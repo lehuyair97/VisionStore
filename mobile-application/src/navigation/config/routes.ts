@@ -9,7 +9,6 @@ export const notLoggedInScreens = {
 
 export const loggedInScreens = {
   BottomTab: BottomTabScenes,
-  Home: Common.Home,
 };
 
 export const ROUTES = createEnum({

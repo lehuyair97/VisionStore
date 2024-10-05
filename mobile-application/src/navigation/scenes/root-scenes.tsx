@@ -8,7 +8,7 @@ export default function RootScenes() {
   const { Navigator, Group, Screen } = createNativeStackNavigator();
   const { authenticationStatus } = useAuth();
   const isAuth = authenticationStatus === "AUTHENTICATED";
-  const screens = isAuth ? loggedInScreens : notLoggedInScreens;
+  const screens = isAuth ? notLoggedInScreens : loggedInScreens ;loggedInScreens
 
   return (
     <Navigator>

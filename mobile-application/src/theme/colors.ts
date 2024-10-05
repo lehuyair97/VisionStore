@@ -1,5 +1,6 @@
 
 const Colors = {
+  background_fit_finder: "#F5F5F5",
   transparent: "transparent",
   brown: "rgb(53,45,45)",
   black: "#191414",

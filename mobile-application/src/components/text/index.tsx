@@ -13,4 +13,4 @@ export default forwardRef<NativeText, React.ComponentProps<typeof ReText>>(
       </ReText>
     )
   }
-)
+) 
