@@ -5,16 +5,13 @@ import Colors from '@theme/colors';
 import React from 'react';
 import { FlatList, View,Text,TouchableOpacity } from 'react-native'; // Thêm import FlatList
 
-const data = [ // Tạo dữ liệu cho FlatList
-    { id: '1', title: 'Laptop', icon: 'home' },
-    { id: '2', title: 'Pc', icon: 'desktop' },
-    { id: '3', title: 'Linh Kiện', icon: 'microchip' },
-    { id: '4', title: 'Phụ kiện', icon: 'headphones' },
-    // Thêm các mục khác nếu cần
-  ];
-  
 
-const FitFinder = () => {
+  
+  interface FitFinderProps {
+    data: any[];
+  }
+
+const FitFinder = ({ data }: FitFinderProps) => {
     const [selectedId, setSelectedId] = React.useState(null); 
     
     const renderItem = ({ item ,index}) => ( // Hàm render cho từng mục
@@ -39,6 +36,7 @@ const FitFinder = () => {
         keyExtractor={item => item.id}
         horizontal // Đặt FlatList thành dạng ngang
         scrollEnabled={false}
+        showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 0 }} // Đảm bảo không có padding
 
       />

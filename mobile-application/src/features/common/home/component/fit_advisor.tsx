@@ -3,14 +3,13 @@ import Colors from "@theme/colors";
 import React from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 
-const data = [ // Tạo dữ liệu cho FlatList
-    { id: '1', title: 'Tất cả' },
-    { id: '2', title: 'Macbook' },
-    { id: '3', title: 'Mac mini' },
-    { id: '4', title: 'Mac pro' },
-];
 
-const FitAdvisor = () => {
+
+interface FitAdvisorProps {
+    data: any[];
+  }
+
+const FitAdvisor = ({ data }: FitAdvisorProps) => {
     const [selectedId, setSelectedId] = React.useState(null); // State để lưu ID của mục được chọn
 
     const renderItem = ({ item,index }) => (

@@ -5,15 +5,11 @@ import { View, Text, FlatList, Image, StyleSheet } from "react-native";
 import TextHome from "./text_home";
 import { Row } from "@components";
 
-const data = [ // Tạo dữ liệu cho FlatList
-    { id: '1', name: 'MacBook Pro', year: '2021', price: '$129,009', image: require('../../../../assets/icons/mac.png') },
-    { id: '2', name: 'MacBook Air', year: '2020', price: '$99,900', image: require('../../../../assets/icons/mac.png') },
-    { id: '3', name: 'iMac', year: '2021', price: '$179,009', image: require('../../../../assets/icons/mac.png') },
-    { id: '4', name: 'Mac Mini', year: '2020', price: '$69,900', image: require('../../../../assets/icons/mac.png') },
-    // Thêm các mục khác nếu cần
-];
+interface ListMacProps {
+    data: any[];
+  }
 
-const ListMac = () => {
+const ListMac = ({ data }: ListMacProps) => {
     const renderItem = ({ item, index }) => (
         <View style={styles.itemContainer}>
             <Image source={item.image} style={styles.image} />
@@ -26,7 +22,7 @@ const ListMac = () => {
                 <Text style={styles.price}>{item.price}</Text>
 
             </Block>
-            <Block height={5} />
+            <Block height={10} />
 
         </View>
     );

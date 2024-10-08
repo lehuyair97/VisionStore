@@ -1,12 +1,36 @@
-import { Image } from 'react-native';
+import React from 'react';
+import { View, Image, Dimensions } from 'react-native';
+import Swiper from 'react-native-swiper';
 
-const Banner = () => {
+interface BannerProps {
+  images: any[];
+}
+
+
+const Banner = ({ images }: BannerProps) => {
+  const height = 135;
     return (
-        <Image
-        source={require('../../../../assets/icons/banner.png')}
-        style={{ width: '100%', height: 133, borderRadius: 16 }}
-        resizeMode="cover"
-      />
+      <View style={{ height: height , borderRadius:16}}>
+        <Swiper
+            style={{ height: height }}
+            autoplay
+            autoplayTimeout={3}
+            showsPagination
+            dotColor="#90A4AE"
+            activeDotColor="#FFEE58"
+        >
+            {images.map((image, index) => (
+                <View key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Image
+                        source={image}
+                        style={{ width: '100%', height: height , borderRadius:16}} // Đặt kích thước cụ thể cho ảnh
+                        resizeMode="cover" // Đảm bảo ảnh giữ nguyên tỷ lệ
+                    />
+                </View>
+            ))}
+        </Swiper>
+      </View>
+
     );
 }
 
