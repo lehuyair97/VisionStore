@@ -23,6 +23,7 @@ const Colors = {
   title: "#000000",
   error: "rgba(228, 93, 93, 0.06)",
   primary: '#DF5454',
+  gray_profile: "#FCF5F5",
 
   // Rose colors
   rose_50: "#fff1f2",
