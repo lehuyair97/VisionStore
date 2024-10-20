@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
+const { paymentTransactionsSchema } = require("./userModel");
 
 const orderModel = new mongoose.Schema({
   customerId: {
@@ -23,12 +24,8 @@ const orderModel = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  deliveryMethod: {
-    type: String,
-    required: true,
-  },
-  paymentMethod: {
-    type: String,
+  paymentTransactions: {
+    type: paymentTransactionsSchema,
     required: true,
   },
   totalBill: {
@@ -43,10 +40,8 @@ const orderModel = new mongoose.Schema({
     type: String,
     default: () => moment().format("dddd, DD/MM/YYYY HH:mm:ss"),
   },
-
 });
 
-// Tạo model từ schema
 const Order = mongoose.model("Order", orderModel);
 
 module.exports = Order;

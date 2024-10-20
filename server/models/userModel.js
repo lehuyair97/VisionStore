@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
-const paymentMethodSchema = new mongoose.Schema({
-  CardNumber: { type: Number},
-  CVV: { type: Number},
-  YearMonth: { type: String }
+const paymentTransactionsSchema = new mongoose.Schema({
+  id: { type: String, required: true }, 
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
+  orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true }, 
+  paymentMethod: { type: String, required: true }, 
+  paymentDate: { type: Date, default: Date.now }, 
+  paymentStatus: { type: String, required: true }, 
+  paymentReference: { type: String } 
 });
 
 const addressSchema = new mongoose.Schema({
@@ -14,18 +18,24 @@ const addressSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   userName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  display_name: { type: String },
   password: { type: String, required: true },
   avatar: { type: String }, 
-  address:[addressSchema],
-  phoneNumber:{type:Number},
-  favorites:{
+  address: [addressSchema],
+  phoneNumber: { type: Number },
+  favorites: {
     type: Array,
     default: []
   },
-  paymentMethod:[paymentMethodSchema],
+  payment_transaction: [paymentTransactionsSchema],
   createdAt: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+
+module.exports = {
+  User,
+  paymentTransactionsSchema,
+  addressSchema
+};
