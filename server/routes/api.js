@@ -9,6 +9,7 @@ const categoryAPI = require("./APIContainer/Category");
 const productAPI = require("./APIContainer/Product"); 
 const orderAPI = require("./APIContainer/Order");
 const subCategoryAPI = require("./APIContainer/SubCategory");
+const authMiddleware = require("../middleware/authMiddleware"); 
 
 
 // Sử dụng body-parser để phân tích dữ liệu từ form
@@ -43,42 +44,42 @@ const upload = multer({ storage: storage });
 // // Users Controller
 router.post("/users/upload", upload.single("avatar"), userAPI.createUserWithImage);
 router.post("/users", userAPI.createUser);
-router.get("/users", userAPI.getAllUsers);
-router.get("/users/:id", userAPI.getUserById);
-router.put("/change_pw/:id", userAPI.changePassword);
-router.put("/favorites/:id", userAPI.updateFavorite);
-router.put("/updateInfo/:id", userAPI.updateInfo);
-router.delete("/users/:id", userAPI.deleteUser);
+router.get("/users", authMiddleware, userAPI.getAllUsers);
+router.get("/users/:id", authMiddleware, userAPI.getUserById);
+router.put("/change_pw/:id", authMiddleware, userAPI.changePassword);
+router.put("/favorites/:id", authMiddleware, userAPI.updateFavorite);
+router.put("/updateInfo/:id", authMiddleware, userAPI.updateInfo);
+router.delete("/users/:id", authMiddleware, userAPI.deleteUser);
 router.post("/login", userAPI.login);
 
 // // Category routes
 router.get("/category", categoryAPI.getAllCategories);
 router.get("/category/:id", categoryAPI.getCategoryById);
-router.post("/category", categoryAPI.createCategory);
-router.put("/category/:id", categoryAPI.updateCategoryById);
-router.delete("/category/:id", categoryAPI.deleteCategoryById);
-
+router.post("/category", authMiddleware, categoryAPI.createCategory);
+router.put("/category/:id", authMiddleware, categoryAPI.updateCategoryById);
+router.delete("/category/:id", authMiddleware, categoryAPI.deleteCategoryById);
 
 // // SubCategory routes
 router.get("/subcategory", subCategoryAPI.getAllSubCategories); 
 router.get("/subcategory/:id", subCategoryAPI.getSubCategoryById); 
-router.post("/subcategory", subCategoryAPI.createSubCategory); 
-router.put("/subcategory/:id", subCategoryAPI.updateSubCategoryById); 
-router.delete("/subcategory/:id", subCategoryAPI.deleteSubCategoryById); 
+router.post("/subcategory", authMiddleware, subCategoryAPI.createSubCategory); 
+router.put("/subcategory/:id", authMiddleware, subCategoryAPI.updateSubCategoryById); 
+router.delete("/subcategory/:id", authMiddleware, subCategoryAPI.deleteSubCategoryById); 
 
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
 router.get("/products/:id", productAPI.getProductById);
-router.post("/products", productAPI.createProduct);
-router.put("/products/:id", productAPI.updateProductById);
-router.delete("/products/:id", productAPI.deleteProductById);
+router.post("/products", authMiddleware, productAPI.createProduct);
+router.put("/products/:id", authMiddleware, productAPI.updateProductById);
+router.delete("/products/:id", authMiddleware, productAPI.deleteProductById);
 
 // // Order routes
-router.get('/orders', orderAPI.getAllOrders);
-router.get('/orders/:id', orderAPI.getOrderById);
-router.get('/orders/users/:customerId', orderAPI.getOrdersByUserId);
-router.post('/orders', orderAPI.createOrder);
-router.put('/orders/:id', orderAPI.updateOrderById);
-router.delete('/orders/:id', orderAPI.deleteOrderById);
+router.get('/orders', authMiddleware, orderAPI.getAllOrders);
+router.get('/orders/:id', authMiddleware, orderAPI.getOrderById);
+router.get('/orders/users/:customerId', authMiddleware, orderAPI.getOrdersByUserId);
+router.post('/orders', authMiddleware, orderAPI.createOrder);
+router.put('/orders/:id', authMiddleware, orderAPI.updateOrderById);
+router.delete('/orders/:id', authMiddleware, orderAPI.deleteOrderById);
+
 
 module.exports = router;
