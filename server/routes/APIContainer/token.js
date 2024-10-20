@@ -17,7 +17,7 @@ const createRefreshToken = (user) => {
   return jwt.sign(
     { userId: user._id, email: user.email },
     refreshTokenSecret,
-    { expiresIn: "7d", algorithm: "RS256" } 
+    { expiresIn: "7d", algorithm: "HS256" }
   );
 };
 
