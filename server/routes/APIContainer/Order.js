@@ -1,68 +1,69 @@
 const orderModel = require("../../models/orderModel");
+const authenticateToken = require('../../middleware/authMiddleware');
 
-exports.getAllOrders = async (req, res) => {
+exports.getAllOrders = authenticateToken(async (req, res) => {
   try {
     const orders = await orderModel.find({});
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+});
 
-
-exports.getOrderByID = async (req, res) => {
+exports.getOrderById = authenticateToken(async (req, res) => {
   try {
-    const {id} = req.params; 
-    const order = await orderModel.findById({_id:id});
+    const { id } = req.params; 
+    const order = await orderModel.findById({_id: id});
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
     res.status(200).json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+});
 
-exports.getOrdersByUserId = async (req, res) => {
+exports.getOrdersByUserId = authenticateToken(async (req, res) => {
   try {
-    const { customerId } = req.params; // Lấy userID từ request params
+    const { customerId } = req.params; 
     const orders = await orderModel.find({ customerId: customerId });
-    res.status(200).json({data:orders});
+    res.status(200).json({ data: orders });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+});
 
-exports.createOrder = async (req, res) => {
+exports.createOrder = authenticateToken(async (req, res) => {
   try {
-    const newOrder = await orderModel.create(req.body); // Tạo đơn hàng từ dữ liệu trong request body
-    res.status(201).json({data : newOrder}); // Trả về đơn hàng đã được tạo thành công
+    const newOrder = await orderModel.create(req.body); 
+    res.status(201).json({ data: newOrder }); 
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+});
 
-exports.updateOrderById = async (req, res) => {
+exports.updateOrderById = authenticateToken(async (req, res) => {
   try {
-    const { _id } = req.params; // Lấy orderId từ request params
+    const { _id } = req.params; 
     const updatedOrder = await orderModel.findByIdAndUpdate(_id, req.body, { new: true });
     if (!updatedOrder) {
-      res.status(404).json({ message: 'Order not found' });
-    } else {
-      res.status(200).json(updatedOrder); // Trả về đơn hàng đã được cập nhật
+      return res.status(404).json({ message: 'Order not found' });
     }
+    res.status(200).json(updatedOrder); 
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+});
 
-exports.deleteOrderById = async (req, res) => {
+exports.deleteOrderById = authenticateToken(async (req, res) => {
   try {
-    const { _id } = req.params; // Lấy orderId từ request params
+    const { _id } = req.params; 
     const deletedOrder = await orderModel.findByIdAndDelete(_id);
     if (!deletedOrder) {
-      res.status(404).json({ message: 'Order not found' });
-    } else {
-      res.status(200).json(deletedOrder); // Trả về đơn hàng đã được xóa
+      return res.status(404).json({ message: 'Order not found' });
     }
+    res.status(204).end();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+});
