@@ -1,5 +1,4 @@
 const Product = require("./../../models/productModel");
-const authenticateToken = require('../../middleware/authMiddleware');
 
 exports.getAllProducts = async (req, res) => {
   try {
@@ -22,16 +21,16 @@ exports.getProductById = async (req, res) => {
   }
 };
 
-exports.createProduct = authenticateToken(async (req, res) => {
+exports.createProduct = async (req, res) => {
   try {
     const product = await Product.create(req.body);
     res.status(201).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.updateProductById = authenticateToken(async (req, res) => {
+exports.updateProductById = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!product) {
@@ -41,9 +40,9 @@ exports.updateProductById = authenticateToken(async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.deleteProductById = authenticateToken(async (req, res) => {
+exports.deleteProductById = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) {
@@ -53,4 +52,4 @@ exports.deleteProductById = authenticateToken(async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};

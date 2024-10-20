@@ -8,6 +8,8 @@ const userAPI = require("./APIContainer/Users");
 const categoryAPI = require("./APIContainer/Category"); 
 const productAPI = require("./APIContainer/Product"); 
 const orderAPI = require("./APIContainer/Order");
+const subCategoryAPI = require("./APIContainer/SubCategory");
+
 
 // Sử dụng body-parser để phân tích dữ liệu từ form
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -38,7 +40,7 @@ router.get("/images/:filename", (req, res) => {
 // Thiết lập tải lên với Multer
 const upload = multer({ storage: storage });
 
-// Users Controller
+// // Users Controller
 router.post("/users/upload", upload.single("avatar"), userAPI.createUserWithImage);
 router.post("/users", userAPI.createUser);
 router.get("/users", userAPI.getAllUsers);
@@ -49,7 +51,7 @@ router.put("/updateInfo/:id", userAPI.updateInfo);
 router.delete("/users/:id", userAPI.deleteUser);
 router.post("/login", userAPI.login);
 
-// Category routes
+// // Category routes
 router.get("/category", categoryAPI.getAllCategories);
 router.get("/category/:id", categoryAPI.getCategoryById);
 router.post("/category", categoryAPI.createCategory);
@@ -57,21 +59,21 @@ router.put("/category/:id", categoryAPI.updateCategoryById);
 router.delete("/category/:id", categoryAPI.deleteCategoryById);
 
 
-// SubCategory routes
+// // SubCategory routes
 router.get("/subcategory", subCategoryAPI.getAllSubCategories); 
 router.get("/subcategory/:id", subCategoryAPI.getSubCategoryById); 
 router.post("/subcategory", subCategoryAPI.createSubCategory); 
 router.put("/subcategory/:id", subCategoryAPI.updateSubCategoryById); 
 router.delete("/subcategory/:id", subCategoryAPI.deleteSubCategoryById); 
 
-// Product routes
+// // Product routes
 router.get("/products", productAPI.getAllProducts);
 router.get("/products/:id", productAPI.getProductById);
 router.post("/products", productAPI.createProduct);
 router.put("/products/:id", productAPI.updateProductById);
 router.delete("/products/:id", productAPI.deleteProductById);
 
-// Order routes
+// // Order routes
 router.get('/orders', orderAPI.getAllOrders);
 router.get('/orders/:id', orderAPI.getOrderById);
 router.get('/orders/users/:customerId', orderAPI.getOrdersByUserId);

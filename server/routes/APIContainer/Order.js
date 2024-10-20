@@ -1,16 +1,16 @@
 const orderModel = require("../../models/orderModel");
 const authenticateToken = require('../../middleware/authMiddleware');
 
-exports.getAllOrders = authenticateToken(async (req, res) => {
+exports.getAllOrders = async (req, res) => {
   try {
     const orders = await orderModel.find({});
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.getOrderById = authenticateToken(async (req, res) => {
+exports.getOrderById = async (req, res) => {
   try {
     const { id } = req.params; 
     const order = await orderModel.findById({_id: id});
@@ -21,9 +21,9 @@ exports.getOrderById = authenticateToken(async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+}
 
-exports.getOrdersByUserId = authenticateToken(async (req, res) => {
+exports.getOrdersByUserId = async (req, res) => {
   try {
     const { customerId } = req.params; 
     const orders = await orderModel.find({ customerId: customerId });
@@ -31,18 +31,18 @@ exports.getOrdersByUserId = authenticateToken(async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.createOrder = authenticateToken(async (req, res) => {
+exports.createOrder = async (req, res) => {
   try {
     const newOrder = await orderModel.create(req.body); 
     res.status(201).json({ data: newOrder }); 
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.updateOrderById = authenticateToken(async (req, res) => {
+exports.updateOrderById = async (req, res) => {
   try {
     const { _id } = req.params; 
     const updatedOrder = await orderModel.findByIdAndUpdate(_id, req.body, { new: true });
@@ -53,9 +53,9 @@ exports.updateOrderById = authenticateToken(async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.deleteOrderById = authenticateToken(async (req, res) => {
+exports.deleteOrderById = async (req, res) => {
   try {
     const { _id } = req.params; 
     const deletedOrder = await orderModel.findByIdAndDelete(_id);
@@ -66,4 +66,4 @@ exports.deleteOrderById = authenticateToken(async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
