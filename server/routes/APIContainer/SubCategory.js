@@ -1,56 +1,55 @@
-const Product = require("./../../models/productModel");
-const authenticateToken = require('../../middleware/authMiddleware');
+const SubCategory = require("./../../models/sub_categoryModel");
 
-exports.getAllProducts = async (req, res) => {
+exports.getAllSubCategories = async (req, res) => {
   try {
-    const products = await Product.find();
-    res.status(200).json(products);
+    const subCategories = await SubCategory.find(); // Lấy tất cả subcategories
+    res.status(200).json(subCategories);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-exports.getProductById = async (req, res) => {
+exports.getSubCategoryById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+    const subCategory = await SubCategory.findById(req.params.id); // Lấy subcategory theo ID
+    if (!subCategory) {
+      return res.status(404).json({ message: 'SubCategory not found' });
     }
-    res.status(200).json(product);
+    res.status(200).json(subCategory);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-exports.createProduct = authenticateToken(async (req, res) => {
+exports.createSubCategory = async (req, res) => {
   try {
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
+    const subCategory = await SubCategory.create(req.body); // Tạo subcategory mới
+    res.status(201).json(subCategory);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.updateProductById = authenticateToken(async (req, res) => {
+exports.updateSubCategoryById = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+    const subCategory = await SubCategory.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Cập nhật subcategory theo ID
+    if (!subCategory) {
+      return res.status(404).json({ message: 'SubCategory not found' });
     }
-    res.status(200).json(product);
+    res.status(200).json(subCategory);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
 
-exports.deleteProductById = authenticateToken(async (req, res) => {
+exports.deleteSubCategoryById = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+    const subCategory = await SubCategory.findByIdAndDelete(req.params.id); // Xóa subcategory theo ID
+    if (!subCategory) {
+      return res.status(404).json({ message: 'SubCategory not found' });
     }
-    res.status(204).end();
+    res.status(204).end(); // Trả về 204 No Content
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-});
+};
