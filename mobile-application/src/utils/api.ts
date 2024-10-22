@@ -13,8 +13,9 @@ export const REQUEST_URL = {
   SIGN_IN: "/",
   SIGN_IN_WIth_GOOGLE: "/",
   CHECK_IN: "/",
+  CATEGORY: "/category",
 };
-const BASE_URL = ''
+const BASE_URL = 'http://192.168.1.2:3000/api'
 
 
 export type AxiosParams = {
