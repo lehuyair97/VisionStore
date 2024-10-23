@@ -11,9 +11,9 @@ import { useCategory } from "@hooks/category";
 import { Category } from "@hooks/category/use-category";
 
 const images = [
-  require('../../../../assets/icons/banner.png'),
-  require('../../../../assets/icons/banner2.png'),
-  require('../../../../assets/icons/banner.png'),
+  require("../../../../assets/icons/banner.png"),
+  require("../../../../assets/icons/banner2.png"),
+  require("../../../../assets/icons/banner.png"),
 ];
 
 const iconMap: {[key: string]: string} = {
@@ -23,18 +23,44 @@ const iconMap: {[key: string]: string} = {
   'Phụ kiện': 'headphones',
 }
 
-const datafitAdvisor = [ // Tạo dữ liệu cho FlatList
-  { id: '1', title: 'Tất cả' },
-  { id: '2', title: 'Macbook' },
-  { id: '3', title: 'Mac mini' },
-  { id: '4', title: 'Mac pro' },
+const datafitAdvisor = [
+  // Tạo dữ liệu cho FlatList
+  { id: "1", title: "Tất cả" },
+  { id: "2", title: "Macbook" },
+  { id: "3", title: "Mac mini" },
+  { id: "4", title: "Mac pro" },
 ];
 
-const dataListMac = [ // Tạo dữ liệu cho FlatList
-  { id: '1', name: 'MacBook Pro', year: '2021', price: '$129,009', image: require('../../../../assets/icons/mac.png') },
-  { id: '2', name: 'MacBook Air', year: '2020', price: '$99,900', image: require('../../../../assets/icons/mac.png') },
-  { id: '3', name: 'iMac', year: '2021', price: '$179,009', image: require('../../../../assets/icons/mac.png') },
-  { id: '4', name: 'Mac Mini', year: '2020', price: '$69,900', image: require('../../../../assets/icons/mac.png') },
+const dataListMac = [
+  // Tạo dữ liệu cho FlatList
+  {
+    id: "1",
+    name: "MacBook Pro",
+    year: "2021",
+    price: "$129,009",
+    image: require("../../../../assets/icons/mac.png"),
+  },
+  {
+    id: "2",
+    name: "MacBook Air",
+    year: "2020",
+    price: "$99,900",
+    image: require("../../../../assets/icons/mac.png"),
+  },
+  {
+    id: "3",
+    name: "iMac",
+    year: "2021",
+    price: "$179,009",
+    image: require("../../../../assets/icons/mac.png"),
+  },
+  {
+    id: "4",
+    name: "Mac Mini",
+    year: "2020",
+    price: "$69,900",
+    image: require("../../../../assets/icons/mac.png"),
+  },
   // Thêm các mục khác nếu cần
 ];
 
@@ -52,19 +78,21 @@ export default function Home() {
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}>
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+      >
         <AppBar />
-        <Block mt="_20"/>
-        <Banner images={images}/>
-        <Block mt="_20"/>
+        <Block mt="_20" />
+        <Banner images={images} />
+        <Block mt="_20" />
         <FitFinder data={data} />
-        <Block mt="_15"/>
+        <Block mt="_15" />
         <FitAdvisor data={datafitAdvisor} />
-        <Block mt="_15"/>
+        <Block mt="_15" />
         <ListMac data={dataListMac} />
-        <Block mt="_15"/>
+        <Block mt="_15" />
         <ListMac data={dataListMac} />
-        <Block mt="_15"/>
+        <Block mt="_15" />
         <ListMac data={dataListMac} />
       </ScrollView>
     </MainContainer>

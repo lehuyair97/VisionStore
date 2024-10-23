@@ -10,27 +10,62 @@ import { localImages } from "@assets/icons/images";
 import { useAuth, useSignIn } from "@hooks/auth";
 import theme from "@theme";
 
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from "@react-native-google-signin/google-signin";
+import { useEffect, useState } from "react";
+
 function Signin() {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
+  
 
   const {
     control,
-    handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<signInForm>({
     resolver: zodResolver(validateUser),
     mode: "onChange",
     defaultValues: {
-      username: __DEV__ ? "lehuypro97" : "",
-      password: __DEV__ ? "Lehuypro97@" : "",
+      email: __DEV__ ? "lehuyair@gmail.com" : "",
+      password: __DEV__ ? "123" : "",
     },
   });
 
-  const handleSignIn = async (data: signInForm) => {
-    const { data: dataSignIn, success, accessToken } = await submit(data);
-    if (success) {
-      handleLoginSuccess({ accessToken: accessToken, user: dataSignIn?.user });
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: "796239183008-229vcarahasokpb1hm3nnve5jl3s5vse.apps.googleusercontent.com", // Sử dụng client_id từ Firebase
+    });
+  }, []);
+
+  const signin = async () => {
+    console.log("Attempting to sign in...");
+    try {
+      await GoogleSignin.hasPlayServices();
+      const user = await GoogleSignin.signIn();
+      console.log("User data: ", user);
+    } catch (e) {
+      console.error("Sign in error: ", e);
+    }
+  };
+
+
+  const handleSignIn = async () => {
+    const data = getValues();
+    console.log(data);
+    if (Object.keys(errors).length === 0) {
+      const { accessToken, isSuccess, refreshToken, user } = await submit(data);
+      if (isSuccess) {
+        handleLoginSuccess({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          user: user,
+        });
+      }
+    } else {
+      console.log("Errors:", errors);
     }
   };
 
@@ -42,13 +77,13 @@ function Signin() {
           source={localImages().logo}
         />
         <Input
-          name="username"
+          name="email"
           label="Username"
           placeholder="Nhập email"
           labelStyle={{ fontSize: 14 }}
           control={control}
-          error={errors.username?.message}
-          showError={!!errors.username?.message}
+          error={errors.email?.message}
+          showError={!!errors.email?.message}
         />
         <Input
           name="password"
@@ -64,7 +99,7 @@ function Signin() {
           buttonStyle={{ marginTop: 30 }}
           label="Đăng nhập"
           textStyle={{ color: "white" }}
-          onPress={handleSubmit(handleSignIn)}
+          onPress={handleSignIn}
           isLoadding={submitting}
         />
         <Row center alignSelf="center" gap={"_20"} my={"_30"}>
@@ -106,6 +141,11 @@ function Signin() {
             textStyle={{ color: theme.colors.primary, fontWeight: "bold" }}
           />
         </Row>
+              <GoogleSigninButton
+           size={GoogleSigninButton.Size.Standard}
+           color={GoogleSigninButton.Color.Dark}
+           onPress={signin}
+         />
       </Block>
     </MainContainer>
   );
