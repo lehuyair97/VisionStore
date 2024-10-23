@@ -9,14 +9,13 @@ import {
   setAccessToken as setAccessTokenStorage,
   deleteAccessToken,
   validateToken,
+  setRefreshToken as setRefreshTokenStorage,
+  deleteRefreshToken,
+  getRefreshToken,
 } from "../utils/token";
-import {
-  setUserInfoStorage,
-  getUserInfoStorage,
-  getCheckInStatusStorage,
-  setCheckInStatusStorage,
-} from "@utils/storage";
+import { setUserInfoStorage, getUserInfoStorage } from "@utils/storage";
 import { User } from "../hooks/auth/use-sign-in";
+import useRefreshToken from "@hooks/auth/use-refresh-token";
 import dayjs from "dayjs";
 
 export type AuthenticationStatus =
@@ -32,13 +31,15 @@ export type CheckInStatus = {
 type TAuthContext = {
   authenticationStatus: AuthenticationStatus;
   accessToken?: string;
-  handleLoginSuccess: (data: { accessToken: string; user: User }) => void;
+  handleLoginSuccess: (data: {
+    accessToken: string;
+    refreshToken: string;
+    user: User;
+  }) => void;
   setAuthenticationStatus: (status: AuthenticationStatus) => void;
   logout: () => Promise<void>;
   userInfo: User;
-  checkInStatus: CheckInStatus;
   setUserInfo: (user: User) => void;
-  handleCheckInStatus: () => void;
 };
 
 export const AuthContext = createContext<TAuthContext | undefined>(undefined);
@@ -46,13 +47,9 @@ export const AuthContext = createContext<TAuthContext | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authenticationStatus, setAuthenticationStatus] =
     useState<AuthenticationStatus>("UNAUTHENTICATED");
+  const { submit: submitRefreshToken } = useRefreshToken();
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
   const [userInfo, setUserInfo] = useState<User | null>();
-
-  const [checkInStatus, setCheckInStatus] = useState<CheckInStatus>({
-    lastCheckInTime: "",
-    checkInCount: 0,
-  });
 
   useEffect(() => {
     const validateAndSetAuth = async () => {
@@ -60,40 +57,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (isValidToken) {
         setAuthenticationStatus("AUTHENTICATED");
         const info = await getUserInfoStorage();
-        const checkInStatusStorage = await getCheckInStatusStorage();
         setUserInfo(info);
-        if (checkInStatusStorage) {
-          setCheckInStatus(checkInStatusStorage);
-        }
+        return;
       }
+      await refreshToken();
     };
     validateAndSetAuth();
   }, []);
 
   const logout = async () => {
     await deleteAccessToken();
+    await deleteRefreshToken();
     await setUserInfoStorage(null);
     setAuthenticationStatus("UNAUTHENTICATED");
   };
 
-  const handleCheckInStatus = () => {
-    const currentDate = dayjs(new Date()).format("HH:mm:ss");
-    if (checkInStatus?.lastCheckInTime > currentDate) {
-      setCheckInStatus({ checkInCount: 1, lastCheckInTime: currentDate });
-      setCheckInStatusStorage({
-        checkInCount: 1,
-        lastCheckInTime: currentDate,
-      });
-      return;
+  const refreshToken = async () => {
+    const refreshToken = await getRefreshToken();
+    const { accessToken } = await submitRefreshToken(refreshToken);
+    if (accessToken) {
+      setAccessToken(accessToken);
+      setAccessTokenStorage(accessToken);
+      setAuthenticationStatus("AUTHENTICATED");
     }
-    setCheckInStatus({
-      checkInCount: checkInStatus?.checkInCount + 1,
-      lastCheckInTime: currentDate,
-    });
-    setCheckInStatusStorage({
-      checkInCount: checkInStatus?.checkInCount + 1,
-      lastCheckInTime: currentDate,
-    });
   };
 
   const handleLoginSuccess = useCallback(
@@ -115,8 +101,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       handleLoginSuccess,
       userInfo,
       setUserInfo,
-      checkInStatus,
-      handleCheckInStatus,
     }),
     [
       authenticationStatus,
@@ -126,8 +110,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       handleLoginSuccess,
       userInfo,
       setUserInfo,
-      checkInStatus,
-      handleCheckInStatus,
     ]
   );
 

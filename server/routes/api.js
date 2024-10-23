@@ -41,6 +41,9 @@ router.get("/images/:filename", (req, res) => {
 // Thiết lập tải lên với Multer
 const upload = multer({ storage: storage });
 
+//Token routes
+router.post("/refreshtoken", userAPI.refreshToken)
+
 // // Users Controller
 router.post("/users/upload", upload.single("avatar"), userAPI.createUserWithImage);
 router.post("/users", userAPI.createUser);
@@ -51,6 +54,7 @@ router.put("/favorites/:id", authMiddleware, userAPI.updateFavorite);
 router.put("/updateInfo/:id", authMiddleware, userAPI.updateInfo);
 router.delete("/users/:id", authMiddleware, userAPI.deleteUser);
 router.post("/login", userAPI.login);
+router.post("/sign-in-google", userAPI.signinWithGoogle);
 
 // // Category routes
 router.get("/category", categoryAPI.getAllCategories);

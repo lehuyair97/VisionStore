@@ -4,7 +4,6 @@ import Text from "@components/text";
 import Colors from "@theme/colors";
 import { EDGES } from "@utils/helper";
 import { StatusBar } from "expo-status-bar";
-
 interface AppBarProps {
     title: string;
     iconLeft?: boolean;

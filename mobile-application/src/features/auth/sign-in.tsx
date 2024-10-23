@@ -16,21 +16,31 @@ function Signin() {
 
   const {
     control,
-    handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<signInForm>({
     resolver: zodResolver(validateUser),
     mode: "onChange",
     defaultValues: {
-      username: __DEV__ ? "lehuypro97" : "",
-      password: __DEV__ ? "Lehuypro97@" : "",
+      email: __DEV__ ? "lehuyair@gmail.com" : "",
+      password: __DEV__ ? "123" : "",
     },
   });
 
-  const handleSignIn = async (data: signInForm) => {
-    const { data: dataSignIn, success, accessToken } = await submit(data);
-    if (success) {
-      handleLoginSuccess({ accessToken: accessToken, user: dataSignIn?.user });
+  const handleSignIn = async () => {
+    const data = getValues();
+    console.log(data);
+    if (Object.keys(errors).length === 0) {
+      const { accessToken, isSuccess, refreshToken, user } = await submit(data);
+      if (isSuccess) {
+        handleLoginSuccess({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          user: user,
+        });
+      }
+    } else {
+      console.log("Errors:", errors);
     }
   };
 
@@ -42,13 +52,13 @@ function Signin() {
           source={localImages().logo}
         />
         <Input
-          name="username"
+          name="email"
           label="Username"
           placeholder="Nhập email"
           labelStyle={{ fontSize: 14 }}
           control={control}
-          error={errors.username?.message}
-          showError={!!errors.username?.message}
+          error={errors.email?.message}
+          showError={!!errors.email?.message}
         />
         <Input
           name="password"
@@ -64,7 +74,7 @@ function Signin() {
           buttonStyle={{ marginTop: 30 }}
           label="Đăng nhập"
           textStyle={{ color: "white" }}
-          onPress={handleSubmit(handleSignIn)}
+          onPress={handleSignIn}
           isLoadding={submitting}
         />
         <Row center alignSelf="center" gap={"_20"} my={"_30"}>
