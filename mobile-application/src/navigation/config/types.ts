@@ -20,7 +20,7 @@ export type BottomTabRoutes = {
 };
 
 export type signInForm = {
-  username: string;
+  email: string;
   password: string;
 };
 

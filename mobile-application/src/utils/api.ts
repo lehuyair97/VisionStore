@@ -7,15 +7,44 @@ import type {
 import { getAccessToken } from "./token";
 import axios from "axios";
 
-export const CLIENT_ID =
-  "";
-export const REQUEST_URL = {
-  SIGN_IN: "/",
-  SIGN_IN_WIth_GOOGLE: "/",
-  CHECK_IN: "/",
-};
-const BASE_URL = ''
+export const CLIENT_ID = "";
 
+export const REQUEST_URL = {
+  REFRESH_TOKEN: "/refreshtoken",
+  SIGN_IN: "/login",
+  SIGN_IN_WITH_GOOGLE: "/auth/google",
+  CREATE_USER: "/users",
+  CREATE_USER_WITH_IMAGE: "/users/upload",
+  GET_ALL_USERS: "/users",
+  GET_USER_BY_ID: (id) => `/users/${id}`,
+  CHANGE_PASSWORD: (id) => `/change_pw/${id}`,
+  UPDATE_FAVORITE: (id) => `/favorites/${id}`,
+  UPDATE_INFO: (id) => `/updateInfo/${id}`,
+  DELETE_USER: (id) => `/users/${id}`,
+  GET_ALL_CATEGORIES: "/category",
+  GET_CATEGORY_BY_ID: (id) => `/category/${id}`,
+  CREATE_CATEGORY: "/category",
+  UPDATE_CATEGORY: (id) => `/category/${id}`,
+  DELETE_CATEGORY: (id) => `/category/${id}`,
+  GET_ALL_SUBCATEGORIES: "/subcategory",
+  GET_SUBCATEGORY_BY_ID: (id) => `/subcategory/${id}`,
+  CREATE_SUBCATEGORY: "/subcategory",
+  UPDATE_SUBCATEGORY: (id) => `/subcategory/${id}`,
+  DELETE_SUBCATEGORY: (id) => `/subcategory/${id}`,
+  GET_ALL_PRODUCTS: "/products",
+  GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
+  CREATE_PRODUCT: "/products",
+  UPDATE_PRODUCT: (id) => `/products/${id}`,
+  DELETE_PRODUCT: (id) => `/products/${id}`,
+  GET_ALL_ORDERS: "/orders",
+  GET_ORDER_BY_ID: (id) => `/orders/${id}`,
+  GET_ORDERS_BY_USER_ID: (customerId) => `/orders/users/${customerId}`,
+  CREATE_ORDER: "/orders",
+  UPDATE_ORDER: (id) => `/orders/${id}`,
+  DELETE_ORDER: (id) => `/orders/${id}`,
+};
+
+const BASE_URL = "http://192.168.204.213:3000/api";
 
 export type AxiosParams = {
   url: string;
@@ -72,4 +101,5 @@ const api = async ({
     throw error;
   }
 };
+
 export default api;

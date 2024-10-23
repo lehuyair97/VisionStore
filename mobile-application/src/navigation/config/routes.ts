@@ -4,8 +4,9 @@ import { createEnum } from "./types";
 import BottomTabScenes from "@navigation/scenes/bottom-tab-scenes";
 
 export const notLoggedInScreens = {
-  SignUp: Auth.Signup,
   Signin: Auth.Signin,
+  SignUp: Auth.Signup,
+
 };
 
 export const loggedInScreens = {
