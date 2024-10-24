@@ -28,7 +28,7 @@ exports.createUserWithImage = async (req, res) => {
       userName: req.body.userName,
       email: req.body.email,
       password: req.body.password,
-      avatar: `${req.protocol}://${req.get("host")}/api/images/${
+      avatar: `${req.protocol}://${req.get("host")}/api/uploads/users${
         req.file.filename
       }`,
     };
@@ -237,12 +237,10 @@ exports.signinWithGoogle = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-
       user = await User.create({
         userName: name,
         email: email,
         avatar: picture,
-  
       });
     }
 

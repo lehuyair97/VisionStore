@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, default: 0 },
   warrantyPeriod: { type: String },
   description: { type: String },
-  brand: { type: String },
+  brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
   products_child: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 
