@@ -10,9 +10,16 @@ import { localImages } from "@assets/icons/images";
 import { useAuth, useSignIn } from "@hooks/auth";
 import theme from "@theme";
 
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from "@react-native-google-signin/google-signin";
+import { useEffect, useState } from "react";
+
 function Signin() {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
+  
 
   const {
     control,
@@ -26,6 +33,24 @@ function Signin() {
       password: __DEV__ ? "123" : "",
     },
   });
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: "796239183008-229vcarahasokpb1hm3nnve5jl3s5vse.apps.googleusercontent.com", // Sử dụng client_id từ Firebase
+    });
+  }, []);
+
+  const signin = async () => {
+    console.log("Attempting to sign in...");
+    try {
+      await GoogleSignin.hasPlayServices();
+      const user = await GoogleSignin.signIn();
+      console.log("User data: ", user);
+    } catch (e) {
+      console.error("Sign in error: ", e);
+    }
+  };
+
 
   const handleSignIn = async () => {
     const data = getValues();
@@ -116,6 +141,11 @@ function Signin() {
             textStyle={{ color: theme.colors.primary, fontWeight: "bold" }}
           />
         </Row>
+              <GoogleSigninButton
+           size={GoogleSigninButton.Size.Standard}
+           color={GoogleSigninButton.Color.Dark}
+           onPress={signin}
+         />
       </Block>
     </MainContainer>
   );

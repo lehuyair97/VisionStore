@@ -241,12 +241,15 @@ exports.signinWithGoogle = async (req, res) => {
         userName: name,
         email: email,
         avatar: picture,
+        password:"default",
+  
+
       });
     }
 
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
-    await saveRefreshToken(user._id, refreshToken);
+    // await saveRefreshToken(user._id, refreshToken);
 
     res.status(200).json({
       isSuccess: true,
