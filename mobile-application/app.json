@@ -19,10 +19,17 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.visionstore.mobile"
+      "package": "com.visionstore.mobile",
+      "googleServicesFile":"./android/app/google-services.json",
+      "permissions": ["INTERNET"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d446b33a-599d-4a9e-bfb6-157a08d5b761"
+      }
     }
   }
 }

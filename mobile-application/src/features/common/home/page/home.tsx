@@ -6,21 +6,22 @@ import Banner from "../component/banner";
 import FitFinder from "../component/fit_finder";
 import FitAdvisor from "../component/fit_advisor";
 import ListMac from "../component/list_mac";
-import { ScrollView } from "react-native-virtualized-view";
+import { ScrollView } from 'react-native-virtualized-view'
+import { useCategory } from "@hooks/category";
+import { Category } from "@hooks/category/use-category";
 
 const images = [
   require("../../../../assets/icons/banner.png"),
   require("../../../../assets/icons/banner2.png"),
   require("../../../../assets/icons/banner.png"),
 ];
-const data = [
-  // Tạo dữ liệu cho FlatList
-  { id: "1", title: "Laptop", icon: "home" },
-  { id: "2", title: "Pc", icon: "desktop" },
-  { id: "3", title: "Linh Kiện", icon: "microchip" },
-  { id: "4", title: "Phụ kiện", icon: "headphones" },
-  // Thêm các mục khác nếu cần
-];
+
+const iconMap: {[key: string]: string} = {
+  'Laptop': 'home',
+  'PC': 'desktop',
+  'Linh  kiện': 'microchip',
+  'Phụ kiện': 'headphones',
+}
 
 const datafitAdvisor = [
   // Tạo dữ liệu cho FlatList
@@ -64,6 +65,16 @@ const dataListMac = [
 ];
 
 export default function Home() {
+  const { data:category, isLoading, error } = useCategory();
+  console.log("category", category);
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error: {error.message}</Text>;
+
+  const data = category?.map((item: Category) => ({
+    id: item._id,
+    title: item.name,
+    icon: iconMap[item.name] || 'home',
+  }));
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
