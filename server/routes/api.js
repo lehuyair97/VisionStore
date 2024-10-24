@@ -96,9 +96,13 @@ router.delete(
 );
 
 // // Product routes
-router.get("/products",authMiddleware, productAPI.getAllProducts);
-router.get("/products/:id",authMiddleware, productAPI.getProductById);
-router.get("/products/:brandId",authMiddleware, productAPI.getProductsByBrandId);
+router.get("/products", authMiddleware, productAPI.getAllProducts);
+router.get("/products/:id", authMiddleware, productAPI.getProductById);
+router.get(
+  "/products/:brandId",
+  authMiddleware,
+  productAPI.getProductsByBrandId
+);
 router.post("/products", authMiddleware, productAPI.createProduct);
 router.put("/products/:id", authMiddleware, productAPI.updateProductById);
 router.delete("/products/:id", authMiddleware, productAPI.deleteProductById);
@@ -120,12 +124,15 @@ router.get("/brands", authMiddleware, brandAPI.getAllBrands);
 router.get("/brands/:id", authMiddleware, brandAPI.getBrandById);
 router.post(
   "/brands",
-  authMiddleware,
   multer({ storage: getStorage("brands") }).single("logo"),
   brandAPI.createBrand
 );
-router.put("/brands/:id", authMiddleware, brandAPI.updateBrand);
+router.put(
+  "/brands/:id",
+  multer({ storage: getStorage("brands") }).single("logo"),
+  authMiddleware,
+  brandAPI.updateBrand
+);
 router.delete("/brands/:id", authMiddleware, brandAPI.deleteBrandById);
-
 
 module.exports = router;
