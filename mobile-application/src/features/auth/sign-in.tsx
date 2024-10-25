@@ -10,16 +10,13 @@ import { localImages } from "@assets/icons/images";
 import { useAuth, useSignIn } from "@hooks/auth";
 import theme from "@theme";
 
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from "@react-native-google-signin/google-signin";
-import { useEffect, useState } from "react";
+import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
+import useSignInGoogle from "@hooks/auth/use-signin-google";
 
 function Signin() {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
-  
+  const { submit: signInByGoogle } = useSignInGoogle();
 
   const {
     control,
@@ -34,29 +31,11 @@ function Signin() {
     },
   });
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: "796239183008-229vcarahasokpb1hm3nnve5jl3s5vse.apps.googleusercontent.com", // Sử dụng client_id từ Firebase
-    });
-  }, []);
-
-  const signin = async () => {
-    console.log("Attempting to sign in...");
-    try {
-      await GoogleSignin.hasPlayServices();
-      const user = await GoogleSignin.signIn();
-      console.log("User data: ", user);
-    } catch (e) {
-      console.error("Sign in error: ", e);
-    }
-  };
-
-
-  const handleSignIn = async () => {
+  const handleSignIn = async (type: "normal" | "google") => {
     const data = getValues();
-    console.log(data);
     if (Object.keys(errors).length === 0) {
-      const { accessToken, isSuccess, refreshToken, user } = await submit(data);
+      const { accessToken, isSuccess, refreshToken, user } =
+        type === "normal" ? await submit(data) : await signInByGoogle();
       if (isSuccess) {
         handleLoginSuccess({
           accessToken: accessToken,
@@ -99,7 +78,7 @@ function Signin() {
           buttonStyle={{ marginTop: 30 }}
           label="Đăng nhập"
           textStyle={{ color: "white" }}
-          onPress={handleSignIn}
+          onPress={() => handleSignIn("normal")}
           isLoadding={submitting}
         />
         <Row center alignSelf="center" gap={"_20"} my={"_30"}>
@@ -141,11 +120,11 @@ function Signin() {
             textStyle={{ color: theme.colors.primary, fontWeight: "bold" }}
           />
         </Row>
-              <GoogleSigninButton
-           size={GoogleSigninButton.Size.Standard}
-           color={GoogleSigninButton.Color.Dark}
-           onPress={signin}
-         />
+        <GoogleSigninButton
+          size={GoogleSigninButton.Size.Standard}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={() => handleSignIn("google")}
+        />
       </Block>
     </MainContainer>
   );
