@@ -7,24 +7,45 @@ import { localImages } from "@assets/icons/images";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpForm } from "@navigation/config/types";
+import { useAuth, useSignUp } from "@hooks/auth";
 
 const SignUp = () => {
+  const { submit: submitSignUp } = useSignUp();
+  const { handleLoginSuccess } = useAuth();
+
   const {
     control,
-    handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<signUpForm>({
     resolver: zodResolver(validateUser),
     mode: "onChange",
     defaultValues: {
       display_name: "",
-      username: "",
+      email: "",
       password: "",
       re_password: "",
     },
   });
 
-  const handleSignUp = () => {};
+  const handleSignUp = async () => {
+    const data = getValues();
+    const { re_password, ...newData } = data;
+    if (Object.keys(errors).length === 0) {
+      const { accessToken, isSuccess, refreshToken, user } = await submitSignUp(
+        newData
+      );
+      if (isSuccess) {
+        handleLoginSuccess({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          user: user,
+        });
+      }
+    } else {
+      console.log("Errors:", errors);
+    }
+  };
 
   return (
     <MainContainer>
@@ -48,8 +69,8 @@ const SignUp = () => {
           placeholder="Nhập email của bạn"
           labelStyle={{ fontSize: 14 }}
           control={control}
-          error={errors.username?.message}
-          showError={!!errors.username?.message}
+          error={errors.email?.message}
+          showError={!!errors.email?.message}
         />
         <Input
           name="password"
@@ -75,7 +96,7 @@ const SignUp = () => {
           buttonStyle={{ marginTop: 30 }}
           label="Đăng Ký"
           textStyle={{ color: "white" }}
-          onPress={handleSubmit(handleSignUp)}
+          onPress={handleSignUp}
         />
       </Block>
     </MainContainer>
@@ -83,4 +104,3 @@ const SignUp = () => {
 };
 
 export default memo(SignUp);
-

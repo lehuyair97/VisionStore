@@ -16,7 +16,7 @@ const addressSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  userName: { type: String, required: true },
+  userName: { type: String},
   email: { type: String, required: true, unique: true },
   display_name: { type: String },
   password: { type: String, required: true },

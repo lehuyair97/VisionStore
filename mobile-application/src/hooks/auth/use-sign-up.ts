@@ -1,32 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
-import { signInForm } from "@navigation/config/types";
+import { signInReponse, User } from "./use-sign-in";
 
-export type SignInReponse = {
-  isSuccess: boolean;
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-};
-
-export type User = {
-  _id: string;
-  userName: string;
-  email: string;
-  password: string;
-  favorites: any[];
-  address: any[];
-  payment_transaction: any[];
-  createdAt: string;
-  __v: number;
-};
-
-export type SingUpType = {
-
-}
-
-const useSignIn = () => {
+const useSignUp = () => {
   const {
     data,
     mutateAsync: submit,
@@ -34,17 +11,17 @@ const useSignIn = () => {
     isPending: submitting,
     isError,
   } = useMutation({
-    mutationFn: async (variables: signInForm) => {
+    mutationFn: async (variables: User) => {
       const res = (await api({
         url: REQUEST_URL.CREATE_USER,
         method: "POST",
         data: variables,
-      })) as SignInReponse;
+      })) as signInReponse;
       return res;
     },
 
     onSuccess: () => {
-      toast.success("Đăng nhập thành công");
+      toast.success("Đăng ký thành công thành công");
     },
     onError: (error: any) => {
       if (error.response) {
@@ -67,5 +44,4 @@ const useSignIn = () => {
     submitting,
   };
 };
-export default useSignIn;
-
+export default useSignUp;

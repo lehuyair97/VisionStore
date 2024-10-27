@@ -17,6 +17,7 @@ export const loggedInScreens = {
 export const ROUTES = createEnum({
   //Auth Rotues
   Signin: "Signin",
+  SignUp: "SignUp",
 
   //Common Routes
   Home: "Home",

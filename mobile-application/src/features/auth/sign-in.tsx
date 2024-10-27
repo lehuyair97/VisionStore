@@ -12,8 +12,9 @@ import theme from "@theme";
 
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import useSignInGoogle from "@hooks/auth/use-signin-google";
+import { ROUTES } from "@navigation/config/routes";
 
-function Signin() {
+function Signin({ navigation }) {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
   const { submit: signInByGoogle } = useSignInGoogle();
@@ -115,6 +116,7 @@ function Signin() {
             Bạn đã có tài khoản?
           </Text>
           <Button
+            onPress={()=>navigation.navigate(ROUTES.SignUp)}
             label="Đăng ký"
             noneStyle
             textStyle={{ color: theme.colors.primary, fontWeight: "bold" }}

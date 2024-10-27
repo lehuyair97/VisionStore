@@ -25,7 +25,7 @@ export type signInForm = {
 };
 
 export type signUpForm = {
-  username: string;
+  email: string;
   display_name: string;
   password: string;
   re_password: string;

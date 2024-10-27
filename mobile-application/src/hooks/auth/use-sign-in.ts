@@ -11,15 +11,16 @@ export type signInReponse = {
 };
 
 export type User = {
-  _id: string;
-  userName: string;
+  userName?: string;
   email: string;
+  display_name?: string;
   password: string;
-  favorites: any[];
-  address: any[];
-  payment_transaction: any[];
-  createdAt: string;
-  __v: number;
+  avatar?: string;
+  address?: any;
+  phoneNumber?: number;
+  favorites?: any[]; 
+  payment_transaction?: any;
+  createdAt?: Date;
 };
 
 
