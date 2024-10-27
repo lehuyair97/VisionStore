@@ -3,7 +3,7 @@ import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
 import { signInForm } from "@navigation/config/types";
 
-export type signInReponse = {
+export type SignInReponse = {
   isSuccess: boolean;
   user: User;
   accessToken: string;
@@ -22,6 +22,9 @@ export type User = {
   __v: number;
 };
 
+export type SingUpType = {
+
+}
 
 const useSignIn = () => {
   const {
@@ -33,10 +36,10 @@ const useSignIn = () => {
   } = useMutation({
     mutationFn: async (variables: signInForm) => {
       const res = (await api({
-        url: REQUEST_URL.SIGN_IN,
+        url: REQUEST_URL.CREATE_USER,
         method: "POST",
         data: variables,
-      })) as signInReponse;
+      })) as SignInReponse;
       return res;
     },
 

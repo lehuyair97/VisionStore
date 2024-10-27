@@ -1,7 +1,7 @@
 import { toast } from "@components";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useEffect } from "react";
-import { SignInReponse } from "./use-sign-in";
+import { signInReponse } from "./use-sign-in";
 import api, { REQUEST_URL } from "@utils/api";
 import { useMutation } from "@tanstack/react-query";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
@@ -38,7 +38,7 @@ const useSignInGoogle = () => {
         url: REQUEST_URL.SIGN_IN_WITH_GOOGLE,
         method: "POST",
         data: { token: token },
-      })) as SignInReponse;
+      })) as signInReponse;
       return res;
     },
 
