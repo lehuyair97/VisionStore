@@ -1,15 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
-import { ProductResponse } from "./use-get-product-grouped";
+import { ProductResponse } from "./use-get-product-by-brand";
+
 
 const useGetProductGrouped = (categoryId: string) => {
   return useQuery({
-    queryKey: ["category"],
+    queryKey: ["useGetProductGrouped"],
     queryFn: async () => {
       return (await api({
         url: REQUEST_URL.GET_PRODUCT_GROUPED(categoryId),
         method: "GET",
-      })) as ProductResponse[];
+      })) as ProductResponse;
     },
   });
 };
