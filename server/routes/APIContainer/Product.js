@@ -1,4 +1,5 @@
 const Product = require("./../../models/productModel");
+const mongoose = require("mongoose");
 
 exports.getAllProducts = async (req, res) => {
   try {
@@ -11,12 +12,11 @@ exports.getAllProducts = async (req, res) => {
 exports.getAllProductsGroupedByBrand = async (req, res) => {
   const { categoryId } = req.query;
   try {
+    const matchStage = categoryId
+      ? { $match: { category_id: new mongoose.Types.ObjectId(categoryId) } }
+      : null;
     const products = await Product.aggregate([
-      {
-        $match: {
-          category_id: categoryId,
-        },
-      },
+      ...(matchStage ? [matchStage] : []),
       {
         $group: {
           _id: "$brand",
@@ -41,6 +41,7 @@ exports.getAllProductsGroupedByBrand = async (req, res) => {
         },
       },
     ]);
+
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });

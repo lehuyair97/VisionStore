@@ -6,9 +6,9 @@ import Banner from "../component/banner";
 import FitFinder from "../component/fit_finder";
 import FitAdvisor from "../component/fit_advisor";
 import ListMac from "../component/list_mac";
-import { ScrollView } from 'react-native-virtualized-view'
+import { ScrollView } from "react-native-virtualized-view";
 import useCategory, { Category } from "@hooks/common/use-category";
-
+import useGetProductGrouped from "@hooks/common/use-get-products-grouped";
 
 const images = [
   require("../../../../assets/icons/banner.png"),
@@ -16,12 +16,12 @@ const images = [
   require("../../../../assets/icons/banner.png"),
 ];
 
-const iconMap: {[key: string]: string} = {
-  'Laptop': 'home',
-  'PC': 'desktop',
-  'Linh  kiện': 'microchip',
-  'Phụ kiện': 'headphones',
-}
+const iconMap: { [key: string]: string } = {
+  Laptop: "home",
+  PC: "desktop",
+  "Linh  kiện": "microchip",
+  "Phụ kiện": "headphones",
+};
 
 const datafitAdvisor = [
   // Tạo dữ liệu cho FlatList
@@ -65,15 +65,16 @@ const dataListMac = [
 ];
 
 export default function Home() {
-  const { data:category, isLoading, error } = useCategory();
-  console.log("category", category);
+  const { data: category, isLoading, error } = useCategory();
+  const { data: dataProducts } = useGetProductGrouped(category[0]._id);
+  console.log(dataProducts);
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
 
   const data = category?.map((item: Category) => ({
     id: item._id,
     title: item.name,
-    icon: iconMap[item.name] || 'home',
+    icon: iconMap[item.name] || "home",
   }));
 
   return (

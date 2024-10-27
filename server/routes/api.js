@@ -96,10 +96,10 @@ router.delete(
 );
 
 // // Product routes
-router.get("/products", authMiddleware, productAPI.getAllProducts);
+router.get("/products", productAPI.getAllProducts);
 router.get(
   "/productsgrouped",
-  authMiddleware,
+
   productAPI.getAllProductsGroupedByBrand
 );
 router.get("/products/:id", authMiddleware, productAPI.getProductById);
@@ -108,7 +108,7 @@ router.get(
   authMiddleware,
   productAPI.getProductsByBrandId
 );
-router.post("/products", authMiddleware, productAPI.createProduct);
+router.post("/products", productAPI.createProduct);
 router.put("/products/:id", authMiddleware, productAPI.updateProductById);
 router.delete("/products/:id", authMiddleware, productAPI.deleteProductById);
 
