@@ -14,6 +14,7 @@ export const REQUEST_URL = {
   SIGN_IN: "/login",
   SIGN_IN_WITH_GOOGLE: "/auth/google",
   CREATE_USER: "/users",
+  CATEGORY: "/category",
   CREATE_USER_WITH_IMAGE: "/users/upload",
   GET_ALL_USERS: "/users",
   GET_USER_BY_ID: (id) => `/users/${id}`,
@@ -45,7 +46,7 @@ export const REQUEST_URL = {
   DELETE_ORDER: (id) => `/orders/${id}`,
 };
 
-const BASE_URL = "http://192.168.204.213:3000/api";
+const BASE_URL = "http://192.168.1.2:3000/api";
 
 export type AxiosParams = {
   url: string;
