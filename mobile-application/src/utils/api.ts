@@ -33,6 +33,7 @@ export const REQUEST_URL = {
   DELETE_SUBCATEGORY: (id) => `/subcategory/${id}`,
   GET_ALL_PRODUCTS: "/products",
   GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
+  GET_PRODUCT_BY_BRAND_ID: ({ categoryID,brandID}) => `/products?categoryId=${categoryID}&brandId=${brandID}`,
   CREATE_PRODUCT: "/products",
   UPDATE_PRODUCT: (id) => `/products/${id}`,
   DELETE_PRODUCT: (id) => `/products/${id}`,

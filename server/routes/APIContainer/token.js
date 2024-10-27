@@ -8,7 +8,7 @@ const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
 const createAccessToken = (user) => {
   return jwt.sign({ userId: user._id, email: user.email }, accessTokenSecret, {
-    expiresIn: "15m",
+    expiresIn: "60m",
     algorithm: "HS256",
   });
 };
@@ -17,7 +17,7 @@ const createRefreshToken = (user) => {
   return jwt.sign(
     { userId: user._id, email: user.email },
     refreshTokenSecret,
-    { expiresIn: "7d", algorithm: "HS256" }
+    { expiresIn: "14d", algorithm: "HS256" }
   );
 };
 

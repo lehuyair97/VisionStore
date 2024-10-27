@@ -6,7 +6,9 @@ import Banner from "../component/banner";
 import FitFinder from "../component/fit_finder";
 import FitAdvisor from "../component/fit_advisor";
 import ListMac from "../component/list_mac";
-import { ScrollView } from "react-native-virtualized-view";
+import { ScrollView } from 'react-native-virtualized-view'
+import useCategory, { Category } from "@hooks/common/use-category";
+
 
 const images = [
   require("../../../../assets/icons/banner.png"),

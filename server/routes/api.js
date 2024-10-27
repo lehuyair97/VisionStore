@@ -97,9 +97,14 @@ router.delete(
 
 // // Product routes
 router.get("/products", authMiddleware, productAPI.getAllProducts);
+router.get(
+  "/productsgrouped",
+  authMiddleware,
+  productAPI.getAllProductsGroupedByBrand
+);
 router.get("/products/:id", authMiddleware, productAPI.getProductById);
 router.get(
-  "/products/:brandId",
+  "/products?categoryId=:id&brandId=:id",
   authMiddleware,
   productAPI.getProductsByBrandId
 );

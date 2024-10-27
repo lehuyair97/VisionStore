@@ -8,6 +8,38 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.getAllProductsGroupedByBrand = async (req, res) => {
+  try {
+    const products = await Product.aggregate([
+      {
+        $group: {
+          _id: "$brand",
+          products: { $push: "$$ROOT" },
+        },
+      },
+      {
+        $lookup: {
+          from: "brands",
+          localField: "_id",
+          foreignField: "_id",
+          as: "brandDetails",
+        },
+      },
+      {
+        $unwind: "$brandDetails",
+      },
+      {
+        $project: {
+          brand: "$brandDetails.name",
+          products: 1,
+        },
+      },
+    ]);
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 exports.getProductById = async (req, res) => {
   try {
@@ -22,10 +54,14 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.getProductsByBrandId = async (req, res) => {
-  const { brandId } = req.params;
+  const { categoryId, brandId } = req.query;
+  const filter = {};
+  if (categoryId) filter.category_id = categoryId;
+  if (brandId) filter.brand = brandId;
 
   try {
-    const products = await Product.find({ brand: brandId });
+    const products = await Product.find(filter);
+
     if (!products) {
       return res.status(404).json({ message: "Brand not found" });
     }

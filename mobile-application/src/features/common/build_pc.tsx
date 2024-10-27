@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { MainContainer } from "@components";
+import { EDGES, Helper } from "@utils/helper";
 
 export default function BuildPC() {
   return (
-    <View>
+    <MainContainer edges={EDGES.FULL}>
       <Text>build_pc</Text>
-    </View>
-  )
+    </MainContainer>
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
