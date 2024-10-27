@@ -8,9 +8,16 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 exports.getAllProductsGroupedByBrand = async (req, res) => {
+  const { categoryId  } = req.body.params;
   try {
     const products = await Product.aggregate([
+      {
+        $match: {
+          category_id: categoryId ,
+        },
+      },
       {
         $group: {
           _id: "$brand",
@@ -40,6 +47,7 @@ exports.getAllProductsGroupedByBrand = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.getProductById = async (req, res) => {
   try {

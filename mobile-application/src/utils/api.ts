@@ -36,7 +36,8 @@ export const REQUEST_URL = {
   GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
   GET_PRODUCT_BY_BRAND_ID: ({ categoryID, brandID }) =>
     `/products?categoryId=${categoryID}&brandId=${brandID}`,
-  GET_PRODUCT_GROUPED: () => "/productsgrouped",
+  GET_PRODUCT_GROUPED: (categoryId: string) =>
+    `/productsgrouped?categoryId=${categoryId}`,
   CREATE_PRODUCT: "/products",
   UPDATE_PRODUCT: (id) => `/products/${id}`,
   DELETE_PRODUCT: (id) => `/products/${id}`,
