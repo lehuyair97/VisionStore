@@ -5,7 +5,7 @@ const {
   createAccessToken,
   createRefreshToken,
   saveRefreshToken,
-  verifyRefreshToken
+  verifyRefreshToken,
 } = require("./token");
 const RefreshToken = require("./../../models/refresh_token");
 
@@ -14,9 +14,26 @@ const bcrypt = require("bcrypt");
 
 exports.createUser = async (req, res) => {
   try {
+    // Kiểm tra xem email đã tồn tại hay chưa
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Email đã tồn tại",
+      });
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({ ...req.body, password: hashedPassword });
-    res.status(200).json({ isSuccess: true, user: user });
+    const accessToken = createAccessToken(user);
+    const refreshToken = createRefreshToken(user);
+    await saveRefreshToken(refreshToken, user._id);
+    
+    res.status(200).json({
+      isSuccess: true,
+      user: user,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -227,12 +244,11 @@ exports.signinWithGoogle = async (req, res) => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID, 
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
     const { email, name, picture } = payload;
-
 
     let user = await User.findOne({ email });
 
@@ -241,9 +257,7 @@ exports.signinWithGoogle = async (req, res) => {
         userName: name,
         email: email,
         avatar: picture,
-        password:"default",
-  
-
+        password: "default",
       });
     }
 
