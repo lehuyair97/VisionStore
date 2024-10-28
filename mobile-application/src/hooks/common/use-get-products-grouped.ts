@@ -3,8 +3,8 @@ import api, { REQUEST_URL } from "@utils/api";
 import { ProductResponse } from "./use-get-product-by-brand";
 
 const useGetProductGrouped = (categoryId: string) => {
-  const data = useQuery({
-    queryKey: ["useGetProductGrouped"],
+  const {data} = useQuery({
+    queryKey: ["useGetProductGrouped", categoryId], // Thêm categoryId vào queryKey
     queryFn: async () => {
       return await api({
         url: REQUEST_URL.GET_PRODUCT_GROUPED(categoryId),
@@ -12,7 +12,7 @@ const useGetProductGrouped = (categoryId: string) => {
       }) as ProductResponse;
     },
   });
-  return { data };
+  return { data:data };
 };
 
 export default useGetProductGrouped;

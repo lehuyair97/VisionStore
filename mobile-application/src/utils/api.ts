@@ -49,7 +49,7 @@ export const REQUEST_URL = {
   DELETE_ORDER: (id) => `/orders/${id}`,
 };
 
-const BASE_URL = "http://192.168.210.213:3000/api";
+const BASE_URL = "http://192.168.1.2:3000/api";
 
 export type AxiosParams = {
   url: string;

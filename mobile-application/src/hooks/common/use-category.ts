@@ -7,7 +7,7 @@ export interface Category {
 }
 
 const useCategory = () => {
-  return useQuery({
+  const {data, isPending,error, isLoading} = useQuery({
     queryKey: ["category"],
     queryFn: async () => {
       return (await api({
@@ -16,6 +16,7 @@ const useCategory = () => {
       })) as Category[];
     },
   });
+  return { data, isPending, error, isLoading };
 };
 
 export default useCategory;

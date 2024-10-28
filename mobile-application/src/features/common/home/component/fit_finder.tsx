@@ -8,14 +8,19 @@ import { FlatList, View,Text,TouchableOpacity } from 'react-native'; // Thêm im
 
   
   interface FitFinderProps {
+    onPress: (id: string) => void;
     data: any[];
   }
 
-const FitFinder = ({ data }: FitFinderProps) => {
+const FitFinder = ({ data ,onPress}: FitFinderProps) => {
     const [selectedId, setSelectedId] = React.useState(null); 
+    const handlePress = (id: string) => {
+        setSelectedId(id);
+        onPress(id);
+    };
     
     const renderItem = ({ item ,index}) => ( // Hàm render cho từng mục
-        <TouchableOpacity onPress={() => setSelectedId(item.id)}>
+        <TouchableOpacity onPress={() => handlePress(item.id)}>
         <View style={{paddingLeft: index === 0 ? 0 : 8, paddingRight:9, alignContent: 'center', alignItems: 'center'}}>
          <Block style={{width: 80, height: 80,
              backgroundColor:selectedId === item.id ? Colors.primary : Colors.background_fit_finder, borderRadius: 13, justifyContent: 'center', alignItems: 'center'}}>
