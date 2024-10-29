@@ -1,46 +1,67 @@
 import Block from "@components/block";
 import Colors from "@theme/colors";
 import React from "react";
-import { View, Text, FlatList, Image, StyleSheet } from "react-native";
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import TextHome from "./text_home";
 import { Row } from "@components";
+import { localImages } from "@assets/icons/images";
 
 interface ListMacProps {
-    data: any[];
-  }
+    handleNavigateToDetailProduct: () => void;
+    data: { brand: string, products: any[] }[]
+}
 
-const ListMac = ({ data }: ListMacProps) => {
+const ListMac = ({ data, handleNavigateToDetailProduct }: ListMacProps) => {
+    const [imageError, setImageError] = React.useState(false);
     const renderItem = ({ item, index }) => (
-        <View style={styles.itemContainer}>
-            <Image source={item.image} style={styles.image} />
-            <Block style={styles.block_text}>
-                <Text style={styles.year}>{item.year}</Text>
-            </Block>
-            <Text style={styles.title}>{item.name}</Text>
-            <Block height={10} />
-            <Block style={[styles.block_text, { height: 40, paddingHorizontal: 30, borderRadius: 17 }]}>
-                <Text style={styles.price}>{item.price}</Text>
-
-            </Block>
-            <Block height={10} />
-
+        <TouchableOpacity onPress={() => handleNavigateToDetailProduct()}>
+        <View style={{ marginHorizontal: 10 }}>
+            <View style={styles.itemContainer}>
+                {imageError ? (
+                    <View >
+                        <Image source={localImages().ic_mac} style={styles.image} />
+                    </View>
+                ) : (
+                    <Image
+                        source={{ uri: item.image }}
+                        style={styles.image}
+                        onError={() => setImageError(true)}
+                    />
+                )}
+                <Block style={styles.block_text}>
+                    <Text style={styles.year}>{item.warrantyPeriod}</Text>
+                </Block>
+                <Text style={styles.title}>{item.name}</Text>
+                <Block height={10} />
+                <Block style={[styles.block_text, { height: 40, paddingHorizontal: 30, borderRadius: 17 }]}>
+                    <Text style={styles.price}>{item.price}</Text>
+                </Block>
+                <Block height={10} />
+            </View>
         </View>
+        </TouchableOpacity>
     );
+
 
     return (
         <View>
-            <Row between style={{paddingHorizontal: 4}}>
-                <TextHome>Macbook</TextHome>
-                <Text style={{color: Colors.primary, fontWeight: "light", fontSize: 12}}>xem thêm</Text>
-            </Row>
-            <Block height={3}/>
-            <FlatList
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-                numColumns={2} // Đặt số cột là 2
-                contentContainerStyle={styles.listContainer} // Style cho FlatList
-            />
+            {data.map((item, index) => (
+                <View key={index}>
+                    <Row between style={{ paddingHorizontal: 4 }}>
+                        <TextHome>{item.brand}</TextHome>
+                        <Text style={{ color: Colors.primary, fontWeight: "light", fontSize: 12 }}>xem thêm</Text>
+                    </Row>
+                    <Block height={3} />
+                    <FlatList
+                        horizontal={true}
+                        data={item.products}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                        contentContainerStyle={styles.listContainer} // Style cho FlatList
+
+                    />
+                </View>
+            ))}
         </View>
 
     );
@@ -54,7 +75,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.container, height: 20, borderRadius: 10, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10
     },
     itemContainer: {
-        flex: 1,
+        width: 165,
         backgroundColor: '#F0F0F0',
         borderRadius: 10,
         alignItems: 'center',

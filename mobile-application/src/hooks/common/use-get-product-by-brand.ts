@@ -7,6 +7,8 @@ export type getProductByBrandType = {
 };
 
 export interface ProductResponse {
+  flatMap(arg0: (brand: any) => any): unknown;
+  map(arg0: (brand: any) => any): unknown;
   _id: string;
   products: Product[];
   brand: string;

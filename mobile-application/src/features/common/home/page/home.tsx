@@ -9,6 +9,10 @@ import ListMac from "../component/list_mac";
 import { ScrollView } from "react-native-virtualized-view";
 import useCategory, { Category } from "@hooks/common/use-category";
 import useGetProductGrouped from "@hooks/common/use-get-products-grouped";
+import { ProductResponse } from "@hooks/common/use-get-product-by-brand";
+import { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { ROUTES } from "@navigation/config/routes";
 
 const images = [
   require("../../../../assets/icons/banner.png"),
@@ -31,52 +35,31 @@ const datafitAdvisor = [
   { id: "4", title: "Mac pro" },
 ];
 
-const dataListMac = [
-  // Tạo dữ liệu cho FlatList
-  {
-    id: "1",
-    name: "MacBook Pro",
-    year: "2021",
-    price: "$129,009",
-    image: require("../../../../assets/icons/mac.png"),
-  },
-  {
-    id: "2",
-    name: "MacBook Air",
-    year: "2020",
-    price: "$99,900",
-    image: require("../../../../assets/icons/mac.png"),
-  },
-  {
-    id: "3",
-    name: "iMac",
-    year: "2021",
-    price: "$179,009",
-    image: require("../../../../assets/icons/mac.png"),
-  },
-  {
-    id: "4",
-    name: "Mac Mini",
-    year: "2020",
-    price: "$69,900",
-    image: require("../../../../assets/icons/mac.png"),
-  },
-  // Thêm các mục khác nếu cần
-];
-
 export default function Home() {
   const { data: category, isLoading, error } = useCategory();
-  const { data: dataProducts } = useGetProductGrouped(category[0]._id);
-  console.log(dataProducts);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  
+const navigation = useNavigation();
+
+const handleNavigateToDetailProduct = () => {
+  navigation.navigate(ROUTES.DetailProduct as never);
+};
+
+  
+  const { data: dataProducts } = useGetProductGrouped(selectedId || (category && category[0]._id));
+
+
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
+  if (!category || category.length === 0) return <Text>No categories available</Text>;
 
-  const data = category?.map((item: Category) => ({
+  const data = category.map((item: Category) => ({
     id: item._id,
     title: item.name,
     icon: iconMap[item.name] || "home",
   }));
 
+  const products = (dataProducts as unknown as { brand: string; products: any[] }[]) || [];
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
       <ScrollView
@@ -86,15 +69,18 @@ export default function Home() {
         <Block mt="_20" />
         <Banner images={images} />
         <Block mt="_20" />
-        <FitFinder data={data} />
+        <FitFinder data={data} onPress={
+          (id: string) => {
+            setSelectedId(id);
+          }
+        } />
         <Block mt="_15" />
         <FitAdvisor data={datafitAdvisor} />
         <Block mt="_15" />
-        <ListMac data={dataListMac} />
+        <ListMac data={products} 
+        handleNavigateToDetailProduct={handleNavigateToDetailProduct} />
         <Block mt="_15" />
-        <ListMac data={dataListMac} />
-        <Block mt="_15" />
-        <ListMac data={dataListMac} />
+
       </ScrollView>
     </MainContainer>
   );

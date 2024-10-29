@@ -11,5 +11,6 @@ export function localImages() {
     ic_window_fill: require("../images/ic_window_fill.png"),
     ic_profile: require("../images/ic_profile.png"),
     ic_profile_fill: require("../images/ic_profile_fill.png"),
+    ic_mac: require("../mac.png"),
   };
 }
