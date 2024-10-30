@@ -64,34 +64,34 @@ router.post(
   userAPI.createUserWithImage
 );
 router.post("/users", userAPI.createUser);
-router.get("/users", authMiddleware, userAPI.getAllUsers);
-router.get("/users/:id", authMiddleware, userAPI.getUserById);
-router.put("/change_pw/:id", authMiddleware, userAPI.changePassword);
-router.put("/favorites/:id", authMiddleware, userAPI.updateFavorite);
-router.put("/updateInfo/:id", authMiddleware, userAPI.updateInfo);
-router.delete("/users/:id", authMiddleware, userAPI.deleteUser);
+router.get("/users", userAPI.getAllUsers);
+router.get("/users/:id", userAPI.getUserById);
+router.put("/change_pw/:id", userAPI.changePassword);
+router.put("/favorites/:id", userAPI.updateFavorite);
+router.put("/updateInfo/:id", userAPI.updateInfo);
+router.delete("/users/:id", userAPI.deleteUser);
 router.post("/login", userAPI.login);
 router.post("/sign-in-google", userAPI.signinWithGoogle);
 
 // // Category routes
 router.get("/category", categoryAPI.getAllCategories);
 router.get("/category/:id", categoryAPI.getCategoryById);
-router.post("/category", authMiddleware, categoryAPI.createCategory);
-router.put("/category/:id", authMiddleware, categoryAPI.updateCategoryById);
-router.delete("/category/:id", authMiddleware, categoryAPI.deleteCategoryById);
+router.post("/category", categoryAPI.createCategory);
+router.put("/category/:id", categoryAPI.updateCategoryById);
+router.delete("/category/:id", categoryAPI.deleteCategoryById);
 
 // // SubCategory routes
 router.get("/subcategory", subCategoryAPI.getAllSubCategories);
 router.get("/subcategory/:id", subCategoryAPI.getSubCategoryById);
-router.post("/subcategory", authMiddleware, subCategoryAPI.createSubCategory);
+router.post("/subcategory", subCategoryAPI.createSubCategory);
 router.put(
   "/subcategory/:id",
-  authMiddleware,
+
   subCategoryAPI.updateSubCategoryById
 );
 router.delete(
   "/subcategory/:id",
-  authMiddleware,
+
   subCategoryAPI.deleteSubCategoryById
 );
 
@@ -102,31 +102,31 @@ router.get(
 
   productAPI.getAllProductsGroupedByBrand
 );
-router.get("/products/:id", authMiddleware, productAPI.getProductById);
+router.get("/products/:id", productAPI.getProductById);
 router.get(
   "/products?categoryId=:id&brandId=:id",
-  authMiddleware,
+
   productAPI.getProductsByBrandId
 );
 router.post("/products", productAPI.createProduct);
-router.put("/products/:id", authMiddleware, productAPI.updateProductById);
-router.delete("/products/:id", authMiddleware, productAPI.deleteProductById);
+router.put("/products/:id", productAPI.updateProductById);
+router.delete("/products/:id", productAPI.deleteProductById);
 
 // // Order routes
-router.get("/orders", authMiddleware, orderAPI.getAllOrders);
-router.get("/orders/:id", authMiddleware, orderAPI.getOrderById);
+router.get("/orders", orderAPI.getAllOrders);
+router.get("/orders/:id", orderAPI.getOrderById);
 router.get(
   "/orders/users/:customerId",
-  authMiddleware,
+
   orderAPI.getOrdersByUserId
 );
-router.post("/orders", authMiddleware, orderAPI.createOrder);
-router.put("/orders/:id", authMiddleware, orderAPI.updateOrderById);
-router.delete("/orders/:id", authMiddleware, orderAPI.deleteOrderById);
+router.post("/orders", orderAPI.createOrder);
+router.put("/orders/:id", orderAPI.updateOrderById);
+router.delete("/orders/:id", orderAPI.deleteOrderById);
 
 // // Brand routes
-router.get("/brands", authMiddleware, brandAPI.getAllBrands);
-router.get("/brands/:id", authMiddleware, brandAPI.getBrandById);
+router.get("/brands", brandAPI.getAllBrands);
+router.get("/brands/:id", brandAPI.getBrandById);
 router.post(
   "/brands",
   multer({ storage: getStorage("brands") }).single("logo"),
@@ -135,9 +135,9 @@ router.post(
 router.put(
   "/brands/:id",
   multer({ storage: getStorage("brands") }).single("logo"),
-  authMiddleware,
+
   brandAPI.updateBrand
 );
-router.delete("/brands/:id", authMiddleware, brandAPI.deleteBrandById);
+router.delete("/brands/:id", brandAPI.deleteBrandById);
 
 module.exports = router;
