@@ -1,9 +1,9 @@
-import { QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@context/auth-context";
-import RootScenes from "./root-scenes";
 import { NavigationContainer } from "@react-navigation/native";
-import { queryClient } from "@utils/helper";
+import { QueryClientProvider } from "@tanstack/react-query";
 import theme, { navigationTheme, ThemeProvider } from "@theme";
+import { queryClient } from "@utils/helper";
+import RootScenes from "./root-scenes";
 
 export default function MainNavigation() {
   return (

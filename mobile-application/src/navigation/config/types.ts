@@ -22,6 +22,7 @@ export type BottomTabRoutes = {
 export type signInForm = {
   email: string;
   password: string;
+  device_token?: any;
 };
 
 export type signUpForm = {

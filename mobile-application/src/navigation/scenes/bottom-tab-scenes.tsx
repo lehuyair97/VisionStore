@@ -15,6 +15,7 @@ import {
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import { localImages } from "@assets/icons/images";
+import { navigate } from "@navigation/config/navigation-service";
 
 const Tab = createBottomTabNavigator<BottomTabRoutes>();
 
