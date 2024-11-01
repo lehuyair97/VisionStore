@@ -2,7 +2,6 @@
 import { Pressable, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { BuildPC, Cart, Home, Profile } from "@features/common";
-
 import { Block, Text } from "@components";
 
 import {
@@ -15,6 +14,7 @@ import {
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
 import { localImages } from "@assets/icons/images";
+import { navigate } from "@navigation/config/navigation-service";
 
 const Tab = createBottomTabNavigator<BottomTabRoutes>();
 
@@ -125,7 +125,7 @@ const BottomTabScenes = () => {
               tabBarButton: (props) => (
                 <TouchableOpacity
                   {...props}
-                  onPress={() => navigation.navigate(name)}
+                  onPress={() => navigate(name)}
                 />
               ),
             }}

@@ -27,7 +27,7 @@ exports.createUser = async (req, res) => {
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
     await saveRefreshToken(refreshToken, user._id);
-    
+
     res.status(200).json({
       isSuccess: true,
       user: user,
@@ -161,25 +161,30 @@ exports.deleteUser = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, device_token } = req.body;
 
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
-
+ 
+    // Tìm người dùng trong cơ sở dữ liệu
     const user = await User.findOne({ email });
-
+    if(device_token){
+      user.device_token = device_token
+      user.save()
+    }
+    // Nếu không tìm thấy người dùng
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // So sánh password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
+    // Tạo accessToken và refreshToken
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
     await saveRefreshToken(refreshToken, user._id);
@@ -194,6 +199,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.refreshToken = async (req, res) => {
   const { token } = req.body;
@@ -235,7 +241,7 @@ exports.logout = async (req, res) => {
 };
 
 exports.signinWithGoogle = async (req, res) => {
-  const { token } = req.body;
+  const { token, device_token } = req.body;
 
   if (!token) {
     return res.status(400).json({ message: "Google token is required" });
@@ -247,31 +253,33 @@ exports.signinWithGoogle = async (req, res) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const payload = ticket.getPayload();
-    const { email, name, picture } = payload;
-
+    const { email, name, picture } = ticket.getPayload();
     let user = await User.findOne({ email });
 
     if (!user) {
       user = await User.create({
         userName: name,
-        email: email,
+        email,
         avatar: picture,
         password: "default",
+        device_token: device_token || '',
       });
+    } else if (device_token && user.device_token !== device_token) {
+      user.device_token = device_token;
+      await user.save();
     }
 
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
-    // await saveRefreshToken(user._id, refreshToken);
 
-    res.status(200).json({
+    return res.status(200).json({
       isSuccess: true,
-      user: user,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
+      user,
+      accessToken,
+      refreshToken,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error during Google sign-in:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };

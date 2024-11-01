@@ -30,13 +30,12 @@ const useSignInGoogle = () => {
     isPending: submitting,
     isError,
   } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (device_token: string) => {
       const token = await getToken();
-      console.log(token);
       const res = (await api({
         url: REQUEST_URL.SIGN_IN_WITH_GOOGLE,
         method: "POST",
-        data: { token: token },
+        data: { token: token, device_token: device_token  },
       })) as signInReponse;
       return res;
     },
