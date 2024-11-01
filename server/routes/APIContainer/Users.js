@@ -161,29 +161,40 @@ exports.deleteUser = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
+    const { email, password, device_token } = req.body;
+    console.log(req.body)
+    // Kiểm tra email và password có tồn tại không
     if (!email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
+    // Tìm người dùng trong cơ sở dữ liệu
     const user = await User.findOne({ email });
 
+    // Nếu không tìm thấy người dùng
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // So sánh password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
+    // Tạo accessToken và refreshToken
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
     await saveRefreshToken(refreshToken, user._id);
 
+    // Cập nhật device_token vào thông tin người dùng
+    if (device_token) {
+      console.log(device_token)
+      user.device_token = device_token; // Lưu device_token vào user
+      await user.save(); // Lưu thay đổi vào cơ sở dữ liệu
+    }
+
+    // Gửi phản hồi cho người dùng
     res.status(200).json({
       isSuccess: true,
       user: user,
@@ -194,6 +205,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.refreshToken = async (req, res) => {
   const { token } = req.body;

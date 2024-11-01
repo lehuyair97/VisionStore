@@ -57,10 +57,8 @@ function Signin({ navigation }) {
     }
   };
 
-  useNotifications(); // Giả sử useNotifications đã đăng ký listener cho FCM
   const handleSendNotification = async () => {
     const token = await messaging().getToken();
-    // Gọi submitPushNotification chỉ một lần
     const response = await submitPushNotification({
       title: "Just One",
       body: "Working now",
@@ -145,7 +143,7 @@ function Signin({ navigation }) {
         <GoogleSigninButton
           size={GoogleSigninButton.Size.Standard}
           color={GoogleSigninButton.Color.Dark}
-          onPress={() => handleSendNotification()}
+          onPress={() => handleSignIn('google')}
         />
       </Block>
     </MainContainer>

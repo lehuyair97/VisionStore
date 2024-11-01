@@ -63,9 +63,10 @@ exports.getProductById = async (req, res) => {
 exports.getProductsByBrandId = async (req, res) => {
   const { categoryId, brandId } = req.query;
   const filter = {};
+
   if (categoryId) filter.category_id = categoryId;
   if (brandId) filter.brand = brandId;
-
+  console.log(categoryId)
   try {
     const products = await Product.find(filter);
 
