@@ -11,7 +11,7 @@ const orderAPI = require("./APIContainer/Order");
 const brandAPI = require("./APIContainer/Brand");
 const subCategoryAPI = require("./APIContainer/SubCategory");
 const authMiddleware = require("../middleware/authMiddleware");
-
+const notificationAPI = require("./APIContainer/notification");
 // Sử dụng body-parser để phân tích dữ liệu từ form
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -57,6 +57,7 @@ router.get("/images/brands/:filename", (req, res) => {
 //Token routes
 router.post("/refreshtoken", userAPI.refreshToken);
 
+router.post("/send-notification", notificationAPI.pushNotification);
 // // Users Controller
 router.post(
   "/users/upload",
@@ -99,13 +100,11 @@ router.delete(
 router.get("/products", productAPI.getAllProducts);
 router.get(
   "/productsgrouped",
-
   productAPI.getAllProductsGroupedByBrand
 );
 router.get("/products/:id", productAPI.getProductById);
 router.get(
-  "/products?categoryId=:id&brandId=:id",
-
+  "/products-brands",
   productAPI.getProductsByBrandId
 );
 router.post("/products", productAPI.createProduct);

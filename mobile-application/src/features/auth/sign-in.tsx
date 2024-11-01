@@ -44,7 +44,7 @@ function Signin({ navigation }) {
     console.log(userForm)
     if (Object.keys(errors).length === 0) {
       const { accessToken, isSuccess, refreshToken, user } =
-        type === "normal" ? await submit(userForm) : await signInByGoogle();
+        type === "normal" ? await submit(userForm) : await signInByGoogle(token);
       if (isSuccess) {
         handleLoginSuccess({
           accessToken: accessToken,
@@ -57,16 +57,14 @@ function Signin({ navigation }) {
     }
   };
 
-  useNotifications(); // Giả sử useNotifications đã đăng ký listener cho FCM
   const handleSendNotification = async () => {
     const token = await messaging().getToken();
-    // Gọi submitPushNotification chỉ một lần
     const response = await submitPushNotification({
       title: "Just One",
       body: "Working now",
       token,
     });
-    console.log("Notification Response:", response); // Kiểm tra phản hồi để đảm bảo không có lỗi
+    console.log("Notification Response:", response);
   };
 
   return (
@@ -145,7 +143,7 @@ function Signin({ navigation }) {
         <GoogleSigninButton
           size={GoogleSigninButton.Size.Standard}
           color={GoogleSigninButton.Color.Dark}
-          onPress={() => handleSendNotification()}
+          onPress={() => handleSignIn('google')}
         />
       </Block>
     </MainContainer>
