@@ -3,6 +3,7 @@ import { Auth, Common } from "../../features";
 import { createEnum } from "./types";
 import BottomTabScenes from "@navigation/scenes/bottom-tab-scenes";
 import DetailProduct from "@features/common/detail_product/detail_product";
+import Search from "@features/common/search/page/search";
 
 export const notLoggedInScreens = {
   Signin: Auth.Signin,
@@ -14,6 +15,7 @@ export const loggedInScreens = {
   BottomTab: BottomTabScenes,
   Payment: Payment,
   DetailProduct: DetailProduct,
+  Search: Search,
 };
 
 export const ROUTES = createEnum({
@@ -24,4 +26,5 @@ export const ROUTES = createEnum({
   //Common Routes
   Home: "Home",
   DetailProduct:"DetailProduct",
+  Search: "Search",
 });

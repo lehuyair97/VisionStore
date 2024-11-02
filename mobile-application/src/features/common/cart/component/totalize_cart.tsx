@@ -8,14 +8,17 @@ import { useNavigation } from '@react-navigation/native'; // Thêm dòng này
 
 interface TotalizeCartProps {
   onPress?: () => void;
+  onSelectAll?: (selectAll: boolean) => void;
+  totalPrice: number;
 }
-const TotalizeCart = ({onPress}: TotalizeCartProps) => {
+const TotalizeCart = ({onPress, onSelectAll, totalPrice}: TotalizeCartProps) => {
     const navigation = useNavigation();
   const [isAllSelected, setIsAllSelected] = useState(false);
 
   const toggleSelectAll = () => {
-    setIsAllSelected(!isAllSelected);
-    // Thêm logic để chọn tất cả các sản phẩm
+    const newSelectAllState = !isAllSelected;
+    setIsAllSelected(newSelectAllState);
+    onSelectAll && onSelectAll(newSelectAllState);
   };
 
   return (
@@ -33,13 +36,13 @@ const TotalizeCart = ({onPress}: TotalizeCartProps) => {
       </TouchableOpacity>
       <Block flex={1}/>
       <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Tổng cộng: <Text style={styles.price}>0 đ</Text></Text>
+        <Text style={styles.totalText}>Tổng cộng: <Text style={styles.price}>{totalPrice} đ</Text></Text>
         <Block mt={"_5"}/>
         <Text style={styles.shippingText}>phí vận chuyển 0 đ</Text>
       </View>
       <Block m={"_10"}/>
       <TouchableOpacity onPress={onPress} style={styles.button}>
-        <Text style={styles.buttonText}>Thanh toán(0)</Text>
+        <Text style={styles.buttonText}>Thanh toán</Text>
       </TouchableOpacity>
     </Block>
   );

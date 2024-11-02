@@ -8,6 +8,9 @@ import { ScrollView } from "react-native-virtualized-view";
 import Text from "@components/text";
 import ImgDetail from "./img_detail";
 import CustomItem from "./custom_item";
+import { useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import useProductDetail from "@hooks/common/use-get-product-detail";
 
 type Item = {
     id: number;
@@ -31,53 +34,67 @@ const dataCustomItem2 = [
     {  name: "512 GB" },
     {  name: "1 TB" },
 ]
-const DetailProduct = () => (
-    <MainContainer style={{flex: 1, backgroundColor: Colors.background_fit_finder}} edges={EDGES.LEFT_RIGHT}>
-        <Block marginTop={"_5"} />
-        <AppBar 
-        iconLeft = {true}
-        iconRight = {true}
-        iconRightName = "share"
-        colorIconLeft = {Colors.black}
-        colorIconRight = {Colors.black}
-        isBackground = {false}
-        />
-        <ScrollView
-        style={{flex: 1, paddingHorizontal: 26}}
-        >
-            <ImgDetail width={285} height={285}/>
-            <Block marginTop={"_20"} alignSelf={"center"}/>
-            <FlatList
-                    data={data}
-                    horizontal={true}
-                    renderItem={({item}) => (
-                    <ImgDetail width={44} height={44} source={item.image} isBackground={true}/>
-                    )}
-                    ItemSeparatorComponent={() => <Block style={{ width: 15 }} />} 
-                    contentContainerStyle={{ justifyContent: 'center', flexGrow: 1 }} 
-                />
-                <Block marginTop={"_20"}/>
-                <Row center>
-                    <Text fontSize={29} fontWeight={"bold"} color="black2A">
-                        MacBook Air M1
+type DetailProductParams = {
+    DetailProduct: {
+    productId: string;
+    };
+};
+
+const DetailProduct = () => {
+    const route = useRoute<RouteProp<DetailProductParams, 'DetailProduct'>>();
+    const { productId } = route.params;
+    console.log("productId", productId);
+    const { data: productDetail, isPending, error, isLoading } = useProductDetail(productId);
+    console.log("productDetail", productDetail);
+
+    return (
+        <MainContainer style={{flex: 1, backgroundColor: Colors.background_fit_finder}} edges={EDGES.LEFT_RIGHT}>
+            <Block marginTop={"_5"} />
+            <AppBar 
+            iconLeft = {true}
+            iconRight = {true}
+            iconRightName = "share"
+            colorIconLeft = {Colors.black}
+            colorIconRight = {Colors.black}
+            isBackground = {false}
+            />
+            <ScrollView
+            style={{flex: 1, paddingHorizontal: 26}}
+            >
+                <ImgDetail width={285} height={285} source={productDetail?.image}/>
+                <Block marginTop={"_20"} alignSelf={"center"}/>
+                <FlatList
+                        data={data}
+                        horizontal={true}
+                        renderItem={({item}) => (
+                        <ImgDetail width={44} height={44} source={item.image} isBackground={true}/>
+                        )}
+                        ItemSeparatorComponent={() => <Block style={{ width: 15 }} />} 
+                        contentContainerStyle={{ justifyContent: 'center', flexGrow: 1 }} 
+                    />
+                    <Block marginTop={"_20"}/>
+                    <Row center>
+                        <Text fontSize={29} fontWeight={"bold"} color="black2A">
+                            {productDetail?.name}
+                        </Text>
+                        <Block width={5}/>
+                        <Text fontSize={12} fontWeight={"300"} color="black2A">
+                            2021
+                        </Text>
+                    </Row>
+                    <Block marginTop={"_10"}/>
+                    <Text fontSize={21} fontWeight={"300"} color="blue_500">
+                    {productDetail?.price}
                     </Text>
-                    <Block width={5}/>
-                    <Text fontSize={12} fontWeight={"300"} color="black2A">
-                        2021
-                    </Text>
-                </Row>
-                <Block marginTop={"_10"}/>
-                <Text fontSize={21} fontWeight={"300"} color="blue_500">
-                Rp 20.999.000
-                </Text>
-                <Block marginTop={"_20"}/>
-                <CustomItem data={dataCustomItem} title="WARNA" isRow={true}/>
-                <Block marginTop={"_20"}/>
-                <CustomItem data={dataCustomItem2} title="PENYIMPANAN" />
-                <Block height={100}/>
-        </ScrollView>
-    </MainContainer>
-);
+                    <Block marginTop={"_20"}/>
+                    <CustomItem data={dataCustomItem} title="WARNA" isRow={true}/>
+                    <Block marginTop={"_20"}/>
+                    <CustomItem data={dataCustomItem2} title="PENYIMPANAN" />
+                    <Block height={100}/>
+            </ScrollView>
+        </MainContainer>
+    );
+};
 
 const styles = StyleSheet.create({
 

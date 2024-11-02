@@ -17,6 +17,9 @@ export type BottomTabRoutes = {
   ProfileStack: {
     Profile: undefined;
   };
+  DetailProduct: {
+    productId: string;
+  };
 };
 
 export type signInForm = {

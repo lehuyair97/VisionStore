@@ -39,7 +39,7 @@ export interface Product {
 
 const useGetProductByBrandID = (variables: getProductByBrandType) => {
   return useQuery({
-    queryKey: ["category"],
+    queryKey: ["useGetProductByBrandID", variables],
     queryFn: async () => {
       return (await api({
         url: REQUEST_URL.GET_PRODUCT_BY_BRAND_ID(variables),
