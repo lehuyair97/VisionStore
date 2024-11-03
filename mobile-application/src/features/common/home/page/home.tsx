@@ -31,6 +31,7 @@ const iconMap: { [key: string]: string } = {
 
 
 export default function Home() {
+
   const { data: category, isLoading, error } = useCategory();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedIdBrand, setSelectedIdBrand] = useState<string | null>(null);
@@ -72,7 +73,8 @@ export default function Home() {
 
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
-  if (!category || category.length === 0) return <Text>No categories available</Text>;
+  if (!category || category.length === 0)
+    return <Text>No categories available</Text>;
 
   const data = category.map((item: Category) => ({
     id: item._id,

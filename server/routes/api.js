@@ -12,6 +12,10 @@ const brandAPI = require("./APIContainer/Brand");
 const subCategoryAPI = require("./APIContainer/SubCategory");
 const authMiddleware = require("../middleware/authMiddleware");
 const notificationAPI = require("./APIContainer/notification");
+const voucherAPI = require("./APIContainer/Voucher");
+const commentAPI = require("./APIContainer/Comment");
+const messageAPI = require("./APIContainer/Message");
+
 // Sử dụng body-parser để phân tích dữ liệu từ form
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -84,20 +88,22 @@ router.delete("/category/:id", categoryAPI.deleteCategoryById);
 router.get("/subcategory", subCategoryAPI.getAllSubCategories);
 router.get("/subcategory/:id", subCategoryAPI.getSubCategoryById);
 router.post("/subcategory", subCategoryAPI.createSubCategory);
-router.put("/subcategory/:id", subCategoryAPI.updateSubCategoryById);
-router.delete("/subcategory/:id", subCategoryAPI.deleteSubCategoryById);
+router.put(
+  "/subcategory/:id",
 
+  subCategoryAPI.updateSubCategoryById
+);
+router.delete("/subcategory/:id", subCategoryAPI.deleteSubCategoryById);
+router.get(
+  "/subcategory/category/:categoryId",
+  subCategoryAPI.getSubCategoryByCategoryId
+);
+router.get("/subcategory/type/:type", subCategoryAPI.getSubCategoryByType);
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
-router.get(
-  "/productsgrouped",
-  productAPI.getAllProductsGroupedByBrand
-);
+router.get("/productsgrouped", productAPI.getAllProductsGroupedByBrand);
 router.get("/products/:id", productAPI.getProductById);
-router.get(
-  "/products-brands",
-  productAPI.getProductsByBrandId
-);
+router.get("/products-brands", productAPI.getProductsByBrandId);
 router.post("/products", productAPI.createProduct);
 router.put("/products/:id", productAPI.updateProductById);
 router.delete("/products/:id", productAPI.deleteProductById);
@@ -124,5 +130,23 @@ router.put(
   brandAPI.updateBrand
 );
 router.delete("/brands/:id", brandAPI.deleteBrandById);
+
+// // Voucher routes
+router.post("/voucher", voucherAPI.createVoucher);
+router.get("/active-voucher", voucherAPI.getAllActiveVouchers);
+router.get("/voucher", voucherAPI.getAllVouchers);
+router.post("/use-voucher", voucherAPI.useVoucher);
+
+// // comment routes
+router.post("/comment", commentAPI.addComment);
+router.get("/comment/:id", commentAPI.getCommentById);
+router.get("/comment-by-product/:productID", commentAPI.getCommentsByProductID);
+
+// // message routes
+router.post("/message", messageAPI.sendMessage);
+router.get("/messages/:userId", messageAPI.getMessagesByUserId);
+router.delete("/message/:id", messageAPI.deleteMessage);
+router.put("/message/:id", messageAPI.updateMessage);
+router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
 
 module.exports = router;

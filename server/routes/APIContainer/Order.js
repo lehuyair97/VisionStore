@@ -1,5 +1,5 @@
 const orderModel = require("../../models/orderModel");
-const authenticateToken = require('../../middleware/authMiddleware');
+const voucherModel = require("../../models/voucherModel");
 
 exports.getAllOrders = async (req, res) => {
   try {
@@ -12,20 +12,20 @@ exports.getAllOrders = async (req, res) => {
 
 exports.getOrderById = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const order = await orderModel.findById({_id: id});
+    const { id } = req.params;
+    const order = await orderModel.findById({ _id: id });
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
     res.status(200).json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 exports.getOrdersByUserId = async (req, res) => {
   try {
-    const { customerId } = req.params; 
+    const { customerId } = req.params;
     const orders = await orderModel.find({ customerId: customerId });
     res.status(200).json({ data: orders });
   } catch (error) {
@@ -34,9 +34,13 @@ exports.getOrdersByUserId = async (req, res) => {
 };
 
 exports.createOrder = async (req, res) => {
+  const { voucherID } = req.body;
   try {
-    const newOrder = await orderModel.create(req.body); 
-    res.status(201).json({ data: newOrder }); 
+    const newOrder = await orderModel.create(req.body);
+    res.status(201).json({ data: newOrder });
+    if (voucherID) {
+      await voucherModel.findByIdAndDelete(voucherID);
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -44,12 +48,14 @@ exports.createOrder = async (req, res) => {
 
 exports.updateOrderById = async (req, res) => {
   try {
-    const { _id } = req.params; 
-    const updatedOrder = await orderModel.findByIdAndUpdate(_id, req.body, { new: true });
+    const { _id } = req.params;
+    const updatedOrder = await orderModel.findByIdAndUpdate(_id, req.body, {
+      new: true,
+    });
     if (!updatedOrder) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
-    res.status(200).json(updatedOrder); 
+    res.status(200).json(updatedOrder);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -57,10 +63,10 @@ exports.updateOrderById = async (req, res) => {
 
 exports.deleteOrderById = async (req, res) => {
   try {
-    const { _id } = req.params; 
+    const { _id } = req.params;
     const deletedOrder = await orderModel.findByIdAndDelete(_id);
     if (!deletedOrder) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
     res.status(204).end();
   } catch (error) {

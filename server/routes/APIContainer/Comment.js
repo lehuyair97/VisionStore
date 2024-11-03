@@ -1,4 +1,3 @@
-// controllers/commentController.js
 const Comment = require("./../../models/commentModel");
 const { broadcast } = require("./../../config/websocket");
 
@@ -7,7 +6,8 @@ exports.addComment = async (req, res) => {
   try {
     const newComment = new Comment({ productID, userID, text, images });
     await newComment.save();
-    broadcast({ type: "NEW_COMMENT", comment: newComment });
+    // Gửi thông báo tới tất cả client rằng đã có comment mới
+    broadcast("comment", { type: "NEW_COMMENT", comment: newComment });
     res.status(201).json(newComment);
   } catch (error) {
     res.status(500).json({ message: error.message });

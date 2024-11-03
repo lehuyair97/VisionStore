@@ -13,7 +13,10 @@ const paymentTransactionsSchema = new mongoose.Schema({
   paymentStatus: { type: String, required: true },
   paymentReference: { type: String },
 });
-
+const Role = {
+  CLIENT: "client",
+  ADMIN: "admin",
+};
 const addressSchema = new mongoose.Schema({
   location: String,
   detail: String,
@@ -34,6 +37,11 @@ const userSchema = new mongoose.Schema({
   payment_transaction: [paymentTransactionsSchema],
   device_token: { type: String },
   createdAt: { type: Date, default: Date.now },
+  role: {
+    type: String,
+    enum: Object.values(Role),
+    default: Role.CLIENT,
+  },
 });
 
 const User = mongoose.model("User", userSchema);

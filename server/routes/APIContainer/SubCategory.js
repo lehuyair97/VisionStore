@@ -13,7 +13,7 @@ exports.getSubCategoryById = async (req, res) => {
   try {
     const subCategory = await SubCategory.findById(req.params.id); // Lấy subcategory theo ID
     if (!subCategory) {
-      return res.status(404).json({ message: 'SubCategory not found' });
+      return res.status(404).json({ message: "SubCategory not found" });
     }
     res.status(200).json(subCategory);
   } catch (error) {
@@ -32,9 +32,13 @@ exports.createSubCategory = async (req, res) => {
 
 exports.updateSubCategoryById = async (req, res) => {
   try {
-    const subCategory = await SubCategory.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Cập nhật subcategory theo ID
+    const subCategory = await SubCategory.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    ); // Cập nhật subcategory theo ID
     if (!subCategory) {
-      return res.status(404).json({ message: 'SubCategory not found' });
+      return res.status(404).json({ message: "SubCategory not found" });
     }
     res.status(200).json(subCategory);
   } catch (error) {
@@ -46,9 +50,41 @@ exports.deleteSubCategoryById = async (req, res) => {
   try {
     const subCategory = await SubCategory.findByIdAndDelete(req.params.id); // Xóa subcategory theo ID
     if (!subCategory) {
-      return res.status(404).json({ message: 'SubCategory not found' });
+      return res.status(404).json({ message: "SubCategory not found" });
     }
     res.status(204).end(); // Trả về 204 No Content
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getSubCategoryByCategoryId = async (req, res) => {
+  const { categoryId } = req.params;
+  try {
+    const subCategories = await SubCategory.find({
+      categoryID: categoryId,
+    }); 
+    if (!subCategories.length) {
+      return res
+        .status(404)
+        .json({ message: "No subcategories found for this category" });
+    }
+    res.status(200).json(subCategories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getSubCategoryByType = async (req, res) => {
+  const { type } = req.params;
+  try {
+    const subCategories = await SubCategory.find({ sub_category_type: type });
+    if (!subCategories.length) {
+      return res
+        .status(404)
+        .json({ message: "No subcategories found for this type" });
+    }
+    res.status(200).json(subCategories);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

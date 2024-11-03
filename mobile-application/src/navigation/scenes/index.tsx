@@ -6,15 +6,21 @@ import { queryClient } from "@utils/helper";
 import RootScenes from "./root-scenes";
 
 import { navigationRef } from "@navigation/config/navigation-service";
+import { CommonProvider } from "@context/common-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 export default function MainNavigation() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <NavigationContainer theme={navigationTheme} ref={navigationRef}>
-            <RootScenes />
-          </NavigationContainer>
-        </ThemeProvider>
+        <CommonProvider>
+          <GestureHandlerRootView>
+            <ThemeProvider theme={theme}>
+              <NavigationContainer theme={navigationTheme} ref={navigationRef}>
+                <RootScenes/>
+              </NavigationContainer>
+            </ThemeProvider>
+          </GestureHandlerRootView>
+        </CommonProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

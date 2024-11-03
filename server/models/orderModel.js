@@ -40,6 +40,10 @@ const orderModel = new mongoose.Schema({
     type: String,
     default: () => moment().format("dddd, DD/MM/YYYY HH:mm:ss"),
   },
+  voucher: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Voucher' 
+}
 });
 
 const Order = mongoose.model("Order", orderModel);

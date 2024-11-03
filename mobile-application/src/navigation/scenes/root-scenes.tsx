@@ -9,7 +9,7 @@ export default function RootScenes() {
   const { authenticationStatus } = useAuth();
   const isAuth = authenticationStatus === "AUTHENTICATED";
   const screens = !isAuth ? notLoggedInScreens : loggedInScreens;
-  useNotifications(); 
+  useNotifications();
 
   return (
     <Navigator>

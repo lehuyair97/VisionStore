@@ -36,6 +36,8 @@ export const REQUEST_URL = {
   DELETE_CATEGORY: (id) => `/category/${id}`,
   GET_ALL_SUBCATEGORIES: "/subcategory",
   GET_SUBCATEGORY_BY_ID: (id) => `/subcategory/${id}`,
+  GET_SUBCATEGORIES_BY_CATEGORY_ID: (categoryId) => `/subcategory/category/${categoryId}`,
+  GET_SUBCATEGORIES_BY_TYPE: (type) => `/subcategory/type/${type}`,
   CREATE_SUBCATEGORY: "/subcategory",
   UPDATE_SUBCATEGORY: (id) => `/subcategory/${id}`,
   DELETE_SUBCATEGORY: (id) => `/subcategory/${id}`,
@@ -54,6 +56,11 @@ export const REQUEST_URL = {
   CREATE_ORDER: "/orders",
   UPDATE_ORDER: (id) => `/orders/${id}`,
   DELETE_ORDER: (id) => `/orders/${id}`,
+  GET_ACTIVE_VOUCHERS: "/active-voucher",
+  GET_VOUCHERS: "/voucher",
+  USE_VOUCHER: (code, userID) => `/use-voucher?code=${code}&userID=${userID}`,
+  ADD_COMMENT: (productID) => `/comment?productID=${productID}`,
+  GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
 };
 
 const BASE_URL =

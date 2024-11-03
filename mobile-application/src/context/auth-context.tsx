@@ -74,6 +74,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshToken = async () => {
     const refreshToken = await getRefreshToken();
+    console.log(refreshToken);
     const { accessToken } = await submitRefreshToken(refreshToken);
     if (accessToken) {
       setAccessToken(accessToken);
@@ -83,11 +84,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const handleLoginSuccess = useCallback(
-    (data: { accessToken: string; user: User }) => {
+    (data: { accessToken: string; refreshToken: string; user: User }) => {
       setAccessToken(data?.accessToken);
       setUserInfo(data?.user);
       setAuthenticationStatus("AUTHENTICATED");
       setAccessTokenStorage(data?.accessToken);
+      setRefreshTokenStorage(data?.refreshToken);
       setUserInfoStorage(data?.user);
     },
     []
