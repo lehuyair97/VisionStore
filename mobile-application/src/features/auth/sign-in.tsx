@@ -1,5 +1,5 @@
 import { Image } from "react-native";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { MainContainer, Input, Block, Button, Text, Row } from "@components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,16 +9,20 @@ import { EDGES } from "@utils/helper";
 import { localImages } from "@assets/icons/images";
 import { useAuth, useSignIn } from "@hooks/auth";
 import theme from "@theme";
+import messaging from "@react-native-firebase/messaging";
 
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import useSignInGoogle from "@hooks/auth/use-signin-google";
 import { ROUTES } from "@navigation/config/routes";
+import usePushNotification, {
+  useNotifications,
+} from "@hooks/root/use-push-notification";
 
 function Signin({ navigation }) {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
   const { submit: signInByGoogle } = useSignInGoogle();
-
+  const { submit: submitPushNotification } = usePushNotification();
   const {
     control,
     getValues,
@@ -33,10 +37,14 @@ function Signin({ navigation }) {
   });
 
   const handleSignIn = async (type: "normal" | "google") => {
+    console.log('ihi')
+    const token = await messaging().getToken();
     const data = getValues();
+    const userForm = {...data,...{device_token: token}}
+    console.log(userForm)
     if (Object.keys(errors).length === 0) {
       const { accessToken, isSuccess, refreshToken, user } =
-        type === "normal" ? await submit(data) : await signInByGoogle();
+        type === "normal" ? await submit(userForm) : await signInByGoogle(token);
       if (isSuccess) {
         handleLoginSuccess({
           accessToken: accessToken,
@@ -47,6 +55,16 @@ function Signin({ navigation }) {
     } else {
       console.log("Errors:", errors);
     }
+  };
+
+  const handleSendNotification = async () => {
+    const token = await messaging().getToken();
+    const response = await submitPushNotification({
+      title: "Just One",
+      body: "Working now",
+      token,
+    });
+    console.log("Notification Response:", response);
   };
 
   return (
@@ -116,7 +134,7 @@ function Signin({ navigation }) {
             Bạn đã có tài khoản?
           </Text>
           <Button
-            onPress={()=>navigation.navigate(ROUTES.SignUp)}
+            onPress={() => navigation.navigate(ROUTES.SignUp)}
             label="Đăng ký"
             noneStyle
             textStyle={{ color: theme.colors.primary, fontWeight: "bold" }}
@@ -125,7 +143,7 @@ function Signin({ navigation }) {
         <GoogleSigninButton
           size={GoogleSigninButton.Size.Standard}
           color={GoogleSigninButton.Color.Dark}
-          onPress={() => handleSignIn("google")}
+          onPress={() => handleSendNotification()}
         />
       </Block>
     </MainContainer>

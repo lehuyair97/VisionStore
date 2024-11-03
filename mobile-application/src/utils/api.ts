@@ -10,6 +10,7 @@ import axios from "axios";
 export const CLIENT_ID = "";
 
 export const REQUEST_URL = {
+  PUSH_NOTIFICATION: "/send-notification",
   REFRESH_TOKEN: "/refreshtoken",
   SIGN_IN: "/login",
   SIGN_IN_WITH_GOOGLE: "/sign-in-google",
@@ -52,7 +53,8 @@ export const REQUEST_URL = {
   DELETE_ORDER: (id) => `/orders/${id}`,
 };
 
-const BASE_URL = "http://192.168.1.2:3000/api";
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.36:3000/api";
 
 export type AxiosParams = {
   url: string;
