@@ -13,7 +13,7 @@ const Payment = () => {
     return (
         <MainContainer edges={EDGES.LEFT_RIGHT} >
             <Block backgroundColor={"gray_profile"} flex={1}>
-                <AppBar title="Thanh toán"  />
+                <AppBar title="Thanh toán" isBackground />
                 <Block m={"_10"}/>
                 <Address />
                 <Block m={"_10"}/>

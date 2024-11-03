@@ -1,11 +1,9 @@
 import { Block, Button, Icon, MainContainer, Row, Text } from "@components";
 import { EDGES } from "@utils/helper";
-import TextHome from "../component/text_home";
 import AppBar from "../component/appbar";
 import Banner from "../component/banner";
 import FitFinder from "../component/fit_finder";
 import FitAdvisor from "../component/fit_advisor";
-import ListMac from "../component/product-grouped";
 import { ScrollView } from "react-native-virtualized-view";
 import useCategory, { Category } from "@hooks/common/use-category";
 import useBrand from "@hooks/common/use-get-brand";
@@ -36,6 +34,7 @@ export default function Home() {
   const { data: category, isLoading, error } = useCategory();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedIdBrand, setSelectedIdBrand] = useState<string | null>(null);
+  console.log("selectedIdBrand", selectedIdBrand)
 
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
@@ -81,9 +80,6 @@ export default function Home() {
     icon: iconMap[item.name] || "home",
   }));
 
-  const selectedCategoryName = selectedId
-    ? category.find((item: Category) => item._id === selectedId)?.name
-    : null;
 
   const selectedBrandName = selectedIdBrand
     ? dataBrand.find((brand) => brand._id === selectedIdBrand)?.name
@@ -106,6 +102,13 @@ export default function Home() {
     return acc;
   }, []);
 
+  const handleNavigateToDetailBrand = (id: string, brandName: string) => {
+    navigation.navigate(ROUTES.DetailBrand as keyof ParamListBase, {
+      brandId: id,
+      brandName: brandName
+    });
+  };
+
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
@@ -125,12 +128,14 @@ export default function Home() {
               <ProductGrouped 
                 data={dataProductsCategory} 
                 handleNavigateToDetailProduct={handleNavigateToDetailProduct} 
+                handleNavigateToDetailBrand={handleNavigateToDetailBrand}  
               /> 
               : <Text>Không có sản phẩm</Text>)
           : <ProductBrand 
               data={mergedProducts} 
               selectedBrandName={selectedBrandName} 
               handleNavigateToDetailProduct={handleNavigateToDetailProduct} 
+              handleNavigateToDetailBrand={handleNavigateToDetailBrand}
             />
         }
       </ScrollView>

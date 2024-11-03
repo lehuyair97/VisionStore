@@ -16,11 +16,14 @@ export const REQUEST_URL = {
   SIGN_IN_WITH_GOOGLE: "/sign-in-google",
   CREATE_USER: "/users",
   CATEGORY: "/category",
+
+  GET_BRANDS: "/brands",
   GET_CART: "/orders",
+  SEARCH: "/products/search",
+
   CREATE_USER_WITH_IMAGE: "/users/upload",
   GET_ALL_USERS: "/users",
-  GET_BRANDS: "/brands",
-  SEARCH: "/products/search",
+
   GET_USER_BY_ID: (id) => `/users/${id}`,
   CHANGE_PASSWORD: (id) => `/change_pw/${id}`,
   UPDATE_FAVORITE: (id) => `/favorites/${id}`,
@@ -39,7 +42,7 @@ export const REQUEST_URL = {
   GET_ALL_PRODUCTS: "/products",
   GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
   GET_PRODUCT_BY_BRAND_ID: ({ categoryID, brandID }) =>
-    `/products?categoryId=${categoryID}&brandId=${brandID}`,
+    `/products-brands?categoryId=${categoryID}&brandId=${brandID}`,
   GET_PRODUCT_GROUPED: (categoryId: string) =>
     `/productsgrouped?categoryId=${categoryId}`,
   CREATE_PRODUCT: "/products",
@@ -54,7 +57,7 @@ export const REQUEST_URL = {
 };
 
 const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.36:3000/api";
+  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.2:3000/api";
 
 export type AxiosParams = {
   url: string;

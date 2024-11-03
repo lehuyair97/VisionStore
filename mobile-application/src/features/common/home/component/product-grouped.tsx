@@ -5,41 +5,34 @@ import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react
 import TextHome from "./text_home";
 import { Row } from "@components";
 import { localImages } from "@assets/icons/images";
+import { Product } from "@hooks/common/use-get-product-by-brand";
 
-interface Product {
-  _id: string;
-  image: string;
-  warrantyPeriod: string;
-  name: string;
-  price: number | string;
-}
+
+
 
 interface ListMacProps {
-  handleNavigateToDetailProduct: (id: string) => void;
+  handleNavigateToDetailProduct: (id: string, brand: string) => void;
+  handleNavigateToDetailBrand: (id: string, brand: string) => void;
   data: { 
     brand: string;
     products: Product[];
-  }[];
+  }[] | any;
 }
 
-const ProductGrouped = ({ data, handleNavigateToDetailProduct }: ListMacProps) => {
+const ProductGrouped = ({ data, handleNavigateToDetailProduct, handleNavigateToDetailBrand }: ListMacProps) => {
   const [imageError, setImageError] = React.useState(true);
   
   const renderItem = React.useCallback(({ item }: { item: Product }) => (
-    <TouchableOpacity onPress={() => handleNavigateToDetailProduct(item._id)}>
+    <TouchableOpacity onPress={() => handleNavigateToDetailProduct(item._id, item.brand)}>
       <View style={{ marginHorizontal: 10 }}>
         <View style={styles.itemContainer}>
-          {imageError ? (
-            <View >
-              <Image source={localImages().ic_mac} style={styles.image} />
-            </View>
-          ) : (
+
             <Image
               source={{ uri: item.image }}
               style={styles.image}
               onError={() => setImageError(true)}
             />
-          )}
+          
           <Block style={styles.block_text}>
             <Text style={styles.year}>{item.warrantyPeriod}</Text>
           </Block>
@@ -60,7 +53,7 @@ const ProductGrouped = ({ data, handleNavigateToDetailProduct }: ListMacProps) =
         <View key={index}>
           <Row between style={{ paddingHorizontal: 4 }}>
             <TextHome>{item.brand}</TextHome>
-            <Text style={{ color: Colors.primary, fontWeight: "light", fontSize: 12 }}>xem thêm</Text>
+            <Text style={{ color: Colors.primary, fontWeight: "light", fontSize: 12 }} onPress={() => handleNavigateToDetailBrand(item.products[0].brand, item.brand)}>xem thêm</Text>
           </Row>
           <Block height={3} />
           <FlatList
@@ -69,6 +62,8 @@ const ProductGrouped = ({ data, handleNavigateToDetailProduct }: ListMacProps) =
             renderItem={renderItem}
             keyExtractor={item => item._id}
             contentContainerStyle={styles.listContainer} // Style cho FlatList
+            showsHorizontalScrollIndicator={false} // Ẩn thanh cuộn ngang
+
           />
         </View>
       ))}

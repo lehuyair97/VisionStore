@@ -113,3 +113,25 @@ exports.deleteProductById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.searchProducts = async (req, res) => {
+  try {
+    const { name } = req.body; // Lấy tên từ body của yêu cầu
+    const filter = {};
+
+    if (name) {
+      filter.name = { $regex: name, $options: 'i' }; // Tìm kiếm không phân biệt chữ hoa chữ thường
+    }
+
+    // Chỉ tìm kiếm theo tên, không sử dụng _id
+    const products = await Product.find(filter);
+
+    if (!products.length) {
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error searching products:', error); // Ghi lại lỗi chi tiết
+    res.status(500).json({ message: error.message });
+  }
+};

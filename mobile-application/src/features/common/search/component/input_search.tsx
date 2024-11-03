@@ -1,22 +1,41 @@
-import { Icons } from '@assets/icons';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Icon } from '@components';
 import Colors from '@theme/colors';
-import React from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 
-const InputSearch = ({searchTerm, setSearchTerm, onSearch}: {searchTerm: string, setSearchTerm: (searchTerm: string) => void, onSearch: () => void}) => {
+const InputSearch = ({ searchTerm, setSearchTerm, onSearch }: { searchTerm: string, setSearchTerm: (searchTerm: string) => void, onSearch: () => void }) => {
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  const previousSearchTerm = useRef(searchTerm);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (debouncedSearchTerm.trim() && debouncedSearchTerm !== previousSearchTerm.current) {
+        onSearch();
+        previousSearchTerm.current = debouncedSearchTerm;
+      }
+    }, 600);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [debouncedSearchTerm, onSearch]);
+
+  const handleChangeText = (text: string) => {
+    setSearchTerm(text);
+    setDebouncedSearchTerm(text);
+  };
+
   return (
-
     <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder="Search"
         placeholderTextColor="#3E2723"
         value={searchTerm}
-        onChangeText={setSearchTerm}
+        onChangeText={handleChangeText}
         onSubmitEditing={onSearch}
       />
-      
+
       <Icon type="fontAwesome5" name="camera" size={20} color="#3E2723" style={styles.leftIcon} />
 
       <TouchableOpacity style={styles.rightIcon} onPress={onSearch}>
@@ -34,7 +53,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8E1E1',
     borderRadius: 10,
     margin: 10,
-
   },
   input: {
     flex: 1,

@@ -38,7 +38,6 @@ const ImgDetail = ({ width, height, source = localImages().ic_mac, isBackground 
 
     return (
         <Block 
-            marginTop={"_20"} 
             backgroundColor={isBackground ? "white255" : "transparent"} 
             height={height + 20} 
             width={width + 20} 

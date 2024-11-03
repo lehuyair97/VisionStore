@@ -8,17 +8,17 @@ import { localImages } from "@assets/icons/images";
 
 interface ListMacProps {
     handleNavigateToDetailProduct: (id: string) => void;
-    selectedBrandName: string;
+    selectedBrandName?: string;
     data: { brand: string; products: any[] }[]; // Thêm 'brand' vào đây
-
+    handleNavigateToDetailBrand: (id: string, brand: string) => void;
 }
 
-const ProductBrand = ({ data, handleNavigateToDetailProduct ,selectedBrandName}: ListMacProps) => {
-    const [imageError, setImageError] = React.useState(true);
+const ProductBrand = ({ data, handleNavigateToDetailProduct ,selectedBrandName, handleNavigateToDetailBrand}: ListMacProps) => {
+    const [imageError, setImageError] = React.useState(false);
     console.log("data", JSON.stringify(data, null, 2));
     const renderItem = ({ item, index }) => (
-        <TouchableOpacity onPress={() => handleNavigateToDetailProduct(item._id)}>
-        <View style={{ marginRight:90 }}>
+        <TouchableOpacity style={{width: '54%'}} onPress={() => handleNavigateToDetailProduct(item._id)}>
+        <View style={{ marginRight:90 , }}>
             <View style={styles.itemContainer}>
                 {imageError ? (
                     <View >
@@ -50,12 +50,15 @@ const ProductBrand = ({ data, handleNavigateToDetailProduct ,selectedBrandName}:
         <View>
             {data.map((item, index) => (
                 <View key={index}>
-                    <Row between style={{ paddingHorizontal: 4 }}>
-                        <TextHome>{selectedBrandName}</TextHome>
-                        <Text style={{ color: Colors.primary, fontWeight: "light", fontSize: 12 }}>xem thêm</Text>
-                    </Row>
+                    {selectedBrandName && (
+                        <Row between style={{ paddingHorizontal: 4 }}>
+                            <TextHome>{selectedBrandName}</TextHome>
+                            <Text style={{ color: Colors.primary, fontWeight: "light", fontSize: 12 }} onPress={() => handleNavigateToDetailBrand(item.products[0].brand, selectedBrandName)}>xem thêm</Text>
+                        </Row>
+                    )}
                     <Block height={3} />
                     <FlatList
+        
                         numColumns={2}
                         data={item.products}
                         renderItem={renderItem}

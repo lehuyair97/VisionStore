@@ -8,7 +8,7 @@ import InputSearch from "./input_search";
 
 const AppBarSearch = ({searchTerm, setSearchTerm, onSearch}: {searchTerm: string, setSearchTerm: (searchTerm: string) => void, onSearch: () => void}) => {
     return (
-        <Row  center style={{backgroundColor:Colors.background_search,paddingHorizontal:20}}>
+        <Row  center style={{backgroundColor:Colors.white255,paddingHorizontal:20}}>
             <Icon type="fontAwesome" name="chevron-left" size={20} color={Colors.black2A} />
             <Block width={"3%"}/>
             <InputSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={onSearch} />

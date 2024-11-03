@@ -3,18 +3,20 @@ import { View, Image, Dimensions } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 interface BannerProps {
+  borderRadius?: number;
+  nums?: number;
   images: any[];
 }
 
 
-const Banner = ({ images }: BannerProps) => {
+const Banner = ({ images, borderRadius=16, nums=3 }: BannerProps) => {
   const height = 135;
     return (
-      <View style={{ height: height , borderRadius:16}}>
+        <View style={{ height: height , borderRadius:borderRadius}}>
         <Swiper
             style={{ height: height }}
             autoplay
-            autoplayTimeout={3}
+            autoplayTimeout={nums}
             showsPagination
             dotColor="#90A4AE"
             activeDotColor="#FFEE58"
@@ -23,7 +25,7 @@ const Banner = ({ images }: BannerProps) => {
                 <View key={index} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Image
                         source={image}
-                        style={{ width: '100%', height: height , borderRadius:16}} // Đặt kích thước cụ thể cho ảnh
+                        style={{ width: '100%', height: height , borderRadius:borderRadius}} // Đặt kích thước cụ thể cho ảnh
                         resizeMode="cover" // Đảm bảo ảnh giữ nguyên tỷ lệ
                     />
                 </View>

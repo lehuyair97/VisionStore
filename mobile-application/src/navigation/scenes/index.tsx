@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import theme, { navigationTheme, ThemeProvider } from "@theme";
 import { queryClient } from "@utils/helper";
 import RootScenes from "./root-scenes";
+
 import { navigationRef } from "@navigation/config/navigation-service";
 export default function MainNavigation() {
   return (
