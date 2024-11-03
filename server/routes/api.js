@@ -32,7 +32,6 @@ const getStorage = (type) => {
 router.get("/images/brands/:filename", (req, res) => {
   const filename = req.params.filename;
   const imagePath = path.join(__dirname, "../uploads/users", filename);
-
   fs.access(imagePath, fs.constants.F_OK, (err) => {
     if (err) {
       return res.status(404).json({ message: "Image not found" });
@@ -85,16 +84,8 @@ router.delete("/category/:id", categoryAPI.deleteCategoryById);
 router.get("/subcategory", subCategoryAPI.getAllSubCategories);
 router.get("/subcategory/:id", subCategoryAPI.getSubCategoryById);
 router.post("/subcategory", subCategoryAPI.createSubCategory);
-router.put(
-  "/subcategory/:id",
-
-  subCategoryAPI.updateSubCategoryById
-);
-router.delete(
-  "/subcategory/:id",
-
-  subCategoryAPI.deleteSubCategoryById
-);
+router.put("/subcategory/:id", subCategoryAPI.updateSubCategoryById);
+router.delete("/subcategory/:id", subCategoryAPI.deleteSubCategoryById);
 
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
@@ -110,14 +101,13 @@ router.get(
 router.post("/products", productAPI.createProduct);
 router.put("/products/:id", productAPI.updateProductById);
 router.delete("/products/:id", productAPI.deleteProductById);
+router.post("/products/search", productAPI.searchProducts);
+
 
 // // Order routes
 router.get("/orders", orderAPI.getAllOrders);
 router.get("/orders/:id", orderAPI.getOrderById);
-router.get(
-  "/orders/users/:customerId",
-
-  orderAPI.getOrdersByUserId
+router.get("/orders/users/:customerId",orderAPI.getOrdersByUserId
 );
 router.post("/orders", orderAPI.createOrder);
 router.put("/orders/:id", orderAPI.updateOrderById);
@@ -126,15 +116,11 @@ router.delete("/orders/:id", orderAPI.deleteOrderById);
 // // Brand routes
 router.get("/brands", brandAPI.getAllBrands);
 router.get("/brands/:id", brandAPI.getBrandById);
-router.post(
-  "/brands",
-  multer({ storage: getStorage("brands") }).single("logo"),
-  brandAPI.createBrand
+router.post("/brands",multer({ storage: getStorage("brands") }).single("logo"),brandAPI.createBrand
 );
 router.put(
   "/brands/:id",
   multer({ storage: getStorage("brands") }).single("logo"),
-
   brandAPI.updateBrand
 );
 router.delete("/brands/:id", brandAPI.deleteBrandById);

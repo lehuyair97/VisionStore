@@ -1,23 +1,24 @@
-
+import Block from "@components/block";
+import Colors from "@theme/colors";
 import React from "react";
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import TextHome from "./text_home";
-import { localImages } from "@assets/icons/images";
-import Block from "@components/block";
 import { Row } from "@components";
-import Colors from "@theme/colors";
-
+import { localImages } from "@assets/icons/images";
 
 interface ListMacProps {
-    handleNavigateToDetailProduct: () => void;
-    data: { brand: string, products: any[] }[]
+    handleNavigateToDetailProduct: (id: string) => void;
+    selectedBrandName?: string;
+    data: { brand: string; products: any[] }[]; // Thêm 'brand' vào đây
+    handleNavigateToDetailBrand: (id: string, brand: string) => void;
 }
 
-const ListMac = ({ data, handleNavigateToDetailProduct }: ListMacProps) => {
-    const [imageError, setImageError] = React.useState(true);
+const ProductBrand = ({ data, handleNavigateToDetailProduct ,selectedBrandName, handleNavigateToDetailBrand}: ListMacProps) => {
+    const [imageError, setImageError] = React.useState(false);
+    console.log("data", JSON.stringify(data, null, 2));
     const renderItem = ({ item, index }) => (
-        <TouchableOpacity onPress={() => handleNavigateToDetailProduct()}>
-        <View style={{ marginHorizontal: 10 }}>
+        <TouchableOpacity style={{width: '54%'}} onPress={() => handleNavigateToDetailProduct(item._id)}>
+        <View style={{ marginRight:90 , }}>
             <View style={styles.itemContainer}>
                 {imageError ? (
                     <View >
@@ -49,18 +50,20 @@ const ListMac = ({ data, handleNavigateToDetailProduct }: ListMacProps) => {
         <View>
             {data.map((item, index) => (
                 <View key={index}>
-                    <Row between style={{ paddingHorizontal: 4 }}>
-                        <TextHome>{item.brand}</TextHome>
-                        <Text style={{ color: Colors.primary, fontWeight: "light", fontSize: 12 }}>xem thêm</Text>
-                    </Row>
+                    {selectedBrandName && (
+                        <Row between style={{ paddingHorizontal: 4 }}>
+                            <TextHome>{selectedBrandName}</TextHome>
+                            <Text style={{ color: Colors.primary, fontWeight: "light", fontSize: 12 }} onPress={() => handleNavigateToDetailBrand(item.products[0].brand, selectedBrandName)}>xem thêm</Text>
+                        </Row>
+                    )}
                     <Block height={3} />
                     <FlatList
-                        horizontal={true}
+        
+                        numColumns={2}
                         data={item.products}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
-                        contentContainerStyle={styles.listContainer} // Style cho FlatList
-
+                        contentContainerStyle={styles.listContainer}
                     />
                 </View>
             ))}
@@ -74,15 +77,20 @@ const styles = StyleSheet.create({
         padding: 0,
     },
     block_text: {
-        backgroundColor: Colors.container, height: 20, borderRadius: 10, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 10
+        backgroundColor: Colors.container,
+        height: 20,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 10
     },
     itemContainer: {
-        width: 165,
+        flex: 1,
         backgroundColor: '#F0F0F0',
         borderRadius: 10,
         alignItems: 'center',
-        margin: 6
-
+        margin: 6,
+        width: '150%',
     },
     image: {
         width: 100,
@@ -107,4 +115,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ListMac;
+export default ProductBrand;

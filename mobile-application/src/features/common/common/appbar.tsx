@@ -20,7 +20,7 @@ const AppBar = ({title, iconLeft, iconRight, iconRightName, isBackground, colorI
             <StatusBar style="light" backgroundColor="transparent" />
             <Row between center>
                  <Icon type="fontAwesome" name="arrow-left" size={24} color={colorIconLeft ?? Colors.container}/>
-                <Text fontSize={16} fontWeight={"500"}>{title}</Text>
+                <Text fontSize={16} fontWeight={"600"}>{title}</Text>
                 {iconRight && iconRight 
                 ? <Icon type="fontAwesome" name={iconRightName} size={20} color={colorIconRight ?? Colors.container} /> 
                 : <Block width={20} />}

@@ -1,33 +1,35 @@
 import Block from "@components/block";
+import { Brand } from "@hooks/common/use-get-brand";
 import Colors from "@theme/colors";
 import React from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 
-
-
 interface FitAdvisorProps {
-    data: any[];
+    onPress: (id: string) => void;
+    data: Brand[];
+    selectedId: string | null;
   }
 
-const FitAdvisor = ({ data }: FitAdvisorProps) => {
-    const [selectedId, setSelectedId] = React.useState(null); // State để lưu ID của mục được chọn
+const FitAdvisor = ({ data, onPress, selectedId }: FitAdvisorProps) => {
+    const handlePress = (id: string) => {
+        onPress(id);
+    };
 
-    const renderItem = ({ item,index }) => (
+    const renderItem = ({ item, index }) => (
         <TouchableOpacity 
-            onPress={() => setSelectedId(item.id)}
+            onPress={() => handlePress(item._id)}
             style={{paddingLeft: index === 0 ? 0 : 5, paddingRight:5, alignContent: 'center', alignItems: 'center'}}
         >
             <Block style={{
-                paddingHorizontal: 17, height: 35, backgroundColor: selectedId === item.id ? Colors.primary : Colors.background_fit_finder, borderRadius: 13, justifyContent: 'center', alignItems: "flex-start"}}>
+                paddingHorizontal: 17, height: 35, backgroundColor: selectedId === item._id ? Colors.primary : Colors.background_fit_finder, borderRadius: 13, justifyContent: 'center', alignItems: "flex-start"}}>
             <Text style={{ 
-                color: selectedId === item.id ? Colors.whiteF3 : Colors.black, // Đổi màu chữ nếu được chọn
+                color: selectedId === item._id ? Colors.whiteF3 : Colors.black, // Đổi màu chữ nếu được chọn
                 fontSize: 12,
                 fontWeight: '500'
             }}>
-                {item.title}
+                {item.name}
             </Text>
             </Block>
-           
         </TouchableOpacity>
     );
 
@@ -36,7 +38,7 @@ const FitAdvisor = ({ data }: FitAdvisorProps) => {
             <FlatList
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item._id}
                 horizontal // Đặt FlatList thành dạng ngang
             />
         </View>

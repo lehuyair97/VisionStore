@@ -3,23 +3,24 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from '@components';
 import Block from '@components/block';
 import Colors from '@theme/colors';
+import { Cart } from '@hooks/common/use-cart';
 
 interface CartItemProps {
-  item: {
-    id: string;
-    name: string;
-    description: string;
-    price: string;
-    image: string;
-  };
+  item: Cart;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }
 
 const CartItem = ({ item, isSelected, onSelect }: CartItemProps) => {
+  const product = item.carts && item.carts[0];
+
+  if (!product) {
+    return <Text>Product information is not available</Text>;
+  }
+
   return (
     <View style={styles.itemContainer}>
-      <TouchableOpacity onPress={() => onSelect(item.id)} style={styles.checkbox}>
+      <TouchableOpacity onPress={() => onSelect(item._id)} style={styles.checkbox}>
         <Icon
           type="fontAwesome"
           name={isSelected ? 'check-square' : 'square'}
@@ -28,14 +29,14 @@ const CartItem = ({ item, isSelected, onSelect }: CartItemProps) => {
         />
       </TouchableOpacity>
       <Block mr={"_10"}/>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image source={{ uri: product.image }} style={styles.image} />
       <Block mr={"_15"}/>
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.name}>{product.productName}</Text>
         <Block mt={"_5"}/>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={styles.description}>{product.description}</Text>
         <Block mt={"_5"}/>
-        <Text style={styles.price}>{item.price} đ</Text>
+        <Text style={styles.price}>{product.price} đ</Text>
       </View>
     </View>
   );
