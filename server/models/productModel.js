@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const productSchema = new mongoose.Schema({
   id: { type: String, required: true },
   parent_product_id: { type: String },
@@ -22,6 +23,14 @@ const productSchema = new mongoose.Schema({
   description: { type: String },
   brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
   products_child: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  compatible_with: {
+    memory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    processor: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    motherboard: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    graphics: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    storage: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  },
+  sub_category: {},
 });
 
 const Product = mongoose.model("Product", productSchema);

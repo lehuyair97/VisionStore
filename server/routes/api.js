@@ -99,6 +99,14 @@ router.get(
   subCategoryAPI.getSubCategoryByCategoryId
 );
 router.get("/subcategory/type/:type", subCategoryAPI.getSubCategoryByType);
+router.get(
+  "/subcategory/component/:id",
+  subCategoryAPI.getSubCategoryByComponents
+);
+router.get(
+  "/subcategory/accesspries/:id",
+  subCategoryAPI.getSubCategoryByAccessories
+);
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
 router.get("/productsgrouped", productAPI.getAllProductsGroupedByBrand);
@@ -109,12 +117,10 @@ router.put("/products/:id", productAPI.updateProductById);
 router.delete("/products/:id", productAPI.deleteProductById);
 router.post("/products/search", productAPI.searchProducts);
 
-
 // // Order routes
 router.get("/orders", orderAPI.getAllOrders);
 router.get("/orders/:id", orderAPI.getOrderById);
-router.get("/orders/users/:customerId",orderAPI.getOrdersByUserId
-);
+router.get("/orders/users/:customerId", orderAPI.getOrdersByUserId);
 router.post("/orders", orderAPI.createOrder);
 router.put("/orders/:id", orderAPI.updateOrderById);
 router.delete("/orders/:id", orderAPI.deleteOrderById);
@@ -122,7 +128,10 @@ router.delete("/orders/:id", orderAPI.deleteOrderById);
 // // Brand routes
 router.get("/brands", brandAPI.getAllBrands);
 router.get("/brands/:id", brandAPI.getBrandById);
-router.post("/brands",multer({ storage: getStorage("brands") }).single("logo"),brandAPI.createBrand
+router.post(
+  "/brands",
+  multer({ storage: getStorage("brands") }).single("logo"),
+  brandAPI.createBrand
 );
 router.put(
   "/brands/:id",

@@ -19,12 +19,14 @@ const useRefreshToken = () => {
       const res = (await api({
         url: REQUEST_URL.REFRESH_TOKEN,
         method: "POST",
-        data: token,
+        data: { token: token },
       })) as refreshTokenType;
       return res;
     },
 
-    onSuccess: () => {},
+    onSuccess: (data) => {
+      console.log(data);
+    },
     onError: (error: any) => {
       if (error.response) {
         toast.error(error?.response?.data?.message);

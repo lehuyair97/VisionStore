@@ -1,3 +1,4 @@
+const SubCategory = require("../../models/sub_categoryModel");
 const Product = require("./../../models/productModel");
 const mongoose = require("mongoose");
 
@@ -66,7 +67,7 @@ exports.getProductsByBrandId = async (req, res) => {
 
   if (categoryId) filter.category_id = categoryId;
   if (brandId) filter.brand = brandId;
-  console.log(categoryId)
+  console.log(categoryId);
   try {
     const products = await Product.find(filter);
 
@@ -82,6 +83,24 @@ exports.getProductsByBrandId = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const product = await Product.create(req.body);
+    if (req.body.sub_category_id) {
+      const subCategory = await SubCategory.findOne({
+        sub_category_type: "components",
+      });
+
+      if (!subCategory) {
+        return res.status(404).json({ message: "Subcategory not found" });
+      }
+      const item = subCategory.sub_category_list.find(
+        (item) => item._id.toString() === product.sub_category_id
+      );
+
+      if (item) {
+        product.sub_category = item;
+        await product.save();
+      }
+    }
+
     res.status(201).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -119,7 +138,7 @@ exports.searchProducts = async (req, res) => {
     const filter = {};
 
     if (name) {
-      filter.name = { $regex: name, $options: 'i' }; // Tìm kiếm không phân biệt chữ hoa chữ thường
+      filter.name = { $regex: name, $options: "i" }; // Tìm kiếm không phân biệt chữ hoa chữ thường
     }
 
     // Chỉ tìm kiếm theo tên, không sử dụng _id
@@ -131,7 +150,7 @@ exports.searchProducts = async (req, res) => {
 
     res.status(200).json(products);
   } catch (error) {
-    console.error('Error searching products:', error); // Ghi lại lỗi chi tiết
+    console.error("Error searching products:", error); // Ghi lại lỗi chi tiết
     res.status(500).json({ message: error.message });
   }
 };

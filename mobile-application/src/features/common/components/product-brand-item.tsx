@@ -11,9 +11,6 @@ interface ProductBrandItemProps {
 
 const ProductBrandItem = ({ item, handleNavigateToDetailProduct }: ProductBrandItemProps) => {
     const [imageError, setImageError] = useState(false);
-
-    console.log("item", item);
-
     return (
         <TouchableOpacity style={{ width: '51%' }} onPress={() => handleNavigateToDetailProduct(item._id)}>
             <View style={{ marginRight: 90 }}>

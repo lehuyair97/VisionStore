@@ -15,6 +15,7 @@ import { ROUTES } from "@navigation/config/routes";
 import ProductGrouped from "../component/product-grouped";
 import ProductBrand from "../component/product-brand";
 import { View } from "react-native";
+import { navigate } from "@navigation/config/navigation-service";
 
 const images = [
   require("../../../../assets/icons/banner.png"),
@@ -31,11 +32,9 @@ const iconMap: { [key: string]: string } = {
 
 
 export default function Home() {
-
   const { data: category, isLoading, error } = useCategory();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedIdBrand, setSelectedIdBrand] = useState<string | null>(null);
-  console.log("selectedIdBrand", selectedIdBrand)
 
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
@@ -67,9 +66,6 @@ export default function Home() {
     setSelectedIdBrand(id);
   };
 
-  const handleNavigateToSearch = () => {
-    navigation.navigate(ROUTES.Search as keyof ParamListBase);
-  };
 
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
@@ -111,13 +107,12 @@ export default function Home() {
     });
   };
 
-
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
       >
-        <AppBar onPressSearch={handleNavigateToSearch} />
+        <AppBar />
         <Block mt="_20" />
         <Banner images={images} />
         <Block mt="_20" />

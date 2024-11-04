@@ -11,7 +11,7 @@ const subCategorySchema = new mongoose.Schema({
     enum: ["components", "accessories"],
     required: true,
   },
-  sub_category_list: [{ name: String, image: String }],
+  sub_category_list: [{ name: String, image: String, child_type: String }],
 });
 
 const SubCategory = mongoose.model("SubCategory", subCategorySchema);

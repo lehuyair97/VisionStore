@@ -12,6 +12,7 @@ import {
   setRefreshToken as setRefreshTokenStorage,
   deleteRefreshToken,
   getRefreshToken,
+  getAccessToken,
 } from "../utils/token";
 import { setUserInfoStorage, getUserInfoStorage } from "@utils/storage";
 import { User } from "../hooks/auth/use-sign-in";
@@ -74,17 +75,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const refreshToken = async () => {
     const refreshToken = await getRefreshToken();
-    console.log(refreshToken);
-    const { accessToken } = await submitRefreshToken(refreshToken);
-    if (accessToken) {
-      setAccessToken(accessToken);
-      setAccessTokenStorage(accessToken);
-      setAuthenticationStatus("AUTHENTICATED");
+    if (refreshToken) {
+      const { accessToken } = await submitRefreshToken(refreshToken);
+      if (accessToken) {
+        setAccessToken(accessToken);
+        setAccessTokenStorage(accessToken);
+        setAuthenticationStatus("AUTHENTICATED");
+      }
     }
   };
 
   const handleLoginSuccess = useCallback(
-    (data: { accessToken: string; refreshToken: string; user: User }) => {
+    async (data: { accessToken: string; refreshToken: string; user: User }) => {
       setAccessToken(data?.accessToken);
       setUserInfo(data?.user);
       setAuthenticationStatus("AUTHENTICATED");

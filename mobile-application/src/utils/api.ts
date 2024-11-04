@@ -36,7 +36,8 @@ export const REQUEST_URL = {
   DELETE_CATEGORY: (id) => `/category/${id}`,
   GET_ALL_SUBCATEGORIES: "/subcategory",
   GET_SUBCATEGORY_BY_ID: (id) => `/subcategory/${id}`,
-  GET_SUBCATEGORIES_BY_CATEGORY_ID: (categoryId) => `/subcategory/category/${categoryId}`,
+  GET_SUBCATEGORIES_BY_CATEGORY_ID: (categoryId) =>
+    `/subcategory/category/${categoryId}`,
   GET_SUBCATEGORIES_BY_TYPE: (type) => `/subcategory/type/${type}`,
   CREATE_SUBCATEGORY: "/subcategory",
   UPDATE_SUBCATEGORY: (id) => `/subcategory/${id}`,
@@ -63,8 +64,8 @@ export const REQUEST_URL = {
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
 };
 
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.2:3000/api";
+const BASE_URL = "http://192.168.1.94:3000/api"
+  // process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.2:3000/api";
 
 export type AxiosParams = {
   url: string;

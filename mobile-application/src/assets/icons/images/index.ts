@@ -12,5 +12,7 @@ export function localImages() {
     ic_profile: require("../images/ic_profile.png"),
     ic_profile_fill: require("../images/ic_profile_fill.png"),
     ic_mac: require("../mac.png"),
+    ic_plus: require("../images/ic_plus.png"),
+    ic_minus: require("../images/ic_minus.png")
   };
 }

@@ -10,7 +10,6 @@ import useCart from "@hooks/common/use-cart";
 export default function Cart() {
   const navigation = useNavigation();
   const { data: products, isLoading, error } = useCart();
-  console.log("products", products);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 

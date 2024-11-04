@@ -110,7 +110,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary,
     padding: theme.spacing._12,
     alignItems: "center",
-    marginTop: 10,
     borderRadius: theme.borderRadii.l,
   },
   buttonOutline: {

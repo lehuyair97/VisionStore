@@ -1,4 +1,3 @@
-
 const Colors = {
   background_fit_finder: "#F5F5F5",
   transparent: "transparent",
@@ -22,9 +21,10 @@ const Colors = {
   text: "#f0f0f0",
   title: "#000000",
   error: "rgba(228, 93, 93, 0.06)",
-  primary: '#DF5454',
+  primary: "#DF5454",
   gray_profile: "#FCF5F5",
   background_search: "#C94A4A",
+  whiteF8: "#F8F8F8",
 
   // Rose colors
   rose_50: "#fff1f2",
@@ -280,4 +280,3 @@ const Colors = {
   gray_darkest: "#0a0a0f",
 };
 export default Colors;
-

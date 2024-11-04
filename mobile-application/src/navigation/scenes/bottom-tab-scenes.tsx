@@ -1,9 +1,8 @@
 /* eslint-disable max-len */
 import { Pressable, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { BuildPC, Cart, Home, Profile } from "@features/common";
 import { Block, Text } from "@components";
-
+import changeNavigationBarColor from "react-native-navigation-bar-color";
 import {
   BottomTabRoutes,
   ScreenOptions,
@@ -15,6 +14,7 @@ import {
 } from "@react-navigation/bottom-tabs";
 import { localImages } from "@assets/icons/images";
 import { navigate } from "@navigation/config/navigation-service";
+import { useEffect } from "react";
 
 const Tab = createBottomTabNavigator<BottomTabRoutes>();
 
@@ -25,7 +25,9 @@ export const bottomTabScreensRoute = [
   { component: Profile, name: "ProfileStack" },
 ];
 const BottomTabScenes = () => {
-  const navigation = useNavigation();
+  useEffect(() => {
+    changeNavigationBarColor("#DF5454", true);
+  });
 
   const renderTabBarIcon = (title: keyof BottomTabRoutes, focused: boolean) => {
     switch (title) {
@@ -125,7 +127,10 @@ const BottomTabScenes = () => {
               tabBarButton: (props) => (
                 <TouchableOpacity
                   {...props}
-                  onPress={() => navigate(name)}
+                  onPress={() => {
+                    console.log(name);
+                    navigate(name);
+                  }}
                 />
               ),
             }}
