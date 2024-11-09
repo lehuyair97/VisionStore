@@ -88,3 +88,15 @@ export const BuildPCManualData = [
   },
 
 ];
+export const banners = [
+  require("./../assets/icons/banner.png"),
+  require("./../assets/icons/banner2.png"),
+  require("./../assets/icons/banner.png"),
+];
+
+export const iconMap: { [key: string]: string } = {
+  Laptop: "home",
+  PC: "desktop",
+  "Linh  kiện": "microchip",
+  "Phụ kiện": "headphones",
+};

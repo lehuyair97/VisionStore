@@ -1,123 +1,113 @@
-const WebSocket = require("ws");
-const Message = require("./../models/messageModel"); // Mô hình Message MongoDB
+const http = require("http");
+const socketIo = require("socket.io");
 
-const wss = new WebSocket.Server({ port: 8080 });
-const clients = new Map(); // Lưu trữ client theo userId
+// Tạo server HTTP
+const server = http.createServer();
 
-wss.on("connection", (ws, req) => {
-  const userId = req.url.split("?userId=")[1]; // Lấy userId từ query string
-  if (!userId) {
-    console.error("User ID not found");
-    ws.close(); // Ngắt kết nối nếu không có userId
-    return;
-  }
+// Tạo một Socket.io server
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // Cho phép tất cả các domain kết nối, bạn có thể thay đổi theo yêu cầu bảo mật của mình
+  },
+});
 
-  console.log(`New client connected: ${userId}`);
-  clients.set(userId, ws); // Lưu trữ client theo userId
+// Lưu trữ các client kết nối
+let clients = new Map();
 
-  // Gửi lịch sử tin nhắn khi kết nối
-  sendMessageHistory(userId, ws);
+// Kết nối sự kiện
+io.on("connection", (socket) => {
+  console.log("New client connected", socket.id);
 
-  ws.on("message", (message) => {
-    const data = JSON.parse(message);
-    const { type, payload } = data;
-
-    switch (type) {
-      case "chat":
-        handleChatEvent(userId, payload);
-        break;
-      case "voucher":
-        handleVoucherEvent(userId, payload);
-        break;
-      case "comment":
-        handleCommentEvent(userId, payload);
-        break;
-      default:
-        console.log("Unknown event type:", type);
+  // Lưu trữ client theo socket ID hoặc theo userId nếu có
+  socket.on("register", (userId) => {
+    if (userId) {
+      clients.set(userId, socket);
+      console.log(`Client ${userId} registered`);
     }
   });
 
-  ws.on("close", () => {
-    console.log(`Client disconnected: ${userId}`);
-    clients.delete(userId); // Xóa client khi ngắt kết nối
+  // Lắng nghe sự kiện "disconnect"
+  socket.on("disconnect", () => {
+    console.log("Client disconnected", socket.id);
+    // Xóa client khỏi Map khi ngắt kết nối
+    clients.forEach((value, key) => {
+      if (value.id === socket.id) {
+        clients.delete(key);
+      }
+    });
   });
 });
 
-// Gửi lịch sử tin nhắn từ MongoDB
-const sendMessageHistory = async (userId, ws) => {
-  try {
-    const messages = await Message.find({
-      $or: [
-        { senderId: userId },
-        { receiverId: userId }
-      ]
-    }).sort({ createdAt: 1 }); // Sắp xếp theo thời gian tạo
+// Function to broadcast messages to all connected clients
+const broadcast = (data) => {
+  io.emit("message", data); // Gửi tin nhắn tới tất cả client đã kết nối
+};
 
-    ws.send(JSON.stringify({ type: "history", messages }));
-  } catch (error) {
-    console.error("Error fetching message history:", error);
+// Function to send a message to a specific client by userId
+const sendMessageToClient = (userId, data) => {
+  const client = clients.get(userId);
+  if (client) {
+    client.emit("message", data); // Gửi tin nhắn tới client cụ thể
   }
 };
 
-// Hàm xử lý sự kiện chat
-const handleChatEvent = async (userId, payload) => {
-  const { receiverId, message, isAdmin } = payload;
-  if (!message) {
-    console.error("Message is required");
-    return;
+// Function to handle broadcast for different statuses like voucher, comment, message
+const handleEvent = (type, data) => {
+  switch (type) {
+    case "voucher":
+      broadcastVoucherStatus(data);
+      break;
+    case "comment":
+      broadcastCommentStatus(data);
+      break;
+    case "message":
+      broadcastMessageStatus(data);
+      break;
+    default:
+      console.log("Unknown event type");
   }
+};
 
-  const newMessage = new Message({ senderId: userId, receiverId, content: message, isAdmin });
+// Helper functions for broadcasting specific event statuses
 
-  try {
-    // Lưu tin nhắn vào MongoDB
-    await newMessage.save();
+const broadcastVoucherStatus = (data) => {
+  console.log("Broadcasting voucher status:", data);
+  io.emit("voucherStatus", data); // Gửi tin nhắn voucher tới tất cả client
+};
 
-    if (isAdmin) {
-      // Nếu là admin, gửi tin nhắn đến tất cả client
-      broadcast("message", { type: "NEW_MESSAGE", message: newMessage });
-    } else {
-      // Gửi tin nhắn tới client cụ thể (receiverId)
-      sendMessageToClient(receiverId, { type: "NEW_MESSAGE", message: newMessage });
+const broadcastCommentStatus = (data) => {
+  console.log("Broadcasting comment status:", data);
+  io.emit("commentStatus", data); // Gửi tin nhắn comment tới tất cả client
+};
+
+const broadcastMessageStatus = (data) => {
+  console.log("Broadcasting message status:", data);
+  io.emit("messageStatus", data); // Gửi tin nhắn message tới tất cả client
+};
+
+// Function to send specific message to a client by userId and event type
+const sendEventToClient = (userId, type, data) => {
+  const client = clients.get(userId);
+  if (client) {
+    switch (type) {
+      case "voucher":
+        client.emit("voucherStatus", data);
+        break;
+      case "comment":
+        client.emit("commentStatus", data);
+        break;
+      case "message":
+        client.emit("messageStatus", data);
+        break;
+      default:
+        console.log("Unknown event type");
     }
-
-    // Xóa tin nhắn cũ
-    await cleanupOldMessages();
-  } catch (error) {
-    console.error("Error saving message:", error);
   }
 };
 
-// Hàm xử lý sự kiện voucher
-const handleVoucherEvent = (userId, payload) => {
-  // Logic xử lý voucher
-  const { voucher } = payload;
-  broadcast("voucher", { userId, voucher });
-};
+// Bắt đầu lắng nghe server trên cổng 8080
+server.listen(8080, () => {
+  console.log("Server running on port 8080");
+});
 
-// Hàm xử lý sự kiện comment
-const handleCommentEvent = (userId, payload) => {
-  // Logic xử lý comment
-  const { comment } = payload;
-  broadcast("comment", { userId, comment });
-};
-
-// Hàm broadcast cho tất cả client
-const broadcast = (type, payload) => {
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(JSON.stringify({ type, payload }));
-    }
-  });
-};
-
-// Gửi tin nhắn đến một client cụ thể
-function sendMessageToClient(clientId, message) {
-  const client = clients.get(clientId);
-  if (client && client.readyState === WebSocket.OPEN) {
-    client.send(JSON.stringify(message));
-  }
-}
-
-// Xuất các hàm và đối tượng cần thiết
-module.exports = { wss, broadcast, sendMessageToClient };
+module.exports = { io, broadcast, sendMessageToClient, handleEvent, sendEventToClient };

@@ -18,7 +18,8 @@ Notifications.setNotificationHandler({
 // Function to request notification permissions
 const requestNotificationPermission = async () => {
   if (Platform.OS === "ios") {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       if (status !== "granted") {
@@ -57,13 +58,10 @@ const registerForPushNotificationsAsync = async () => {
 
 // Hook to configure notifications and FCM
 export const useNotifications = () => {
-  console.log('fresh')
   const isFCMListenerSet = useRef(false); // Track if the FCM listener has been set
-
   useEffect(() => {
     const setupFCM = async () => {
       const token = await messaging().getToken();
-      console.log("FCM Token:", token);
 
       // Only set up the listener if it hasn't been set
       if (!isFCMListenerSet.current) {
@@ -74,7 +72,8 @@ export const useNotifications = () => {
           await Notifications.scheduleNotificationAsync({
             content: {
               title: remoteMessage.notification?.title || "New Notification",
-              body: remoteMessage.notification?.body || "You have a new message!",
+              body:
+                remoteMessage.notification?.body || "You have a new message!",
               sound: "default",
             },
             trigger: null, // Send immediately
@@ -90,13 +89,16 @@ export const useNotifications = () => {
     setupFCM(); // Call function to set up FCM
 
     // Listen for notification events
-    const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
-      console.log("Notification received:", notification);
-    });
+    const notificationListener = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("Notification received:", notification);
+      }
+    );
 
-    const responseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log("Notification response:", response);
-    });
+    const responseListener =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log("Notification response:", response);
+      });
 
     // Clean up listeners on unmount
     return () => {

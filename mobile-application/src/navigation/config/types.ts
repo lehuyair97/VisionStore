@@ -5,21 +5,11 @@ export function createEnum<T extends Record<string, string>>(o: T): T {
 }
 
 export type BottomTabRoutes = {
-  HomeStack: {
-    Home: undefined;
-  };
-  BuildPCStack: {
-    BuildPC: undefined;
-  };
-  CartStack: {
-    Cart: undefined;
-  };
-  ProfileStack: {
-    Profile: undefined;
-  };
-  DetailProduct: {
-    productId: string;
-  };
+  HomeStack: {};
+  BuildPCStack: {};
+  CartStack: {};
+  ProfileStack: {};
+  DetailProduct: {};
 };
 
 export type signInForm = {

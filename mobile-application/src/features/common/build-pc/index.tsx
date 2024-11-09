@@ -26,11 +26,10 @@ export default function BuildPC() {
     };
     return components[key];
   };
-
   return (
     <MainContainer>
       <Block flex={1}>
-        <SearchView/>
+        <SearchView />
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}

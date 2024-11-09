@@ -1,35 +1,63 @@
+import React from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { Block, Row, Text } from "@components";
-import BottomSheet, { RBSheetRef } from "./bottom-sheet";
-import { Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-type SubCategoriesProp = {
-  subCategories: any;
-  refRBSheet: React.RefObject<RBSheetRef>;
-  onPress: () => void;
-};
-const SubCategories = ({
-  subCategories,
+import { Helper } from "@utils/helper";
+import BottomSheet from "./bottom-sheet";
+
+interface SubCategoryBottomSheetProps {
+  height?: number;
+  refRBSheet: React.RefObject<any>;
+  subCategories: Array<{
+    image: string;
+    name: string;
+  }>;
+  category: string;
+  isFetching: boolean;
+}
+
+const SubCategoryBottomSheet: React.FC<SubCategoryBottomSheetProps> = ({
+  height = 600,
   refRBSheet,
-  onPress,
-}: SubCategoriesProp) => {
+  subCategories,
+  isFetching,
+  category,
+}) => {
   return (
-    <BottomSheet refRBSheet={refRBSheet} height={500}>
-      <Block>
-        {subCategories.map((sub) => {
-          return (
-            <TouchableOpacity onPress={onPress}>
-              <Row center>
+    <BottomSheet height={height} refRBSheet={refRBSheet}>
+      <Block p={"_20"} borderBottomWidth={1} borderColor={"primary"}>
+        <Text color={"primary"} fontWeight={"bold"} fontSize={16}>
+          {category === "components" ? "Linh kiện" : "Phụ kiện"}
+        </Text>
+      </Block>
+
+      {isFetching ? (
+        <Block justifyContent="center" alignItems="center" flex={1}>
+          <ActivityIndicator size="large" color="#000" />
+        </Block>
+      ) : (
+        <FlatList
+          data={subCategories}
+          keyExtractor={Helper.getKeyExtractor}
+          renderItem={({ item }) => (
+            <TouchableOpacity>
+              <Row center gap={"_20"} py={"_10"} px={"_20"} mt={"_10"}>
                 <Image
-                  source={{ uri: sub?.image }}
-                  style={{ width: 40, height: 40, resizeMode: "contain" }}
+                  source={{ uri: item?.image }}
+                  style={{ width: 30, height: 30 }}
                 />
-                <Text>{sub.name}</Text>
+                <Text color={"black"}>{item?.name}</Text>
               </Row>
             </TouchableOpacity>
-          );
-        })}
-      </Block>
+          )}
+        />
+      )}
     </BottomSheet>
   );
 };
-export default SubCategories;
+
+export default SubCategoryBottomSheet;
