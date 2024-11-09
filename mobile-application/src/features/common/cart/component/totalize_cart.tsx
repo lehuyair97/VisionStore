@@ -10,6 +10,8 @@ interface TotalizeCartProps {
   onPress?: () => void;
   onSelectAll?: (selectAll: boolean) => void;
   totalPrice: number;
+  
+  
 }
 const TotalizeCart = ({onPress, onSelectAll, totalPrice}: TotalizeCartProps) => {
     const navigation = useNavigation();

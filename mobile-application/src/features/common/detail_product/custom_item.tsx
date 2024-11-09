@@ -2,37 +2,47 @@ import { Row } from "@components";
 import Block from "@components/block"
 import Text from "@components/text"
 import Colors from "@theme/colors";
+import { useState } from "react";
 import { FlatList, TouchableOpacity } from "react-native";
 
 
 interface CustomItemProps {
     isRow?: boolean;
     title?: string;
+    selected: string;
+    onSelect?: (item: {
+        color?: string;
+        name: string;
+    }) => void;
    data: {
     color?: string;
     name: string;
    }[];
 }
-const CustomItem = ({ data, isRow = false, title = "WARNA" }: CustomItemProps) => {
+const CustomItem = ({ data, isRow = false, title = "WARNA", selected, onSelect }: CustomItemProps) => {
     return (
-        <Block>
+        <Block marginTop={"_20"}>
             <Text fontSize={16} fontWeight={"bold"} color="black2A">
             {title}
             </Text>
             <Block marginTop={"_10"}/>
             <FlatList
                 data={data}
+                showsHorizontalScrollIndicator={false}
                 horizontal
                 renderItem={({ item }) => {
-                    const paddingHorizontal = isRow ? 15 : 22; // Tách logic ra ngoài
+                    const paddingHorizontal = isRow ? 15 : 22; 
                     return (
                         <TouchableOpacity
+                            onPress={() => {
+                                onSelect?.(item);
+                            }}
                             style={{
-                                borderWidth: 0.5,
+                                borderWidth: selected === item.name ? 1 : 0,
                                 borderColor: "gray_200",
                                 borderRadius: 20,
                                 paddingVertical: 10,
-                                paddingHorizontal: paddingHorizontal, // Sử dụng biến
+                                paddingHorizontal: paddingHorizontal, 
                                 backgroundColor: Colors.gray_300,
                             }}
                         >
@@ -42,7 +52,7 @@ const CustomItem = ({ data, isRow = false, title = "WARNA" }: CustomItemProps) =
                                         width={25}
                                         height={25}
                                         style={{
-                                            borderRadius: 12.5, // Một nửa của width/height để tạo hình tròn
+                                            borderRadius: 12.5, 
                                             backgroundColor: item.color,
                                         }}
                                     />

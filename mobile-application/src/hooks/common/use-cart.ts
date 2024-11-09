@@ -9,6 +9,8 @@ export interface Cart {
   customerEmail: string;
   customerAddress: string;
   customerPhoneNumber: number;
+  optionsColor: string;
+  optionsMemory: string;
   paymentTransactions: {
     id: string;
     userId: string;

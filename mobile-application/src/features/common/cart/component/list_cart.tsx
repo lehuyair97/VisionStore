@@ -3,6 +3,7 @@ import { FlatList } from 'react-native';
 import CartItem from './cart_item';
 import { Cart } from '@hooks/common/use-cart';
 import Text from '@components/text';
+import useQuantity from '@hooks/common/util/useQuantity';
 
 
 interface ListCartProps {
@@ -12,6 +13,7 @@ interface ListCartProps {
 }
 
 const ListCart = ({ products, selectedItems, setSelectedItems }: ListCartProps) => {
+
   const toggleSelect = (id: string) => {
     setSelectedItems(prevSelected =>
       prevSelected.includes(id)
@@ -25,15 +27,24 @@ const ListCart = ({ products, selectedItems, setSelectedItems }: ListCartProps) 
       data={products}
       keyExtractor={item => item._id || Math.random().toString()}
       contentContainerStyle={{ marginHorizontal: 20 }}
-      renderItem={({ item }) => (
-        item ? (
+      style={{ marginBottom: 100 }}
+      renderItem={({ item }) => {
+        const product = item.carts && item.carts[0];
+
+        if (!product) {
+          return <Text>No products available</Text>;
+        }
+
+
+        return (
           <CartItem
+
             item={item}
             isSelected={selectedItems.includes(item._id)}
             onSelect={toggleSelect}
           />
-        ) : <Text>No products available</Text>
-      )}
+        );
+      }}
     />
   );
 }

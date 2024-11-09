@@ -4,11 +4,13 @@ import { EDGES } from "@utils/helper";
 import AppBarCart from "../component/appbar_cart";
 import ListCart from "../component/list_cart";
 import TotalizeCart from "../component/totalize_cart";
-import { StyleSheet, View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, View, Text, Alert } from "react-native";
+import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
+
 import useCart from "@hooks/common/use-cart";
+
 export default function Cart() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const { data: products, isLoading, error } = useCart();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -30,6 +32,16 @@ export default function Cart() {
     }
   }, [selectedItems, products]);
 
+  const handleNavigateToPayment = () => {
+    const selectedProducts = products.filter(product => selectedItems.includes(product._id));
+
+    if (selectedProducts == null || selectedProducts.length === 0) {
+      Alert.alert('Thông báo', 'Không có sản phẩm nào để thanh toán');
+      return;
+    }
+    navigation.navigate("Payment", { selectedProducts });
+  };
+
   if (isLoading) {
     return <MainContainer edges={EDGES.LEFT_RIGHT} style={styles.container}><Text>Loading...</Text></MainContainer>;
   }
@@ -43,9 +55,11 @@ export default function Cart() {
       <AppBarCart />
       <ListCart products={products} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
       <View style={styles.totalizeContainer}>
-        <TotalizeCart onPress={() => navigation.navigate("Payment" as never)}
-        onSelectAll={handleSelectAll}
-        totalPrice={totalPrice} />
+        <TotalizeCart
+          onPress={handleNavigateToPayment}
+          onSelectAll={handleSelectAll}
+          totalPrice={totalPrice}
+        />
       </View>
     </MainContainer>
   );
@@ -54,9 +68,7 @@ export default function Cart() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
     paddingVertical: 25,
-    
   },
   totalizeContainer: {
     position: 'absolute',

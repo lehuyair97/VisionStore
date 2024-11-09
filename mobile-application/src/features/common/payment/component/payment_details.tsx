@@ -1,22 +1,33 @@
 import { Block, Icon, Row, Text } from "@components";
 import Colors from "@theme/colors";
 import TextRow from "./text_row";
-const PaymentDetails = () => {
+import { Cart } from "@hooks/common/use-cart";
+
+interface PaymentDetailsProps {
+    totalProductPrice: number;
+    shippingCost: number;
+    discount: number;
+    finalTotal: number;
+}
+
+const PaymentDetails = ({ totalProductPrice, shippingCost, discount, finalTotal }: PaymentDetailsProps) => {
 
     const totalPrice = [
         {
             title: "Tổng tiền hàng",
-            price: "100.000đ"
+            price: `${totalProductPrice}VNĐ`
         },
         {
             title: "Tổng tiền vận chuyển",
-            price: "100.000đ"
+            price: `${shippingCost}VNĐ`
         },
         {
             title: "Tổng tiền giảm giá",
-            price: "100.000đ"
+            price: `${discount}VNĐ`
         }
     ];
+
+
     return (
         <Block backgroundColor={"container"} paddingHorizontal={"_20"} paddingVertical={"_15"} >
             <Row center>
@@ -28,7 +39,7 @@ const PaymentDetails = () => {
             {totalPrice.map((item, index) => (
                 <TextRow key={index} title={item.title} price={item.price} />
             ))}
-            <TextRow title="Tổng thanh toán" price="100.000đ" bold={true} size={16} color={Colors.primary}/>
+            <TextRow title="Tổng thanh toán" price={`${finalTotal}đ`} bold={true} size={16} color={Colors.primary}/>
         </Block>
     );
 }

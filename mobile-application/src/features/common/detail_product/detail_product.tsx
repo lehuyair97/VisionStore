@@ -20,6 +20,7 @@ import useProductDetail from "@hooks/common/use-get-product-detail";
 import CustomControllerNums from "./custom-conntroler-nums";
 import useAddCart, { CartItem } from "@hooks/common/use-add-cart";
 import { ROUTES } from "@navigation/config/routes";
+import useQuantity from "@hooks/common/util/useQuantity";
 
 type Item = {
   id: number;
@@ -49,6 +50,8 @@ interface OrderData {
   customerEmail: string;
   customerAddress: string;
   customerPhoneNumber: number;
+  optionsColor: string;
+  optionsMemory: string;
   paymentTransactions: {
     id: string;
     userId: string;
@@ -74,11 +77,14 @@ const DetailProduct = () => {
   } = useProductDetail(productId);
   const { addCart } = useAddCart();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const { quantity, increaseQuantity, decreaseQuantity } = useQuantity({ initialQuantity: 1 });
 
-  const [quantity, setQuantity] = useState(1);
 
-  const increaseQuantity = () => setQuantity((prev) => prev + 1);
-  const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+  const [selectedColor, setSelectedColor] = useState<{ color?: string; name: string } | null>(null);
+  const [selectedMemory, setSelectedMemory] = useState<{ name: string } | null>(null);
+  console.log(selectedColor, selectedMemory);
+
+
 
   const data: Item[] = [
     { id: 1, image: productDetail?.image },
@@ -93,6 +99,8 @@ const DetailProduct = () => {
       customerEmail: "thao@gmail.com",
       customerAddress: "123 Main St",
       customerPhoneNumber: 1234567890,
+      optionsColor: selectedColor?.name || "",
+      optionsMemory: selectedMemory?.name || "",
       paymentTransactions: {
         id: "transaction123",
         userId: "605c5b2e33f2e45b8b5d537f",
@@ -161,40 +169,30 @@ const DetailProduct = () => {
           ItemSeparatorComponent={() => <Block style={{ width: 15 }} />}
           contentContainerStyle={{ justifyContent: "center", flexGrow: 1 }}
         />
-        <Block marginTop={"_20"} />
-        <Row center>
+        <Row center marginTop={"_20"}>
           <Text fontSize={29} fontWeight={"bold"} color="black2A">
             {productDetail?.name}
           </Text>
-          <Block width={5} />
+          <Block width={10} />
           <Text fontSize={12} fontWeight={"300"} color="black2A">
-            2021
+            {productDetail?.warrantyPeriod}
           </Text>
         </Row>
-        <Block marginTop={"_10"} />
-        <Text fontSize={21} fontWeight={"300"} color="blue_500">
+        <Text fontSize={21} fontWeight={"300"} color="blue_500" marginTop={"_10"}>
           {productDetail?.price}
         </Text>
-        <Block marginTop={"_20"} />
-        <CustomItem data={dataCustomItem} title="WARNA" isRow={true} />
-        <Block marginTop={"_20"} />
-        <CustomItem data={dataCustomItem2} title="PENYIMPANAN" />
-        <Block height={30} />
+        <CustomItem selected={selectedColor?.name} data={productDetail?.optionsColor || dataCustomItem} title="Color" isRow={true} onSelect={(item) => setSelectedColor(item)} />
+        <CustomItem selected={selectedMemory?.name} data={productDetail?.optionsMemory || dataCustomItem2} title="Memory" onSelect={(item) => setSelectedMemory(item)} />
 
-        <Block>
+        <Block marginTop={"_40"}>
           <Row center between>
-            <Block
-              width={150}
-              backgroundColor="gray136"
-              borderRadius={"_28"}
-              padding={"_10"}
-            >
+
               <CustomControllerNums
+                width={150}
                 decreaseQuantity={decreaseQuantity}
                 increaseQuantity={increaseQuantity}
                 quantity={quantity}
               />
-            </Block>
             <TouchableOpacity style={styles.buyButton} onPress={handleAddCart}>
               <Text style={styles.buyButtonText}>Mua</Text>
             </TouchableOpacity>

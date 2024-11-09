@@ -32,6 +32,12 @@ const orderModel = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  optionsColor: {
+    type: String,
+  },
+  optionsMemory: {
+    type: String,
+  },
   carts: {
     type: Array,
     required: true,

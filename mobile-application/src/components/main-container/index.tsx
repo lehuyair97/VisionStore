@@ -15,13 +15,13 @@ const MainContainer = ({
   const isFocused = useIsFocused()
   return (
     <SafeAreaView
-      style={[{ flex: 1, backgroundColor: theme.colors.container }, style]}
+      style={[{ flex: 1, backgroundColor: theme.colors.whiteF8 }, style]}
       edges={edges}
       {...rest}>
       {isFocused ? (
         <StatusBar
           style='dark'
-          backgroundColor={theme.colors.container}
+          backgroundColor={theme.colors.whiteC4}
           translucent={true}
         />
       ) : (

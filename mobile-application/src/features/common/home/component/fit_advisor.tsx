@@ -41,7 +41,7 @@ const FitAdvisor = ({ data, onPress, selectedId }: FitAdvisorProps) => {
       >
         <Text
           style={{
-            color: selectedId === item._id ? Colors.whiteF3 : Colors.black, // Đổi màu chữ nếu được chọn
+            color: selectedId === item._id ? Colors.whiteF3 : Colors.black, 
             fontSize: 12,
             fontWeight: "500",
           }}

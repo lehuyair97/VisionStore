@@ -46,7 +46,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
 
 const styles = StyleSheet.create({
   itemWrapper: {
-    backgroundColor: "#F0F0F0",
+    backgroundColor: "#FFF",
     borderRadius: 10,
     alignItems: "center",
     margin: 6,
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   warrantyContainer: {
-    backgroundColor: Colors.container,
+    backgroundColor: Colors.whiteF8,
     height: 20,
     borderRadius: 10,
     justifyContent: "center",
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   priceContainer: {
-    backgroundColor: Colors.container,
+    backgroundColor: Colors.whiteF8,
     height: 40,
     borderRadius: 17,
     justifyContent: "center",

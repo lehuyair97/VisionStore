@@ -2,7 +2,7 @@ import { Button, Row, Text } from "@components"; // Giữ nguyên import này
 import Block from "@components/block"; // Giữ nguyên import này
 import Colors from "@theme/colors"; // Giữ nguyên import này
 
-const Pay = () => {
+const Pay = ({finalTotal}: {finalTotal: number}) => {
     return (
         <Block alignItems={"flex-end"} >
             <Row center  >
@@ -10,7 +10,7 @@ const Pay = () => {
                     <Block m={"_10"}/>
                     <Text fontSize={14} color={"black"} fontWeight={"bold"}>Thanh toán</Text>
                     <Block m={"_3"}/>
-                    <Text fontSize={14} color={"primary"} fontWeight={"normal"}>100.000 VNĐ</Text>
+                    <Text fontSize={14} color={"primary"} fontWeight={"normal"}>{finalTotal} VNĐ</Text>
                 </Block>
                 <Block style={{borderRadius: 0, width: "35%", height: "100%", backgroundColor: Colors.primary, alignItems: "center", justifyContent: "center",marginTop: 20}}>
                 <Button>

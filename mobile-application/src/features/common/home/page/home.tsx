@@ -1,4 +1,4 @@
-import { Block, MainContainer, Row, Text } from "@components";
+import { Block, Icon, MainContainer, Row, Text } from "@components";
 import useCategory, { Category } from "@hooks/common/use-category";
 import useBrand from "@hooks/common/use-get-brand";
 import useGetProductGrouped from "@hooks/common/use-get-products-grouped";
@@ -13,7 +13,6 @@ import { Image, TouchableOpacity } from "react-native";
 import { EDGES, Helper } from "@utils/helper";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native-virtualized-view";
-import AppBar from "../component/appbar";
 import Banner from "../component/banner";
 import FitAdvisor from "../component/fit_advisor";
 import FitFinder from "../component/fit_finder";
@@ -25,6 +24,8 @@ import BottomSheet from "@features/common/components/bottom-sheet";
 import { RBSheetRef } from "@features/common/components/bottom-sheet";
 import { FlatList } from "react-native-gesture-handler";
 import SubCategoryBottomSheet from "@features/common/components/sub-categories";
+import Colors from "@theme/colors";
+import AppBarCustom from "../component/appbar_custom";
 export default function Home() {
   const { data: categories, isLoading, error } = useCategory();
   const [categorySelected, setCategorySelected] =
@@ -106,11 +107,26 @@ export default function Home() {
     return <Text>No categories available</Text>;
 
   return (
-    <MainContainer edges={EDGES.LEFT_RIGHT}>
+    <MainContainer edges={EDGES.LEFT_RIGHT} >
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
       >
-        <AppBar />
+        <AppBarCustom title="VisionSore" titleStyle={{ fontWeight: "bold", color: Colors.primary }}
+          childrenRight={
+              <Row>
+              <TouchableOpacity onPress={() => navigation.navigate(ROUTES.Search as keyof ParamListBase)}>
+                <Icon
+                  type="fontAwesome"
+                  name="search"
+                  size={20}
+                  color={Colors.black2A}
+                />
+              </TouchableOpacity>
+              <Block width={20} />
+              <Icon type="fontAwesome" name="bell" size={20} color={Colors.black2A} />
+            </Row>
+          }
+        />
         <Banner images={banners} />
         <FitFinder
           data={transformedCategories}

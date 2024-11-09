@@ -4,18 +4,21 @@ import RenderProduct from "@features/common/common/render_product";
 import { FlatList } from "react-native";
 import RowTow from "./row_tow";
 import Colors from "@theme/colors";
+import { Cart } from "@hooks/common/use-cart";
 
-const ItemProduct = () => {
-    const data = [
-        { id: '1', name: 'USB 3.0 SanDisk CZ73 Ultra Flair 512GB 150Mb/s (Bạc) - Nhất Tín Chính Hãng', capacity: '512 GB', speed: '150Mb/s', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU9uWRAuTwzHZXLCKjD_p-DrJqLbYcjQVlKg&s' },
-        { id: '2', name: 'USB 3.0 SanDisk CZ73 Ultra Flair 512GB 150Mb/s (Bạc) - Nhất Tín Chính Hãng', capacity: '512 GB', speed: '150Mb/s', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU9uWRAuTwzHZXLCKjD_p-DrJqLbYcjQVlKg&s' },
-    ];
 
+interface ItemProductProps {
+    selectedProducts: Cart[];
+}
+
+const ItemProduct = ({ selectedProducts }: ItemProductProps) => {
+
+    console.log("selectedProducts", selectedProducts);
     return (
         <Block backgroundColor={"container"}>
             <FlatList
-                data={data}
-                keyExtractor={item => item.id}
+                data={selectedProducts}
+                keyExtractor={item => item._id}
                 renderItem={({item}) => <RenderProduct item={item} />}
                 style={{ paddingHorizontal: 20}}
             />

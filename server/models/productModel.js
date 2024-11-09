@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-  id: { type: String, required: true },
   parent_product_id: { type: String },
   sku: { type: String, required: true },
   name: { type: String, required: true },
@@ -10,6 +9,21 @@ const productSchema = new mongoose.Schema({
   descriptions: { type: String },
   thumbnail: { type: String },
   image: { type: String },
+  optionsColor: {
+    type: [
+      {
+        color: { type: String },
+        name: { type: String },
+      },
+    ],
+  },
+  optionsMemory: {
+    type: [
+      {
+        name: { type: String },
+      },
+    ],
+  },
   category_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",

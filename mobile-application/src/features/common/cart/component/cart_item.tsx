@@ -1,18 +1,26 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Icon } from '@components';
+import { View,  Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { Icon, Row, Text } from '@components';
 import Block from '@components/block';
 import Colors from '@theme/colors';
 import { Cart } from '@hooks/common/use-cart';
+import CustomControllerNums from '@features/common/detail_product/custom-conntroler-nums';
+import useQuantity from '@hooks/common/util/useQuantity';
 
 interface CartItemProps {
   item: Cart;
   isSelected: boolean;
   onSelect: (id: string) => void;
+
 }
 
 const CartItem = ({ item, isSelected, onSelect }: CartItemProps) => {
+
+    
+
   const product = item.carts && item.carts[0];
+  const { quantity, increaseQuantity, decreaseQuantity } = useQuantity({ initialQuantity: product.quantity });
+
 
   if (!product) {
     return <Text>Product information is not available</Text>;
@@ -28,15 +36,19 @@ const CartItem = ({ item, isSelected, onSelect }: CartItemProps) => {
           color={isSelected ? Colors.primary : Colors.text}
         />
       </TouchableOpacity>
-      <Block mr={"_10"}/>
-      <Image source={{ uri: product.image }} style={styles.image} />
-      <Block mr={"_15"}/>
+      <Image source={{ uri: product.image }} style={[styles.image, { marginHorizontal: 10, marginRight: 20 }]}  />
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>{product.productName}</Text>
-        <Block mt={"_5"}/>
-        <Text style={styles.description}>{product.description}</Text>
-        <Block mt={"_5"}/>
-        <Text style={styles.price}>{product.price} đ</Text>
+        <Text fontSize={16} fontWeight={"bold"} color="black2A" style={styles.name}>{product.productName}</Text>
+        <Text fontSize={14} fontWeight={"300"} color="black2A" style={styles.description}>{product.description}</Text>
+        <Row between mt={"_15"} center>
+          <Text fontSize={14} fontWeight={"300"} color="black2A" style={styles.price}>{product.price} đ</Text>
+          <CustomControllerNums
+          fontSize={14}
+          padding={6}
+          widthButton={20}
+          heightButton={20}
+           width={120} quantity={quantity} decreaseQuantity={decreaseQuantity} increaseQuantity={increaseQuantity} />
+        </Row>
       </View>
     </View>
   );
@@ -68,6 +80,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   description: {
+    marginTop: 10,
     fontSize: 14,
     color: '#666',
   },

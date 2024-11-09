@@ -12,6 +12,13 @@ export interface ProductDetail {
     descriptions: string;
     thumbnail: string;
     image: string;
+    optionsColor: {
+      color: string;
+      name: string;
+    }[];
+    optionsMemory: {
+      name: string;
+    }[];
     category_id: string;
     sub_category_id: string;
     option_id: string;
