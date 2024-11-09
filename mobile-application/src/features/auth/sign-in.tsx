@@ -1,21 +1,19 @@
-import { Image } from "react-native";
-import { memo } from "react";
-import { MainContainer, Input, Block, Button, Text, Row } from "@components";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { validateUser } from "@utils/validate";
-import { signInForm } from "@navigation/config/types";
-import { EDGES } from "@utils/helper";
 import { localImages } from "@assets/icons/images";
+import { Block, Button, Input, MainContainer, Row, Text } from "@components";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth, useSignIn } from "@hooks/auth";
-import theme from "@theme";
+import useSignInGoogle from "@hooks/auth/use-signin-google";
+import usePushNotification from "@hooks/root/use-push-notification";
+import { ROUTES } from "@navigation/config/routes";
+import { signInForm } from "@navigation/config/types";
 import messaging from "@react-native-firebase/messaging";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
-import useSignInGoogle from "@hooks/auth/use-signin-google";
-import { ROUTES } from "@navigation/config/routes";
-import usePushNotification, {
-  useNotifications,
-} from "@hooks/root/use-push-notification";
+import theme from "@theme";
+import { EDGES } from "@utils/helper";
+import { validateUser } from "@utils/validate";
+import { memo } from "react";
+import { useForm } from "react-hook-form";
+import { Image } from "react-native";
 
 function Signin({ navigation }) {
   const { handleLoginSuccess } = useAuth();
@@ -36,34 +34,32 @@ function Signin({ navigation }) {
   });
 
   const handleSignIn = async (type: "normal" | "google") => {
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
     const token = await messaging().getToken();
     const data = getValues();
     const userForm = { ...data, ...{ device_token: token } };
-    if (Object.keys(errors).length === 0) {
-      const { accessToken, isSuccess, refreshToken, user } =
-        type === "normal"
-          ? await submit(userForm)
-          : await signInByGoogle(token);
-      if (isSuccess) {
-        handleLoginSuccess({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          user: user,
-        });
-      }
-    } else {
-      console.log("Errors:", errors);
+
+    const { accessToken, isSuccess, refreshToken, user } =
+      type === "normal" ? await submit(userForm) : await signInByGoogle(token);
+    if (isSuccess) {
+      handleLoginSuccess({
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        user: user,
+      });
     }
   };
 
-  const handleSendNotification = async () => {
-    const token = await messaging().getToken();
-    const response = await submitPushNotification({
-      title: "Just One",
-      body: "Working now",
-      token,
-    });
-  };
+  // const handleSendNotification = async () => {
+  //   const token = await messaging().getToken();
+  //   await submitPushNotification({
+  //     title: "Just One",
+  //     body: "Working now",
+  //     token,
+  //   });
+  // };
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
@@ -141,7 +137,7 @@ function Signin({ navigation }) {
         <GoogleSigninButton
           size={GoogleSigninButton.Size.Standard}
           color={GoogleSigninButton.Color.Dark}
-          onPress={() => handleSignIn('google')}
+          onPress={() => handleSignIn("google")}
         />
       </Block>
     </MainContainer>

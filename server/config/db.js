@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 var express = require('express');
-const app = express();
 const { MongoClient, ServerApiVersion } = require('mongodb');  // Import MongoClient và ServerApiVersion
 
 const uri = "mongodb+srv://workhardteam2023:Lehuy1997@cluster0.x9z7n.mongodb.net/VisionStore?retryWrites=true&w=majority&appName=Cluster0";

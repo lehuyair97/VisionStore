@@ -4,6 +4,7 @@ import api, { REQUEST_URL } from "@utils/api";
 export interface Category {
   _id: string;
   name: string;
+  type: string
 }
 
 const useCategory = () => {

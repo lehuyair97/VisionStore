@@ -1,7 +1,5 @@
 import { Button, Input, MainContainer } from "@components";
-import Text from "@components/text";
 import { commonStyles } from "@features/common/profile/styles/styles";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { EDGES } from "@utils/helper";
 import { useForm } from "react-hook-form";
 
@@ -45,7 +43,6 @@ const ChangePassword = () => {
           label="Đổi mật khẩu"
           textStyle={{ color: "white" }}
           onPress={() => {
-            console.log("Button pressed");
             handleSubmit((data) => {  
               console.log("handleSubmit called with data: ", data);
             })();

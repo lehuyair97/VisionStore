@@ -1,48 +1,48 @@
 import { useEffect, useRef, useState } from "react";
+import io from "socket.io-client";
 
-const useRootWebSocket = (url) => {
+const useRootWebSocket = () => {
   const [messages, setMessages] = useState([]);
-  const ws = useRef(null);
+  const socket = useRef(null);
 
   useEffect(() => {
-    // Tạo kết nối WebSocket
-    ws.current = new WebSocket(url);
+    // Tạo kết nối với server qua socket.io
+    socket.current = io("http://192.168.1.11:8080");
 
-    ws.current.onopen = () => {
-      console.log("WebSocket connected");
+    socket.current.on("connect", () => {
+      console.log("Socket connected");
       // Có thể thông báo cho người dùng rằng kết nối đã mở
-    };
+    });
 
-    ws.current.onmessage = (event) => {
+    socket.current.on("commentStatus", (message) => {
       try {
-        const message = JSON.parse(event.data);
         // Kiểm tra loại tin nhắn hoặc các điều kiện khác nếu cần
         setMessages((prevMessages) => [...prevMessages, message]);
       } catch (error) {
-        console.error("Error parsing message:", error);
+        console.error("Error handling message:", error);
       }
-    };
+    });
 
-    ws.current.onclose = () => {
-      console.log("WebSocket disconnected");
+    socket.current.on("disconnect", () => {
+      console.log("Socket disconnected");
       // Thông báo cho người dùng rằng kết nối đã ngắt
-    };
+    });
 
-    ws.current.onerror = (error) => {
-      console.error("WebSocket error:", error);
+    socket.current.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
       // Xử lý lỗi kết nối nếu cần
-    };
+    });
 
     return () => {
-      ws.current.close();
+      socket.current.disconnect();
     };
-  }, [url]);
+  }, []);
 
   const sendMessage = (data) => {
-    if (ws.current.readyState === WebSocket.OPEN) {
-      ws.current.send(JSON.stringify(data));
+    if (socket.current.connected) {
+      socket.current.emit("message", data);
     } else {
-      console.error("WebSocket is not open. Cannot send message.");
+      console.error("Socket is not connected. Cannot send message.");
     }
   };
 

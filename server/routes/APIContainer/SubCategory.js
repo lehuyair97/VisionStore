@@ -79,7 +79,7 @@ exports.getSubCategoryByCategoryId = async (req, res) => {
         .status(404)
         .json({ message: "No subcategories found for this category" });
     }
-    res.status(200).json(subCategories);
+    res.status(200).json(subCategories[0]);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -94,7 +94,7 @@ exports.getSubCategoryByType = async (req, res) => {
         .status(404)
         .json({ message: "No subcategories found for this type" });
     }
-    res.status(200).json(subCategories);
+    res.status(200).json(subCategories[0]);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

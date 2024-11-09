@@ -1,8 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
-import { Block, Button, Row } from "@components";
+import { Button, Row } from "@components";
 import { TextInput } from "@components/text-input";
 import { makeStyles } from "@theme";
-import { backgroundColor } from "@shopify/restyle";
 
 export default function SearchView() {
   const style = useStyle();

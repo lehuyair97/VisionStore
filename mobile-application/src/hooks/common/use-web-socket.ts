@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import useRootWebSocket from "./use-root-web-socket"; // Đảm bảo rằng đường dẫn đúng
 
 // Hook cho loại tin nhắn Message
-export const useMessageWebSocket = (url) => {
-  const { messages, sendMessage } = useRootWebSocket(url);
+export const useMessageWebSocket = () => {
+  const { messages, sendMessage } = useRootWebSocket();
   const [messageList, setMessageList] = useState([]);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export const useMessageWebSocket = (url) => {
 
 // Hook cho loại tin nhắn Voucher
 export const useVoucherWebSocket = (url) => {
-  const { messages, sendMessage } = useRootWebSocket(url);
+  const { messages, sendMessage } = useRootWebSocket();
   const [voucherList, setVoucherList] = useState([]);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const useVoucherWebSocket = (url) => {
 
 // Hook cho loại tin nhắn Chat
 export const useChatWebSocket = (url) => {
-  const { messages, sendMessage } = useRootWebSocket(url);
+  const { messages, sendMessage } = useRootWebSocket();
   const [chatList, setChatList] = useState([]);
 
   useEffect(() => {

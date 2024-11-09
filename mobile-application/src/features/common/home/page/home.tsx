@@ -1,111 +1,109 @@
-import { Block, Button, Icon, MainContainer, Row, Text } from "@components";
-import { EDGES } from "@utils/helper";
-import AppBar from "../component/appbar";
-import Banner from "../component/banner";
-import FitFinder from "../component/fit_finder";
-import FitAdvisor from "../component/fit_advisor";
-import { ScrollView } from "react-native-virtualized-view";
+import { Block, MainContainer, Row, Text } from "@components";
 import useCategory, { Category } from "@hooks/common/use-category";
 import useBrand from "@hooks/common/use-get-brand";
 import useGetProductGrouped from "@hooks/common/use-get-products-grouped";
-import useGetProductByBrandID, { ProductResponse } from "@hooks/common/use-get-product-by-brand";
-import { useEffect, useState } from "react";
-import { useNavigation, NavigationProp, ParamListBase } from "@react-navigation/native";
-import { ROUTES } from "@navigation/config/routes";
-import ProductGrouped from "../component/product-grouped";
-import ProductBrand from "../component/product-brand";
-import { View } from "react-native";
 import { navigate } from "@navigation/config/navigation-service";
-
-const images = [
-  require("../../../../assets/icons/banner.png"),
-  require("../../../../assets/icons/banner2.png"),
-  require("../../../../assets/icons/banner.png"),
-];
-
-const iconMap: { [key: string]: string } = {
-  Laptop: "home",
-  PC: "desktop",
-  "Linh  kiện": "microchip",
-  "Phụ kiện": "headphones",
-};
-
-
+import { ROUTES } from "@navigation/config/routes";
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
+import { Image, TouchableOpacity } from "react-native";
+import { EDGES, Helper } from "@utils/helper";
+import { useEffect, useRef, useState } from "react";
+import { ScrollView } from "react-native-virtualized-view";
+import AppBar from "../component/appbar";
+import Banner from "../component/banner";
+import FitAdvisor from "../component/fit_advisor";
+import FitFinder from "../component/fit_finder";
+import ProductBrand from "../component/product-grouped-by-brand";
+import { banners, iconMap } from "@utils/containts";
+import { CategoryCustomProps } from "./types";
+import useGetSubCategoryByType from "@hooks/common/use-get-sub-category-by-type";
+import BottomSheet from "@features/common/components/bottom-sheet";
+import { RBSheetRef } from "@features/common/components/bottom-sheet";
+import { FlatList } from "react-native-gesture-handler";
+import SubCategoryBottomSheet from "@features/common/components/sub-categories";
 export default function Home() {
-  const { data: category, isLoading, error } = useCategory();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedIdBrand, setSelectedIdBrand] = useState<string | null>(null);
-
+  const { data: categories, isLoading, error } = useCategory();
+  const [categorySelected, setCategorySelected] =
+    useState<CategoryCustomProps | null>(null);
+  const [selectedIdBrand, setSelectedIdBrand] = useState("");
+  const refRBSheet = useRef<RBSheetRef>();
+  const [subCategories, setSubCategories] = useState<any>();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const {
+    refetch: submmitSubCategory,
+    isRefetchError,
+    isRefetching,
+  } = useGetSubCategoryByType(categorySelected?.type, false);
+
+  const transformedCategories =
+    categories?.map((item) => ({
+      id: item._id,
+      title: item.name,
+      icon: iconMap[item.name] || "home",
+      type: item?.type,
+    })) || [];
+
+  const openSubCategories = () => {
+    if (refRBSheet?.current) {
+      refRBSheet.current.open();
+    }
+  };
+  const closeSubCategories = () => {
+    if (refRBSheet?.current) {
+      refRBSheet.current.close();
+    }
+  };
+
+  useEffect(() => {
+    if (!categorySelected && transformedCategories.length > 0) {
+      setCategorySelected(transformedCategories[0]);
+    }
+  }, [transformedCategories]);
+
+  useEffect(() => {
+    if (
+      categorySelected?.type === "accessories" ||
+      categorySelected?.type === "components"
+    ) {
+      const fetchSubCategory = async () => {
+        openSubCategories();
+        const res = await submmitSubCategory();
+        setSubCategories(res?.data);
+      };
+      fetchSubCategory();
+    }
+  }, [categorySelected]);
+  const { data: productsByCategory } = useGetProductGrouped(
+    categorySelected?.id || ""
+  );
+  const { data: brands } = useBrand();
+  const extendedBrands = brands
+    ? [
+        { _id: "", name: "Tất cả", description: "", logo: "", brandType: "" },
+        ...brands,
+      ]
+    : [];
 
   const handleNavigateToDetailProduct = (id: string) => {
-    navigation.navigate(ROUTES.DetailProduct as keyof ParamListBase, {
-      productId: id
-    });
+    navigate(ROUTES.DetailProduct as keyof ParamListBase, { productId: id });
   };
-
-  const categoryID = selectedId || (category && category[0]._id);
-  const brandID = selectedIdBrand;
-
-  const { data: dataProductsCategory } = useGetProductGrouped(categoryID);
-  const { data: dataProductsBrand } = useGetProductByBrandID({
-    categoryID,
-    brandID
-  });
-  const { data: dataBrand } = useBrand();
-  const extendedDataBrand = dataBrand ? [
-    { _id: "", name: "Tất cả", description: "", logo: "", brandType: "" },
-    ...dataBrand
-  ] : [];
-
-  const handleSelectCategory = (id: string) => {
-    setSelectedId(id);
-  };
-
-  const handleSelectBrand = (id: string) => {
-    setSelectedIdBrand(id);
-  };
-
-
-  if (isLoading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error: {error.message}</Text>;
-  if (!category || category.length === 0)
-    return <Text>No categories available</Text>;
-
-  const data = category.map((item: Category) => ({
-    id: item._id,
-    title: item.name,
-    icon: iconMap[item.name] || "home",
-  }));
-
-
-  const selectedBrandName = selectedIdBrand
-    ? dataBrand.find((brand) => brand._id === selectedIdBrand)?.name
-    : null;
-
-  const mergedProducts = (dataProductsBrand || []).reduce((acc, product) => {
-    const brandId = product.brand;
-    let brandGroup = acc.find(group => group._id === brandId);
-
-    if (!brandGroup) {
-      brandGroup = {
-        _id: brandId,
-        brand: selectedBrandName,
-        products: []
-      };
-      acc.push(brandGroup);
-    }
-
-    brandGroup.products.push(product);
-    return acc;
-  }, []);
 
   const handleNavigateToDetailBrand = (id: string, brandName: string) => {
     navigation.navigate(ROUTES.DetailBrand as keyof ParamListBase, {
-      brandId: id,
-      brandName: brandName
+      id,
+      brandName,
+      categoryId: categorySelected?.id,
     });
   };
+
+  if (isLoading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error: {error.message}</Text>;
+  if (!categories || categories.length === 0)
+    return <Text>No categories available</Text>;
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
@@ -113,29 +111,30 @@ export default function Home() {
         contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
       >
         <AppBar />
-        <Block mt="_20" />
-        <Banner images={images} />
-        <Block mt="_20" />
-        <FitFinder data={data} selectedId={selectedId} onPress={handleSelectCategory} />
-        <Block mt="_15" />
-        <FitAdvisor data={extendedDataBrand} selectedId={selectedIdBrand} onPress={handleSelectBrand} />
-        <Block mt="_15" />
-        {selectedIdBrand === "" || selectedIdBrand === null 
-          ? (dataProductsCategory ? 
-              <ProductGrouped 
-                data={dataProductsCategory} 
-                handleNavigateToDetailProduct={handleNavigateToDetailProduct} 
-                handleNavigateToDetailBrand={handleNavigateToDetailBrand}  
-              /> 
-              : <Text>Không có sản phẩm</Text>)
-          : <ProductBrand 
-              data={mergedProducts} 
-              selectedBrandName={selectedBrandName} 
-              handleNavigateToDetailProduct={handleNavigateToDetailProduct} 
-              handleNavigateToDetailBrand={handleNavigateToDetailBrand}
-            />
-        }
+        <Banner images={banners} />
+        <FitFinder
+          data={transformedCategories}
+          selected={categorySelected}
+          onPress={setCategorySelected}
+        />
+        <FitAdvisor
+          data={extendedBrands}
+          selectedId={selectedIdBrand}
+          onPress={setSelectedIdBrand}
+        />
+        <ProductBrand
+          brandSelected={selectedIdBrand}
+          data={productsByCategory}
+          handleNavigateToDetailProduct={handleNavigateToDetailProduct}
+          handleNavigateToDetailBrand={handleNavigateToDetailBrand}
+        />
       </ScrollView>
+      <SubCategoryBottomSheet
+        isFetching={isRefetching}
+        refRBSheet={refRBSheet}
+        subCategories={subCategories?.sub_category_list}
+        category={categorySelected?.type}
+      />
     </MainContainer>
   );
 }

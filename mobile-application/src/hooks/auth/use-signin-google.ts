@@ -35,7 +35,7 @@ const useSignInGoogle = () => {
       const res = (await api({
         url: REQUEST_URL.SIGN_IN_WITH_GOOGLE,
         method: "POST",
-        data: { token: token, device_token: device_token  },
+        data: { token: token, device_token: device_token },
       })) as signInReponse;
       return res;
     },

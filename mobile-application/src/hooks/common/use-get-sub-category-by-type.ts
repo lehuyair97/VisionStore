@@ -6,19 +6,21 @@ type SubCategoryType =
   | "Laptop"
   | "components"
   | "accessories"
-  | "monitor";
+  | "monitor" | string
 
-const useGetSubCategoryByType = (type: SubCategoryType) => {
-  const { data, error, isPending } = useQuery({
-    queryKey: ["sub_category", type],
-    queryFn: async () => {
-      return await api({
-        url: REQUEST_URL.GET_SUBCATEGORIES_BY_TYPE(type),
-        method: "GET",
-      });
-    },
-  });
-  return { data, error, isPending };
+const useGetSubCategoryByType = (type: SubCategoryType, isAutoFetch: boolean) => {
+  const { data, error, isPending, refetch, isRefetching, isRefetchError } =
+    useQuery({
+      queryKey: ["sub_category", type],
+      queryFn: async () => {
+        return await api({
+          url: REQUEST_URL.GET_SUBCATEGORIES_BY_TYPE(type),
+          method: "GET",
+        });
+      },
+      enabled: isAutoFetch,
+    });
+  return { data, error, isPending, refetch, isRefetchError, isRefetching };
 };
 
 export default useGetSubCategoryByType;
