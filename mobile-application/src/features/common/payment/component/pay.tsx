@@ -6,15 +6,15 @@ const Pay = ({finalTotal}: {finalTotal: number}) => {
     return (
         <Block alignItems={"flex-end"} >
             <Row center  >
-                <Block paddingRight={"_10"}  height={90} backgroundColor={"background_fit_finder"} flex={1} alignItems={"flex-end"}>
+                <Block paddingRight={"_10"}  height={80} backgroundColor={"background_fit_finder"} flex={1} alignItems={"flex-end"}>
                     <Block m={"_10"}/>
                     <Text fontSize={14} color={"black"} fontWeight={"bold"}>Thanh toán</Text>
                     <Block m={"_3"}/>
                     <Text fontSize={14} color={"primary"} fontWeight={"normal"}>{finalTotal} VNĐ</Text>
                 </Block>
-                <Block style={{borderRadius: 0, width: "35%", height: "100%", backgroundColor: Colors.primary, alignItems: "center", justifyContent: "center",marginTop: 20}}>
+                <Block style={{borderRadius: 0, width: "35%", height: "92%", backgroundColor: Colors.primary, alignItems: "center", justifyContent: "center",marginTop: 20}}>
                 <Button>
-                    <Text textAlign={"center"} color={"container"} fontWeight={"bold"}>Thanh toán</Text>
+                    <Text mt={'_20'} textAlign={"center"} color={"container"} fontWeight={"bold"}>Thanh toán</Text>
                     <Block m={"_10"}/>
                 </Button>
                 </Block>

@@ -1,13 +1,17 @@
-import React from "react";
-import { TabView } from "react-native-tab-view";
+import { Block, Icon, MainContainer, Row } from "@components";
 import { useTabState } from "@hooks/common/use-tab-state";
-import { TAB_BUILD } from "./components/tab-bar";
+import { ROUTES } from "@navigation/config/routes";
+import Colors from "@theme/colors";
+import { SCREEN_WIDTH } from "@utils/helper";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { TabView } from "react-native-tab-view";
+import AppBarCustom from "../home/component/appbar_custom";
 import BuildAutomatic from "./components/build-automatic";
 import BuildManual from "./components/build-manual";
-import { SCREEN_WIDTH } from "@utils/helper";
-import { Block, MainContainer, Text } from "@components";
-import TabBarHome from "./components/tab-bar";
-import SearchView from "./components/search-view";
+import TabBarHome, { TAB_BUILD } from "./components/tab-bar";
+import { navigate } from "@navigation/config/navigation-service";
+import { StatusBar } from "react-native";
+
 export type Route = {
   key: string;
   icon?: string;
@@ -18,7 +22,6 @@ export type Route = {
 };
 export default function BuildPC() {
   const { index, setIndex, routes } = useTabState(TAB_BUILD);
-
   const renderScene = ({ route: { key } }: { route: Route }) => {
     const components = {
       Manual: <BuildManual />,
@@ -29,7 +32,31 @@ export default function BuildPC() {
   return (
     <MainContainer>
       <Block flex={1}>
-        <SearchView />
+        <Block px={"_20"} pb={'_20'}>
+          <AppBarCustom
+            title="VisionSore"
+            titleStyle={{ fontWeight: "bold", color: Colors.primary }}
+            childrenRight={
+              <Row>
+                <TouchableOpacity onPress={() => navigate(ROUTES.Search)}>
+                  <Icon
+                    type="fontAwesome"
+                    name="search"
+                    size={20}
+                    color={Colors.black2A}
+                  />
+                </TouchableOpacity>
+                <Block width={20} />
+                <Icon
+                  type="fontAwesome"
+                  name="bell"
+                  size={20}
+                  color={Colors.black2A}
+                />
+              </Row>
+            }
+          />
+        </Block>
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}

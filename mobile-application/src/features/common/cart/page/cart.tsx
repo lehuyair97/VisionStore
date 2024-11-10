@@ -29,7 +29,7 @@ export default function Cart() {
     }
   };
   useEffect(() => {
-    const total = carts.carts
+    const total = carts?.carts
       .filter((item) => selectedItems.includes(item?.productId))
       .reduce((temp, current) => temp + current?.quantity * current?.price, 0);
     setTotalPrice(total);
@@ -39,12 +39,11 @@ export default function Cart() {
     const selectedProducts = carts?.carts?.filter((product) =>
       selectedItems.includes(product.productId)
     );
-
     if (selectedProducts == null || selectedProducts.length === 0) {
       Alert.alert("Thông báo", "Không có sản phẩm nào để thanh toán");
       return;
     }
-    navigation.navigate("Payment", { selectedProducts });
+    navigation.navigate("Payment", { selectedProducts, carts, totalPrice });
   };
 
   if (isLoading) {

@@ -88,7 +88,6 @@ const DetailProduct = () => {
     { id: 2, image: productDetail?.image },
     { id: 3, image: productDetail?.image },
   ];
-  console.log(userInfo?._id)
 
   const handleAddCart = () => {
     const orderData: OrderData = {

@@ -21,7 +21,7 @@ export default function TabBarHome(
   }
 ) {
   return (
-    <Row marginHorizontal={"_20"}>
+    <Row paddingHorizontal={"_20"} pt={'_10'} backgroundColor={'container'}>
       {props.navigationState?.routes.map((route: Route, index: number) => {
         const isActive = index === props.navigationState?.index;
         return (

@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   avatar: { type: String },
   address: [addressSchema],
+  addressSelected: { location: String, detail: String },
   phoneNumber: { type: Number },
   favorites: {
     type: Array,

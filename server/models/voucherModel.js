@@ -1,10 +1,8 @@
-// models/voucherModel.js
 const mongoose = require("mongoose");
 
 const voucherSchema = new mongoose.Schema({
   code: {
     type: String,
-    required: true,
     unique: true,
   },
   discount: {
@@ -15,21 +13,30 @@ const voucherSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  title: String,
+  description: String,
   status: {
     type: String,
     enum: ["active", "inactive"],
     default: "active",
   },
-  usedBy: [{
-    userID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+  type: {
+    type: String,
+    enum: ["discount", "shipping"],
+    required: true,
+  },
+  usedBy: [
+    {
+      userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      usedAt: {
+        type: Date,
+        default: Date.now,
+      },
     },
-    usedAt: {
-      type: Date,
-      default: Date.now
-    }
-  }],
+  ],
 });
 
 module.exports = mongoose.model("Voucher", voucherSchema);

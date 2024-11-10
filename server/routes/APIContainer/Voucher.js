@@ -1,16 +1,23 @@
 const Voucher = require("./../../models/voucherModel");
-const { broadcast } = require("./../../config/websocket");
+const { handleEvent } = require("./../../config/websocket");
 
 exports.createVoucher = async (req, res) => {
+  console.log(req.body);
   try {
-    const { code, discount, expiration_date } = req.body;
+    const { discount, expiration_date, type, title, description } = req.body;
 
-    const newVoucher = new Voucher({ code, discount, expiration_date });
+    const code = generateRandomCode();
+    const newVoucher = new Voucher({
+      discount,
+      expiration_date,
+      type,
+      title,
+      description,
+      code,
+    });
     await newVoucher.save();
-
-    // Gửi thông báo tới tất cả client về voucher mới được tạo
-    broadcast("voucher", { type: "NEW_VOUCHER", voucher: newVoucher });
-
+    const vouchers = await Voucher.find({ status: "active" });
+    handleEvent("voucher", vouchers);
     res.status(201).json(newVoucher);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -27,16 +34,17 @@ exports.useVoucher = async (req, res) => {
     if (voucher.status === "inactive") {
       return res.status(400).json({ message: "Voucher is inactive" });
     }
-    if (voucher.usedBy.some(entry => entry.userID.toString() === userID)) {
-      return res.status(400).json({ message: "You have already used this voucher" });
+    if (voucher.usedBy.some((entry) => entry.userID.toString() === userID)) {
+      return res
+        .status(400)
+        .json({ message: "You have already used this voucher" });
     }
-    
+
     voucher.usedBy.push({ userID });
     await voucher.save();
 
-    // Gửi thông báo tới tất cả client rằng voucher đã được sử dụng
-    broadcast("voucher", { type: "VOUCHER_USED", voucher });
-
+    const vouchers = await Voucher.find({ status: "active" });
+    handleEvent("voucher", vouchers);
     res.status(200).json(voucher);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -73,3 +81,14 @@ exports.getVoucherByCode = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+function generateRandomCode(length = 8) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  const timestampPart = Date.now().toString(36).toUpperCase();
+  for (let i = 0; i < length - timestampPart.length; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return `${timestampPart}${code}`;
+}

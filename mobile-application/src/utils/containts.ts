@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const comentsData = [
   {
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
@@ -53,8 +55,7 @@ export const BuildPCManualData = [
     price: "$699.99",
     original_price: "$799.99",
     quantity: 10,
-    image:
-      "https://images.anandtech.com/doci/17204/RTX_3080_12GB_678x452.jpg",
+    image: "https://images.anandtech.com/doci/17204/RTX_3080_12GB_678x452.jpg",
   },
   {
     id: "4",
@@ -86,7 +87,6 @@ export const BuildPCManualData = [
     image:
       "https://images.evga.com/products/gallery/png/100-W1-0600-K1_LG_1.png",
   },
-
 ];
 export const banners = [
   require("./../assets/icons/banner.png"),
@@ -100,3 +100,18 @@ export const iconMap: { [key: string]: string } = {
   "Linh  kiện": "microchip",
   "Phụ kiện": "headphones",
 };
+
+export const deliveryMethods = [
+  {
+    method: "Giao nhanh",
+    description: "Giao hàng nhanh",
+    estimated_delivery_time: dayjs().add(2, "day").format("DD-MM-YYYY"),
+    price: 35,
+  },
+  {
+    method: "Giao thường",
+    description: "Giao hàng chậm",
+    estimated_delivery_time: dayjs().add(3, "day").format("DD-MM-YYYY"),
+    price: 25,
+  },
+];

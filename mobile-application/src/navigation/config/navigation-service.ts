@@ -11,7 +11,7 @@ import { ROUTES } from './routes'
 
 export const navigationRef = createRef<NavigationContainerRef<any>>()
 
-export function navigate(name: string, params?: unknown, key?: string) {
+export function navigate(name: any, params?: unknown, key?: string) {
   if (key) {
     navigationRef.current?.navigate({ key, name, params })
     return

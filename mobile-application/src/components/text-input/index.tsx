@@ -106,7 +106,7 @@ function TextInputComponent(props: InputProps, ref: any) {
       minHeight: 25,
       flex: 1,
       fontSize: size,
-      borderRadius: 4,
+      borderRadius: 16,
       paddingLeft: leftIcon ? 30 : 10,
       backgroundColor: theme.colors.title,
       paddingRight: rightIcon || props.secureTextEntry ? 44 : 15,

@@ -1,10 +1,10 @@
-import { useIsFocused } from '@react-navigation/native'
-import theme from '@theme'
-import { StatusBar } from 'expo-status-bar'
+import { useIsFocused } from "@react-navigation/native";
+import theme from "@theme";
+import { StatusBar } from "expo-status-bar";
 import {
   NativeSafeAreaViewProps,
-  SafeAreaView
-} from 'react-native-safe-area-context'
+  SafeAreaView,
+} from "react-native-safe-area-context";
 
 const MainContainer = ({
   children,
@@ -12,24 +12,18 @@ const MainContainer = ({
   edges,
   ...rest
 }: NativeSafeAreaViewProps) => {
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
   return (
     <SafeAreaView
       style={[{ flex: 1, backgroundColor: theme.colors.whiteF8 }, style]}
       edges={edges}
-      {...rest}>
-      {isFocused ? (
-        <StatusBar
-          style='light'
-          backgroundColor={theme.colors.primary}
-          translucent={true}
-        />
-      ) : (
-        <StatusBar style='light' backgroundColor={theme.colors.primary} />
-      )}
+      {...rest}
+    >
+      <StatusBar style="light" backgroundColor={theme.colors.primary} />
+
       {children}
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default MainContainer
+export default MainContainer;

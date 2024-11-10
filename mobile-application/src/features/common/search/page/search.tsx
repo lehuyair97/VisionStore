@@ -31,7 +31,6 @@ const Search = () => {
     }
   };
   useEffect(() => {
-    console.log("datanew", products); // Kiểm tra dữ liệu sau khi tìm kiếm
   }, [products]);
   return (
     <MainContainer edges={EDGES.FULL} >

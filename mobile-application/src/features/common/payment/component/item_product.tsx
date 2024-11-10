@@ -12,8 +12,6 @@ interface ItemProductProps {
 }
 
 const ItemProduct = ({ selectedProducts }: ItemProductProps) => {
-
-    console.log("selectedProducts", selectedProducts);
     return (
         <Block backgroundColor={"container"}>
             <FlatList
@@ -22,9 +20,6 @@ const ItemProduct = ({ selectedProducts }: ItemProductProps) => {
                 renderItem={({item}) => <RenderProduct item={item} />}
                 style={{ paddingHorizontal: 20}}
             />
-            <RowTow title="Voucher" icon="ticket" title_method="Miễn phí vận chuyển " color_title_method={Colors.green_300} />
-            <RowTow title="Voucher" icon="ticket" title_method="Miễn phí vận chuyển " color_title_method={Colors.green_300} />
-
         </Block>
     );
 }

@@ -128,7 +128,6 @@ const BottomTabScenes = () => {
                 <TouchableOpacity
                   {...props}
                   onPress={() => {
-                    console.log(name);
                     navigate(name);
                   }}
                 />

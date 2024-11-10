@@ -11,7 +11,7 @@ export type signInReponse = {
 };
 
 export type User = {
-  _id:string;
+  _id: string;
   userName?: string;
   email: string;
   display_name?: string;
@@ -19,11 +19,14 @@ export type User = {
   avatar?: string;
   address?: any;
   phoneNumber?: number;
-  favorites?: any[]; 
+  favorites?: any[];
   payment_transaction?: any;
   createdAt?: Date;
+  addressSelected: {
+    location: string;
+    detail: string
+  };
 };
-
 
 const useSignIn = () => {
   const {
@@ -67,4 +70,3 @@ const useSignIn = () => {
   };
 };
 export default useSignIn;
-

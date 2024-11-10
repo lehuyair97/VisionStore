@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 
-const useGetComment = () => {
+const useGetActiveVoucher = () => {
   const { data, error, isPending } = useQuery({
     queryKey: ["active-vouchers"],
     queryFn: async () => {
@@ -14,4 +14,4 @@ const useGetComment = () => {
   return { data, error, isPending };
 };
 
-export default useGetComment;
+export default useGetActiveVoucher;

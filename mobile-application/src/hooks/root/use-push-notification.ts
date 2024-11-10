@@ -45,7 +45,6 @@ const requestNotificationPermission = async () => {
 const registerForPushNotificationsAsync = async () => {
   const token = await requestNotificationPermission();
   if (!token) return;
-  console.log("Expo Push Token:", token);
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
       name: "default",

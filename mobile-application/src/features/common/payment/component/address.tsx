@@ -19,7 +19,7 @@ const Address = ({address}: AddressProps) => {
                     <Block>
                     <Text color={"black"}>Địa chỉ nhận hàng</Text>
                     <Block m={"_5"}/>
-                    <Text color={"black"}>{address.customerName ?? '----------'} |+{address.customerPhoneNumber ?? '----------'}</Text>
+                    <Text color={"black"}>{address.customerEmail ?? '----------'} |+{address.customerPhoneNumber ?? '----------'}</Text>
                     <Text color={"black"}>{address.customerAddress ?? '----------'}</Text>
                 </Block>
                 </Row>

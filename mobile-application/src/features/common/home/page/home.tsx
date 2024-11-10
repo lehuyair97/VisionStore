@@ -1,7 +1,11 @@
 import { Block, Icon, MainContainer, Row, Text } from "@components";
-import useCategory, { Category } from "@hooks/common/use-category";
+import { RBSheetRef } from "@features/common/components/bottom-sheet";
+import SubCategoryBottomSheet from "@features/common/components/sub-categories";
+import useCategory from "@hooks/common/use-category";
 import useBrand from "@hooks/common/use-get-brand";
+import useGetProductGroupedByChildSubCategory from "@hooks/common/use-get-product-grouped-by-Sub-category-child-id";
 import useGetProductGrouped from "@hooks/common/use-get-products-grouped";
+import useGetSubCategoryByType from "@hooks/common/use-get-sub-category-by-type";
 import { navigate } from "@navigation/config/navigation-service";
 import { ROUTES } from "@navigation/config/routes";
 import {
@@ -9,24 +13,18 @@ import {
   ParamListBase,
   useNavigation,
 } from "@react-navigation/native";
-import { Image, TouchableOpacity } from "react-native";
-import { EDGES, Helper } from "@utils/helper";
+import Colors from "@theme/colors";
+import { banners, iconMap } from "@utils/containts";
+import { EDGES } from "@utils/helper";
 import { useEffect, useRef, useState } from "react";
+import { TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
+import AppBarCustom from "../component/appbar_custom";
 import Banner from "../component/banner";
 import FitAdvisor from "../component/fit_advisor";
 import FitFinder from "../component/fit_finder";
 import ProductBrand from "../component/product-grouped-by-brand";
-import { banners, iconMap } from "@utils/containts";
 import { CategoryCustomProps } from "./types";
-import useGetSubCategoryByType from "@hooks/common/use-get-sub-category-by-type";
-import BottomSheet from "@features/common/components/bottom-sheet";
-import { RBSheetRef } from "@features/common/components/bottom-sheet";
-import { FlatList } from "react-native-gesture-handler";
-import SubCategoryBottomSheet from "@features/common/components/sub-categories";
-import Colors from "@theme/colors";
-import AppBarCustom from "../component/appbar_custom";
-import useGetProductGroupedByChildSubCategory from "@hooks/common/use-get-product-grouped-by-Sub-category-child-id";
 export default function Home() {
   const { data: categories, isLoading, error } = useCategory();
   const [categorySelected, setCategorySelected] =

@@ -7,9 +7,11 @@ import { commonStyles } from "../styles/styles";
 
 interface HeaderProfileProps {
     avatar: string;
+    displayName: string;
+    email: string
 }
 
-const HeaderProfile = ({ avatar }: HeaderProfileProps) => {
+const HeaderProfile = ({ avatar, displayName, email }: HeaderProfileProps) => {
     return (
 <Block>
         <MainContainer edges={EDGES.LEFT_RIGHT} style={[commonStyles.container, {paddingTop: 40}]}>
@@ -17,8 +19,8 @@ const HeaderProfile = ({ avatar }: HeaderProfileProps) => {
                 <Row center>
                     <Image source={{ uri: avatar }} style={{ width: 60, height: 60, borderRadius: 100 }} />
                     <Block ml={"_15"}>
-                        <Text style={styles.name}>Nguyễn Văn A</Text>
-                        <Text style={styles.email}>nguyenvana@gmail.com</Text>
+                        <Text style={styles.name}>{displayName}</Text>
+                        <Text style={styles.email}>{email}</Text>
                     </Block>
                 </Row>
                 <Row center >
