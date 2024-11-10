@@ -75,7 +75,7 @@ const Button = React.forwardRef<TouchableOpacity, ButtonProps>((props, ref) => {
           />
         )}
         {label && (
-          <Text fontSize={16} color="black" px="_10" style={textStyle}>
+          <Text fontSize={16} color="container" px="_10" style={textStyle}>
             {label}
           </Text>
         )}

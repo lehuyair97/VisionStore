@@ -8,20 +8,26 @@ import RootScenes from "./root-scenes";
 import { navigationRef } from "@navigation/config/navigation-service";
 import { CommonProvider } from "@context/common-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import WebSocketProvider from "@context/web-socket-context";
 export default function MainNavigation() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <CommonProvider>
-          <GestureHandlerRootView>
-            <ThemeProvider theme={theme}>
-              <NavigationContainer theme={navigationTheme} ref={navigationRef}>
-                <RootScenes/>
-              </NavigationContainer>
-            </ThemeProvider>
-          </GestureHandlerRootView>
-        </CommonProvider>
-      </AuthProvider>
+      <WebSocketProvider>
+        <AuthProvider>
+          <CommonProvider>
+            <GestureHandlerRootView>
+              <ThemeProvider theme={theme}>
+                <NavigationContainer
+                  theme={navigationTheme}
+                  ref={navigationRef}
+                >
+                  <RootScenes />
+                </NavigationContainer>
+              </ThemeProvider>
+            </GestureHandlerRootView>
+          </CommonProvider>
+        </AuthProvider>
+      </WebSocketProvider>
     </QueryClientProvider>
   );
 }

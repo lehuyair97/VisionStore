@@ -10,23 +10,18 @@ const orderModel = new mongoose.Schema({
   },
   customerName: {
     type: String,
-    required: true,
   },
   customerEmail: {
     type: String,
-    required: true,
   },
   customerAddress: {
     type: String,
-    required: true,
   },
   customerPhoneNumber: {
     type: Number,
-    required: true,
   },
   paymentTransactions: {
     type: paymentTransactionsSchema,
-    required: true,
   },
   totalBill: {
     type: Number,

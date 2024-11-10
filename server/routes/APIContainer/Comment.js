@@ -1,56 +1,50 @@
 const Comment = require("./../../models/commentModel");
 const { broadcast, handleEvent } = require("./../../config/websocket");
 
-exports.addComment = async (req, res) => {
-  const { productID, userID, text, images } = req.body;
-  try {
-    const newComment = new Comment({ productID, userID, text, images });
-    await newComment.save();
-    // broadcast({
-    //   type: "NEW_COMMENT", // Thông báo loại sự kiện
-    //   data: newComment, // Dữ liệu cần gửi đi (comment mới)
-    // });
-    handleEvent("comment", newComment);
+async function getCommentsData(productID) {
+  const comments = await Comment.find({ productID }).populate(
+    "userID",
+    "email userName avatar"
+  );
+  
+  const count = comments.length;
+  const totalRating = comments.reduce((sum, comment) => sum + comment.rating, 0);
+  const averageRating = count > 0 ? totalRating / count : 0;
 
-    // Trả về comment mới tạo với mã trạng thái 201
-    res.status(201).json(newComment);
-  } catch (error) {
-    // Xử lý lỗi và trả về mã lỗi 500
-    res.status(500).json({ message: error.message });
-  }
-};
+  return { comments, count, averageRating };
+}
 
 exports.getCommentsByProductID = async (req, res) => {
   const { productID } = req.params;
   try {
-    // Lấy danh sách comment theo productID và populate thông tin user
-    const comments = await Comment.find({ productID }).populate(
-      "userID",
-      "email"
-    );
-
-    // Trả về danh sách comment
-    res.status(200).json(comments);
+    const commentsData = await getCommentsData(productID);
+    res.status(200).json(commentsData);
   } catch (error) {
-    // Xử lý lỗi và trả về mã lỗi 500
     res.status(500).json({ message: error.message });
   }
 };
 
+exports.addComment = async (req, res) => {
+  const { productID, userID, text, images, rating } = req.body;
+  try {
+    const newComment = new Comment({ productID, userID, text, images, rating });
+    await newComment.save();
+    const commentsData = await getCommentsData(productID);
+    handleEvent("comment", commentsData);
+    res.status(201).json(commentsData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 exports.getCommentById = async (req, res) => {
   const { id } = req.params;
   try {
-    // Tìm comment theo ID
     const comment = await Comment.findById(id);
     if (!comment) {
-      // Nếu không tìm thấy comment, trả về lỗi 404
       return res.status(404).json({ message: "Comment not found" });
     }
-
-    // Trả về comment tìm thấy
     res.status(200).json(comment);
   } catch (error) {
-    // Xử lý lỗi và trả về mã lỗi 500
     res.status(500).json({ message: error.message });
   }
 };

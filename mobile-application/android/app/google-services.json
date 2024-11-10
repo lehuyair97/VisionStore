@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "796239183008",
+    "project_id": "visionstore-ec03c",
+    "storage_bucket": "visionstore-ec03c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796239183008:android:eb2c68d392959d9aa29dc5",
+        "android_client_info": {
+          "package_name": "com.visionstore.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "796239183008-r7k598kehh8dc4hd8ianlck56e03cbes.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.visionstore.mobile",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "796239183008-229vcarahasokpb1hm3nnve5jl3s5vse.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3knwNLDtdgX8O-A4fSlCa4wJL6OcHvXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "796239183008-229vcarahasokpb1hm3nnve5jl3s5vse.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

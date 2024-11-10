@@ -6,11 +6,11 @@ import { IconComponentProps } from "../components/icon/type";
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
       networkMode: "online",
       retry: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
+      refetchOnMount: true,
+      refetchOnReconnect: true,
     },
     mutations: {
       networkMode: "online",

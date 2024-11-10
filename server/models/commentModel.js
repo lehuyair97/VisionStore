@@ -9,12 +9,20 @@ const commentSchema = new mongoose.Schema({
   },
   userID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", 
+    ref: "User",
     required: true,
   },
   text: {
     type: String,
     required: true,
+  },
+  rating: {
+    type: Number,
+    required: true,
+  },
+  likes:{
+    type: Number,
+    default: 0
   },
   images: [
     {

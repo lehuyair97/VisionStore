@@ -135,7 +135,6 @@ return config;
 
 
 const pcBuild1 = calculatePcBuildRanges(15030540, configType);
-console.log(pcBuild1);
 exports.BuildPCAutomatic = async (req, res) => {
   const { bucket } = req.body;
 

@@ -4,59 +4,79 @@ import { EDGES } from "@utils/helper";
 import AppBarCart from "../component/appbar_cart";
 import ListCart from "../component/list_cart";
 import TotalizeCart from "../component/totalize_cart";
-import { StyleSheet, View, Text, Alert } from "react-native";
-import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
-
+import { StyleSheet, View, Alert } from "react-native";
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
+import { useAuth } from "@hooks/auth";
 import useCart from "@hooks/common/use-cart";
+import { Block, Text } from "@components";
 
 export default function Cart() {
+  const { userInfo } = useAuth();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const { data: products, isLoading, error } = useCart();
+  const { data: carts, isLoading, error } = useCart(userInfo?._id);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const handleSelectAll = (selectAll: boolean) => {
-    if (selectAll && products) {
-      setSelectedItems(products.map(product => product._id));
+    if (selectAll && carts) {
+      setSelectedItems(carts?.carts.map((product) => product.productId));
     } else {
       setSelectedItems([]);
     }
   };
-
   useEffect(() => {
-    if (products) {
-      const total = products
-        .filter(product => selectedItems.includes(product._id))
-        .reduce((sum, product) => sum + (product.carts[0].price || 0), 0);
-      setTotalPrice(total);
-    }
-  }, [selectedItems, products]);
+    const total = carts.carts
+      .filter((item) => selectedItems.includes(item?.productId))
+      .reduce((temp, current) => temp + current?.quantity * current?.price, 0);
+    setTotalPrice(total);
+  }, [selectedItems]);
 
   const handleNavigateToPayment = () => {
-    const selectedProducts = products.filter(product => selectedItems.includes(product._id));
+    const selectedProducts = carts?.carts?.filter((product) =>
+      selectedItems.includes(product.productId)
+    );
 
     if (selectedProducts == null || selectedProducts.length === 0) {
-      Alert.alert('Thông báo', 'Không có sản phẩm nào để thanh toán');
+      Alert.alert("Thông báo", "Không có sản phẩm nào để thanh toán");
       return;
     }
     navigation.navigate("Payment", { selectedProducts });
   };
 
   if (isLoading) {
-    return <MainContainer edges={EDGES.LEFT_RIGHT} style={styles.container}><Text>Loading...</Text></MainContainer>;
+    return (
+      <MainContainer edges={EDGES.LEFT_RIGHT} style={styles.container}>
+        <Text>Loading...</Text>
+      </MainContainer>
+    );
   }
 
-  if (error) {
-    return <MainContainer edges={EDGES.LEFT_RIGHT} style={styles.container}><Text>Error: {error.message}</Text></MainContainer>;
+  if (!carts) {
+    return (
+      <Block flex={1} justifyContent={"center"} alignContent={"center"}>
+        <Text color={"black"} textAlign={"center"}>
+          {"Hiện bạn chưa có sản phẩm nào"}
+        </Text>
+      </Block>
+    );
   }
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT} style={styles.container}>
       <AppBarCart />
-      <ListCart products={products} selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
+      <ListCart
+        carts={carts}
+        selectedItems={selectedItems}
+        setSelectedItems={setSelectedItems}
+      />
       <View style={styles.totalizeContainer}>
         <TotalizeCart
           onPress={handleNavigateToPayment}
+          isSelectedAll={selectedItems?.length === carts?.carts?.length}
           onSelectAll={handleSelectAll}
           totalPrice={totalPrice}
         />
@@ -71,12 +91,12 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
   },
   totalizeContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    borderTopColor: "#ccc",
   },
 });

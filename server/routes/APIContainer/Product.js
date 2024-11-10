@@ -42,10 +42,59 @@ exports.getAllProductsGroupedByBrand = async (req, res) => {
         },
       },
     ]);
-
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getAllProductsGroupedByBrandForSubCategory = async (req, res) => {
+  const { subCategory_child_ID } = req.query;
+  try {
+    // Thực hiện truy vấn aggregate để nhóm sản phẩm theo thương hiệu
+    const products = await Product.aggregate([
+      {
+        $match: {
+          sub_category_id: subCategory_child_ID, // Lọc theo sub_category_id
+        },
+      },
+      {
+        $group: {
+          _id: "$brand", // Nhóm theo brand
+          products: { $push: "$$ROOT" }, // Đưa tất cả sản phẩm vào mảng products
+        },
+      },
+      {
+        $lookup: {
+          from: "brands", // Tìm trong collection brands
+          localField: "_id", // Trường brand trong Product
+          foreignField: "_id", // Trường _id trong Brands
+          as: "brandDetails", // Lưu thông tin thương hiệu vào mảng brandDetails
+        },
+      },
+      {
+        $unwind: "$brandDetails", // Giải nén mảng brandDetails
+      },
+      {
+        $project: {
+          brand: "$brandDetails.name", // Lấy tên thương hiệu từ brandDetails
+          products: 1, // Giữ nguyên mảng sản phẩm
+        },
+      },
+    ]);
+
+    // Kiểm tra nếu không có sản phẩm nào được tìm thấy
+    if (products.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No products found for this sub-category." });
+    }
+
+    // Trả về kết quả
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error); // Log lỗi chi tiết cho dễ dàng debug
+    res.status(500).json({ message: error.message }); // Trả về lỗi cho client
   }
 };
 
@@ -67,7 +116,6 @@ exports.getProductsByBrandId = async (req, res) => {
 
   if (categoryId) filter.category_id = categoryId;
   if (brandId) filter.brand = brandId;
-  console.log(categoryId);
   try {
     const products = await Product.find(filter);
 
@@ -83,24 +131,6 @@ exports.getProductsByBrandId = async (req, res) => {
 exports.createProduct = async (req, res) => {
   try {
     const product = await Product.create(req.body);
-    if (req.body.sub_category_id) {
-      const subCategory = await SubCategory.findOne({
-        sub_category_type: "components",
-      });
-
-      if (!subCategory) {
-        return res.status(404).json({ message: "Subcategory not found" });
-      }
-      const item = subCategory.sub_category_list.find(
-        (item) => item._id.toString() === product.sub_category_id
-      );
-
-      if (item) {
-        product.sub_category = item;
-        await product.save();
-      }
-    }
-
     res.status(201).json(product);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -132,6 +162,7 @@ exports.deleteProductById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 exports.searchProducts = async (req, res) => {
   try {
     const { name } = req.body; // Lấy tên từ body của yêu cầu

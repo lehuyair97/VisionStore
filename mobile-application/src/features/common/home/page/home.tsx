@@ -26,6 +26,7 @@ import { FlatList } from "react-native-gesture-handler";
 import SubCategoryBottomSheet from "@features/common/components/sub-categories";
 import Colors from "@theme/colors";
 import AppBarCustom from "../component/appbar_custom";
+import useGetProductGroupedByChildSubCategory from "@hooks/common/use-get-product-grouped-by-Sub-category-child-id";
 export default function Home() {
   const { data: categories, isLoading, error } = useCategory();
   const [categorySelected, setCategorySelected] =
@@ -33,13 +34,20 @@ export default function Home() {
   const [selectedIdBrand, setSelectedIdBrand] = useState("");
   const refRBSheet = useRef<RBSheetRef>();
   const [subCategories, setSubCategories] = useState<any>();
+  const [products, setProducts] = useState<any>();
+  const [subCategoryChildSelected, setsubCategoryChildSelected] =
+    useState<any>();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const {
     refetch: submmitSubCategory,
     isRefetchError,
     isRefetching,
   } = useGetSubCategoryByType(categorySelected?.type, false);
-
+  const { data: productsByCategory } = useGetProductGrouped(
+    categorySelected?.id || ""
+  );
+  const { data: productsBySubCategoryChild } =
+    useGetProductGroupedByChildSubCategory(subCategoryChildSelected?._id);
   const transformedCategories =
     categories?.map((item) => ({
       id: item._id,
@@ -47,6 +55,7 @@ export default function Home() {
       icon: iconMap[item.name] || "home",
       type: item?.type,
     })) || [];
+  console.log(productsBySubCategoryChild);
 
   const openSubCategories = () => {
     if (refRBSheet?.current) {
@@ -78,9 +87,16 @@ export default function Home() {
       fetchSubCategory();
     }
   }, [categorySelected]);
-  const { data: productsByCategory } = useGetProductGrouped(
-    categorySelected?.id || ""
-  );
+  useEffect(() => {
+    if (
+      categorySelected?.type === "accessories" ||
+      categorySelected?.type === "components"
+    ) {
+      setProducts(productsBySubCategoryChild);
+    } else {
+      setProducts(productsByCategory);
+    }
+  }, [productsByCategory, productsBySubCategoryChild]);
   const { data: brands } = useBrand();
   const extendedBrands = brands
     ? [
@@ -107,14 +123,20 @@ export default function Home() {
     return <Text>No categories available</Text>;
 
   return (
-    <MainContainer edges={EDGES.LEFT_RIGHT} >
+    <MainContainer edges={EDGES.LEFT_RIGHT}>
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
       >
-        <AppBarCustom title="VisionSore" titleStyle={{ fontWeight: "bold", color: Colors.primary }}
+        <AppBarCustom
+          title="VisionSore"
+          titleStyle={{ fontWeight: "bold", color: Colors.primary }}
           childrenRight={
-              <Row>
-              <TouchableOpacity onPress={() => navigation.navigate(ROUTES.Search as keyof ParamListBase)}>
+            <Row>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(ROUTES.Search as keyof ParamListBase)
+                }
+              >
                 <Icon
                   type="fontAwesome"
                   name="search"
@@ -123,7 +145,12 @@ export default function Home() {
                 />
               </TouchableOpacity>
               <Block width={20} />
-              <Icon type="fontAwesome" name="bell" size={20} color={Colors.black2A} />
+              <Icon
+                type="fontAwesome"
+                name="bell"
+                size={20}
+                color={Colors.black2A}
+              />
             </Row>
           }
         />
@@ -140,7 +167,7 @@ export default function Home() {
         />
         <ProductBrand
           brandSelected={selectedIdBrand}
-          data={productsByCategory}
+          data={products}
           handleNavigateToDetailProduct={handleNavigateToDetailProduct}
           handleNavigateToDetailBrand={handleNavigateToDetailBrand}
         />
@@ -150,6 +177,10 @@ export default function Home() {
         refRBSheet={refRBSheet}
         subCategories={subCategories?.sub_category_list}
         category={categorySelected?.type}
+        onsubCategoryChildSelected={(item) => {
+          setsubCategoryChildSelected(item);
+          closeSubCategories();
+        }}
       />
     </MainContainer>
   );

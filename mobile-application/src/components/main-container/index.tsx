@@ -20,12 +20,12 @@ const MainContainer = ({
       {...rest}>
       {isFocused ? (
         <StatusBar
-          style='dark'
-          backgroundColor={theme.colors.whiteC4}
+          style='light'
+          backgroundColor={theme.colors.primary}
           translucent={true}
         />
       ) : (
-        <StatusBar style='light' backgroundColor={theme.colors.container} />
+        <StatusBar style='light' backgroundColor={theme.colors.primary} />
       )}
       {children}
     </SafeAreaView>

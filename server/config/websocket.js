@@ -11,14 +11,11 @@ const io = socketIo(server, {
   },
 });
 
-// Lưu trữ các client kết nối
 let clients = new Map();
 
-// Kết nối sự kiện
 io.on("connection", (socket) => {
   console.log("New client connected", socket.id);
 
-  // Lưu trữ client theo socket ID hoặc theo userId nếu có
   socket.on("register", (userId) => {
     if (userId) {
       clients.set(userId, socket);
@@ -26,10 +23,8 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Lắng nghe sự kiện "disconnect"
   socket.on("disconnect", () => {
     console.log("Client disconnected", socket.id);
-    // Xóa client khỏi Map khi ngắt kết nối
     clients.forEach((value, key) => {
       if (value.id === socket.id) {
         clients.delete(key);
@@ -38,20 +33,17 @@ io.on("connection", (socket) => {
   });
 });
 
-// Function to broadcast messages to all connected clients
 const broadcast = (data) => {
-  io.emit("message", data); // Gửi tin nhắn tới tất cả client đã kết nối
+  io.emit("message", data); 
 };
 
-// Function to send a message to a specific client by userId
 const sendMessageToClient = (userId, data) => {
   const client = clients.get(userId);
   if (client) {
-    client.emit("message", data); // Gửi tin nhắn tới client cụ thể
+    client.emit("message", data); 
   }
 };
 
-// Function to handle broadcast for different statuses like voucher, comment, message
 const handleEvent = (type, data) => {
   switch (type) {
     case "voucher":
@@ -68,24 +60,19 @@ const handleEvent = (type, data) => {
   }
 };
 
-// Helper functions for broadcasting specific event statuses
 
 const broadcastVoucherStatus = (data) => {
-  console.log("Broadcasting voucher status:", data);
-  io.emit("voucherStatus", data); // Gửi tin nhắn voucher tới tất cả client
+  io.emit("voucherStatus", data); 
 };
 
 const broadcastCommentStatus = (data) => {
-  console.log("Broadcasting comment status:", data);
-  io.emit("commentStatus", data); // Gửi tin nhắn comment tới tất cả client
+  io.emit("commentStatus", data);
 };
 
 const broadcastMessageStatus = (data) => {
-  console.log("Broadcasting message status:", data);
-  io.emit("messageStatus", data); // Gửi tin nhắn message tới tất cả client
+  io.emit("messageStatus", data); 
 };
 
-// Function to send specific message to a client by userId and event type
 const sendEventToClient = (userId, type, data) => {
   const client = clients.get(userId);
   if (client) {
@@ -105,7 +92,6 @@ const sendEventToClient = (userId, type, data) => {
   }
 };
 
-// Bắt đầu lắng nghe server trên cổng 8080
 server.listen(8080, () => {
   console.log("Server running on port 8080");
 });

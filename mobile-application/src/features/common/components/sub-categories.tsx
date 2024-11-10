@@ -15,9 +15,11 @@ interface SubCategoryBottomSheetProps {
   subCategories: Array<{
     image: string;
     name: string;
+    _id: string;
   }>;
   category: string;
   isFetching: boolean;
+  onsubCategoryChildSelected: (subCategory:any) => void
 }
 
 const SubCategoryBottomSheet: React.FC<SubCategoryBottomSheetProps> = ({
@@ -26,15 +28,15 @@ const SubCategoryBottomSheet: React.FC<SubCategoryBottomSheetProps> = ({
   subCategories,
   isFetching,
   category,
+  onsubCategoryChildSelected,
 }) => {
   return (
     <BottomSheet height={height} refRBSheet={refRBSheet}>
       <Block p={"_20"} borderBottomWidth={1} borderColor={"primary"}>
         <Text color={"primary"} fontWeight={"bold"} fontSize={16}>
-          {category === "components" ? "Linh kiện" : "Phụ kiện"}
+          {category === "components" ? "Linh ki ện" : "Phụ kiện"}
         </Text>
       </Block>
-
       {isFetching ? (
         <Block justifyContent="center" alignItems="center" flex={1}>
           <ActivityIndicator size="large" color="#000" />
@@ -44,7 +46,7 @@ const SubCategoryBottomSheet: React.FC<SubCategoryBottomSheetProps> = ({
           data={subCategories}
           keyExtractor={Helper.getKeyExtractor}
           renderItem={({ item }) => (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>{onsubCategoryChildSelected(item)}}>
               <Row center gap={"_20"} py={"_10"} px={"_20"} mt={"_10"}>
                 <Image
                   source={{ uri: item?.image }}

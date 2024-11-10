@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 
+interface Data {
+  data: Cart
+}
 export interface Cart {
   products: any;
   _id: string;
@@ -33,17 +36,17 @@ export interface Cart {
   __v: number;
 }
 
-const useCart = () => {
+const useCart = (customerId:string) => {
   const {data, isPending, error, isLoading} = useQuery({
     queryKey: ["cart"],
     queryFn: async () => {
       return (await api({
-        url: REQUEST_URL.GET_CART,
+        url: REQUEST_URL.GET_CART_BY_USERID(customerId),
         method: "GET",
-      })) as Cart[];
+      })) as Data;
     },
   });
-  return { data, isPending, error, isLoading };
+  return { data: data?.data, isPending, error, isLoading };
 };
 
 export default useCart;

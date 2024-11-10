@@ -19,6 +19,7 @@ export const REQUEST_URL = {
 
   GET_BRANDS: "/brands",
   GET_CART: "/orders",
+  GET_CART_BY_USERID: (customerId: string) => `orders/users/${customerId}`,
   SEARCH: "/products/search",
 
   CREATE_USER_WITH_IMAGE: "/users/upload",
@@ -48,6 +49,8 @@ export const REQUEST_URL = {
     `/products-brands?categoryId=${categoryID}&brandId=${brandID}`,
   GET_PRODUCT_GROUPED: (categoryId: string) =>
     `/productsgrouped?categoryId=${categoryId}`,
+  GET_PRODUCT_GROUPED_BY_CHILD_SUBCATEGORY: (subCategory_child_ID: String) =>
+    `/productsgroupedbySubCategory?subCategory_child_ID=${subCategory_child_ID}`,
   CREATE_PRODUCT: "/products",
   UPDATE_PRODUCT: (id) => `/products/${id}`,
   DELETE_PRODUCT: (id) => `/products/${id}`,

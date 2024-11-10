@@ -73,18 +73,15 @@ const useAddCart = () => {
           method: "POST",
           data: data,
         });
-        console.log('Full API response:', res);
         const responseData = res.data || res;
-        console.log('API response data:', responseData);
         return responseData;
       } catch (err) {
-        console.error('API call failed:', err);
         throw err;
       }
     },
     onSuccess: (data) => {
       toast.success("Product added to cart successfully!");
-      console.log("Added product:", data);
+     
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);

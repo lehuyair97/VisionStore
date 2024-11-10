@@ -11,6 +11,7 @@ export type signInReponse = {
 };
 
 export type User = {
+  _id:string;
   userName?: string;
   email: string;
   display_name?: string;

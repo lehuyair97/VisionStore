@@ -6,9 +6,10 @@ import {
   Dimensions,
   ImageStyle,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Block, Row, Text } from "@components";
+import { Block, Icon, Row, Text } from "@components";
 import { makeStyles } from "@theme";
+import dayjs from "dayjs";
+import StarRating from "../detail_product/components/start-rating";
 
 const { width } = Dimensions.get("window");
 const imageWidth = width * 0.48 - 16; // Tính toán 48% chiều rộng màn hình, trừ đi khoảng cách giữa các hình ảnh
@@ -20,6 +21,8 @@ type Props = {
   comment: string;
   images: string[];
   likes: number;
+  timestamp: string;
+  rating?: number;
 };
 
 const CommentItem: React.FC<Props> = ({
@@ -29,11 +32,13 @@ const CommentItem: React.FC<Props> = ({
   comment,
   images,
   likes,
+  timestamp,
+  rating,
 }) => {
   const styles = useStyle();
   return (
-    <Block borderBottomColor={"gray888"} borderBottomWidth={1}>
-      <Row p={"l"} alignItems={"center"} justifyContent={"space-between"}>
+    <Block borderBottomColor={"gray_200"} borderBottomWidth={1}>
+      <Row alignItems={"center"} justifyContent={"space-between"}>
         <Image source={{ uri: avatar }} style={styles.avatar as ImageStyle} />
         <Text
           fontSize={18}
@@ -44,15 +49,22 @@ const CommentItem: React.FC<Props> = ({
           {name}
         </Text>
         <TouchableOpacity style={styles.likeButton}>
-          <Row center>
-            <Text color={"gray136"}>Hữu ích {likes} </Text>
-            <Ionicons name="heart-outline" size={24} color="red" />
+          <Row center gap={"s"}>
+            <Text mt={"s"} color={"gray136"}>
+              Hữu ích {likes}{" "}
+            </Text>
+            <TouchableOpacity>
+              <Icon type="antDesign" name="like2" size={24} color="blue" />
+            </TouchableOpacity>
           </Row>
         </TouchableOpacity>
       </Row>
-      <Block mb={"_12"}>
-        <Text fontSize={16} color={"amber_500"}>
-          Màu sắc: {color}
+      <Block my={"_10"}>
+        <Text fontSize={16} color={"gray136"}>
+          Màu sắc:
+          <Text fontSize={16} color={"black"}>
+            {color}
+          </Text>
         </Text>
       </Block>
       <Block mb={"_12"}>
@@ -66,6 +78,10 @@ const CommentItem: React.FC<Props> = ({
             style={[styles.image as ImageStyle, { width: imageWidth }]}
           />
         ))}
+      </Row>
+      <Row between center mb={"_20"}>
+        <Text color={"gray136"}>{dayjs(timestamp).format("DD/MM/YYYY")}</Text>
+        <StarRating rating={rating} />
       </Row>
     </Block>
   );

@@ -31,7 +31,7 @@ const ImgDetail = ({ width, height, source = localImages().ic_mac, isBackground 
             width: width - 4, // Trừ đi 2 * borderWidth để hình ảnh nằm gọn trong viền
             height: height - 4, 
             borderRadius: (width - 4) / 2, // Tính toán động borderRadius cho hình ảnh
-            resizeMode: "contain",
+            resizeMode: "center",
             alignSelf: "center",
         },
     });
@@ -48,7 +48,7 @@ const ImgDetail = ({ width, height, source = localImages().ic_mac, isBackground 
             alignItems="center"
         >
             <Block 
-                backgroundColor="gray_200" 
+                backgroundColor="white255" 
                 height={height} 
                 width={width} 
                 style={dynamicStyles.circularImageContainer} 

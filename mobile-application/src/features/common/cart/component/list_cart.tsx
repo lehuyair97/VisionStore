@@ -1,52 +1,49 @@
-import React, { useState } from 'react';
-import { FlatList } from 'react-native';
-import CartItem from './cart_item';
-import { Cart } from '@hooks/common/use-cart';
-import Text from '@components/text';
-import useQuantity from '@hooks/common/util/useQuantity';
-
+import React, { useState } from "react";
+import { FlatList } from "react-native";
+import CartItem from "./cart_item";
+import { Cart } from "@hooks/common/use-cart";
+import Text from "@components/text";
+import useQuantity from "@hooks/common/util/useQuantity";
 
 interface ListCartProps {
-  products: Cart[];
+  carts: any;
   selectedItems: string[];
   setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const ListCart = ({ products, selectedItems, setSelectedItems }: ListCartProps) => {
-
+const ListCart = ({
+  carts,
+  selectedItems,
+  setSelectedItems,
+}: ListCartProps) => {
   const toggleSelect = (id: string) => {
-    setSelectedItems(prevSelected =>
-      prevSelected.includes(id)
-        ? prevSelected.filter(item => item !== id)
+    setSelectedItems((prevSelected) =>
+      prevSelected?.includes(id)
+        ? prevSelected.filter((item) => item !== id)
         : [...prevSelected, id]
     );
   };
 
   return (
     <FlatList
-      data={products}
-      keyExtractor={item => item._id || Math.random().toString()}
+      data={carts?.carts}
+      keyExtractor={(item) => item._id || Math.random().toString()}
       contentContainerStyle={{ marginHorizontal: 20 }}
       style={{ marginBottom: 100 }}
       renderItem={({ item }) => {
-        const product = item.carts && item.carts[0];
-
-        if (!product) {
-          return <Text>No products available</Text>;
+        if (!item) {
+          return <Text color={"red_400"}>No carts available</Text>;
         }
-
-
         return (
           <CartItem
-
             item={item}
-            isSelected={selectedItems.includes(item._id)}
+            isSelected={selectedItems?.includes(item.productId)}
             onSelect={toggleSelect}
           />
         );
       }}
     />
   );
-}
+};
 
 export default ListCart;

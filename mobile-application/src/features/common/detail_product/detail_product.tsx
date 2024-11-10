@@ -1,27 +1,21 @@
-import React, { useState } from "react";
-import { localImages } from "@assets/icons/images";
-import { Block, Icon, MainContainer, Row } from "@components";
-import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { Block, MainContainer, Row } from "@components";
+import Text from "@components/text";
 import AppBar from "@features/common/common/appbar";
+import useAddCart, { CartItem } from "@hooks/common/use-add-cart";
+import useProductDetail from "@hooks/common/use-get-product-detail";
+import useQuantity from "@hooks/common/util/useQuantity";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import Colors from "@theme/colors";
 import { EDGES } from "@utils/helper";
+import { useState } from "react";
+import { FlatList } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
-import Text from "@components/text";
-import ImgDetail from "./img_detail";
-import CustomItem from "./custom_item";
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import { RouteProp } from "@react-navigation/native";
-import useProductDetail from "@hooks/common/use-get-product-detail";
+import ActionBottomBar from "./components/bottom-action-bar";
+import Comment from "./components/comment";
 import CustomControllerNums from "./custom-conntroler-nums";
-import useAddCart, { CartItem } from "@hooks/common/use-add-cart";
-import { ROUTES } from "@navigation/config/routes";
-import useQuantity from "@hooks/common/util/useQuantity";
-
+import CustomItem from "./custom_item";
+import ImgDetail from "./img_detail";
+import { useAuth } from "@hooks/auth";
 type Item = {
   id: number;
   image: string;
@@ -69,6 +63,7 @@ interface OrderData {
 const DetailProduct = () => {
   const route = useRoute<RouteProp<DetailProductParams, "DetailProduct">>();
   const { productId } = route.params;
+  const { userInfo } = useAuth();
   const {
     data: productDetail,
     isPending,
@@ -76,28 +71,31 @@ const DetailProduct = () => {
     isLoading,
   } = useProductDetail(productId);
   const { addCart } = useAddCart();
-  const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const { quantity, increaseQuantity, decreaseQuantity } = useQuantity({ initialQuantity: 1 });
+  const { quantity, increaseQuantity, decreaseQuantity } = useQuantity({
+    initialQuantity: 1,
+  });
 
-
-  const [selectedColor, setSelectedColor] = useState<{ color?: string; name: string } | null>(null);
-  const [selectedMemory, setSelectedMemory] = useState<{ name: string } | null>(null);
-  console.log(selectedColor, selectedMemory);
-
-
+  const [selectedColor, setSelectedColor] = useState<{
+    color?: string;
+    name: string;
+  } | null>(null);
+  const [selectedMemory, setSelectedMemory] = useState<{ name: string } | null>(
+    null
+  );
 
   const data: Item[] = [
     { id: 1, image: productDetail?.image },
     { id: 2, image: productDetail?.image },
     { id: 3, image: productDetail?.image },
   ];
+  console.log(userInfo?._id)
 
   const handleAddCart = () => {
     const orderData: OrderData = {
-      customerId: "605c5b2e33f2e45b8b5d537f",
-      customerName: "Thao",
-      customerEmail: "thao@gmail.com",
-      customerAddress: "123 Main St",
+      customerId: userInfo?._id,
+      customerName: userInfo?.display_name,
+      customerEmail: userInfo?.email,
+      customerAddress: null,
       customerPhoneNumber: 1234567890,
       optionsColor: selectedColor?.name || "",
       optionsMemory: selectedMemory?.name || "",
@@ -137,7 +135,10 @@ const DetailProduct = () => {
 
   return (
     <MainContainer
-      style={{ flex: 1, backgroundColor: Colors.background_fit_finder }}
+      style={{
+        flex: 1,
+        backgroundColor: Colors.background_fit_finder,
+      }}
       edges={EDGES.LEFT_RIGHT}
     >
       <AppBar
@@ -178,51 +179,43 @@ const DetailProduct = () => {
             {productDetail?.warrantyPeriod}
           </Text>
         </Row>
-        <Text fontSize={21} fontWeight={"300"} color="blue_500" marginTop={"_10"}>
+        <Text
+          fontSize={21}
+          fontWeight={"300"}
+          color="blue_500"
+          marginTop={"_10"}
+        >
           {productDetail?.price}
         </Text>
-        <CustomItem selected={selectedColor?.name} data={productDetail?.optionsColor || dataCustomItem} title="Color" isRow={true} onSelect={(item) => setSelectedColor(item)} />
-        <CustomItem selected={selectedMemory?.name} data={productDetail?.optionsMemory || dataCustomItem2} title="Memory" onSelect={(item) => setSelectedMemory(item)} />
-
-        <Block marginTop={"_40"}>
-          <Row center between>
-
-              <CustomControllerNums
-                width={150}
-                decreaseQuantity={decreaseQuantity}
-                increaseQuantity={increaseQuantity}
-                quantity={quantity}
-              />
-            <TouchableOpacity style={styles.buyButton} onPress={handleAddCart}>
-              <Text style={styles.buyButtonText}>Mua</Text>
-            </TouchableOpacity>
-          </Row>
-        </Block>
-        <Block height={100} />
+        <CustomItem
+          selected={selectedColor?.name}
+          data={productDetail?.optionsColor || dataCustomItem}
+          title="Color"
+          isRow={true}
+          onSelect={(item) => setSelectedColor(item)}
+        />
+        <CustomItem
+          selected={selectedMemory?.name}
+          data={productDetail?.optionsMemory || dataCustomItem2}
+          title="Memory"
+          onSelect={(item) => setSelectedMemory(item)}
+        />
+        <Row center between marginTop={"_40"}>
+          <Text fontSize={18} color={"black"} fontWeight={"bold"}>
+            Quantity
+          </Text>
+          <CustomControllerNums
+            width={150}
+            decreaseQuantity={decreaseQuantity}
+            increaseQuantity={increaseQuantity}
+            quantity={quantity}
+          />
+        </Row>
+        <Comment productID={productId} />
       </ScrollView>
+      <ActionBottomBar onAddToCart={handleAddCart} onBuyNow={() => {}} />
     </MainContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  quantityText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  buyButton: {
-    backgroundColor: "#E53935",
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    height: 50,
-    width: "50%",
-  },
-  buyButtonText: {
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    alignSelf: "center",
-    fontSize: 16,
-  },
-});
 
 export default DetailProduct;

@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema({
     ref: "Category",
     required: true,
   },
-  sub_category_id: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory" },
+  sub_category_id: { type: String },
   option_id: { type: mongoose.Schema.Types.ObjectId, ref: "Option" },
   create_date: { type: Date, default: Date.now },
   stock: { type: Number, default: 0 },

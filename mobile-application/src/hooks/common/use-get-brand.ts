@@ -17,7 +17,6 @@ const useBrand = () => {
         url: REQUEST_URL.GET_BRANDS,
         method: "GET",
       })) as Brand[];
-      console.log("API Response:", response);
       return response;
     },
   });

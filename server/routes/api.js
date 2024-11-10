@@ -88,11 +88,7 @@ router.delete("/category/:id", categoryAPI.deleteCategoryById);
 router.get("/subcategory", subCategoryAPI.getAllSubCategories);
 router.get("/subcategory/:id", subCategoryAPI.getSubCategoryById);
 router.post("/subcategory", subCategoryAPI.createSubCategory);
-router.put(
-  "/subcategory/:id",
-
-  subCategoryAPI.updateSubCategoryById
-);
+router.put("/subcategory/:id", subCategoryAPI.updateSubCategoryById);
 router.delete("/subcategory/:id", subCategoryAPI.deleteSubCategoryById);
 router.get(
   "/subcategory/category/:categoryId",
@@ -110,6 +106,10 @@ router.get(
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
 router.get("/productsgrouped", productAPI.getAllProductsGroupedByBrand);
+router.get(
+  "/productsgroupedbySubCategory",
+  productAPI.getAllProductsGroupedByBrandForSubCategory
+);
 router.get("/products/:id", productAPI.getProductById);
 router.get("/products-brands", productAPI.getProductsByBrandId);
 router.post("/products", productAPI.createProduct);
@@ -158,7 +158,11 @@ router.delete("/message/:id", messageAPI.deleteMessage);
 router.put("/message/:id", messageAPI.updateMessage);
 router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
 
-function calculateComponentPriceRange(totalBudget, percentageMin, percentageMax) {
+function calculateComponentPriceRange(
+  totalBudget,
+  percentageMin,
+  percentageMax
+) {
   const minPrice = (totalBudget * percentageMin) / 100;
   const maxPrice = (totalBudget * percentageMax) / 100;
   return { minPrice, maxPrice };
@@ -166,64 +170,67 @@ function calculateComponentPriceRange(totalBudget, percentageMin, percentageMax)
 
 function calculatePcBuildRanges(totalBudget, configType) {
   let config = {};
-  
+
   const configs = {
-      developer: {
-          CPU: [30, 35],
-          GPU: [5, 10],
-          RAM: [15, 20],
-          Mainboard: [10, 15],
-          Storage: [15, 20],
-          PSU: [5, 10],
-          Case: [0, 5],
-          Cooling: [0, 5],
-      },
-      graphicDesign: {
-          CPU: [20, 25],
-          GPU: [30, 35],
-          RAM: [15, 20],
-          Mainboard: [10, 15],
-          Storage: [10, 15],
-          PSU: [5, 10],
-          Case: [0, 5],
-          Cooling: [0, 5],
-      },
-      office: {
-          CPU: [25, 30],
-          GPU: [5, 10],
-          RAM: [10, 15],
-          Mainboard: [10, 15],
-          Storage: [15, 20],
-          PSU: [5, 10],
-          Case: [0, 5],
-          Cooling: [0, 5],
-      },
-      gaming: {
-          CPU: [20, 25],
-          GPU: [30, 35],
-          RAM: [10, 20],  
-          Mainboard: [10, 15],
-          Storage: [10, 15],
-          PSU: [5, 10],
-          Case: [0, 5],
-          Cooling: [0, 5],
-      }
+    developer: {
+      CPU: [30, 35],
+      GPU: [5, 10],
+      RAM: [15, 20],
+      Mainboard: [10, 15],
+      Storage: [15, 20],
+      PSU: [5, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
+    graphicDesign: {
+      CPU: [20, 25],
+      GPU: [30, 35],
+      RAM: [15, 20],
+      Mainboard: [10, 15],
+      Storage: [10, 15],
+      PSU: [5, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
+    office: {
+      CPU: [25, 30],
+      GPU: [5, 10],
+      RAM: [10, 15],
+      Mainboard: [10, 15],
+      Storage: [15, 20],
+      PSU: [5, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
+    gaming: {
+      CPU: [20, 25],
+      GPU: [30, 35],
+      RAM: [10, 20],
+      Mainboard: [10, 15],
+      Storage: [10, 15],
+      PSU: [5, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
   };
 
   const selectedConfig = configs[configType];
 
   for (let component in selectedConfig) {
-      const [percentageMin, percentageMax] = selectedConfig[component];
-      config[component] = calculateComponentPriceRange(totalBudget, percentageMin, percentageMax);
+    const [percentageMin, percentageMax] = selectedConfig[component];
+    config[component] = calculateComponentPriceRange(
+      totalBudget,
+      percentageMin,
+      percentageMax
+    );
   }
 
   return config;
 }
 
-const totalBudget = 10000000; 
-const configType = 'gaming'; 
+const totalBudget = 10000000;
+const configType = "gaming";
 
 const pcBuild = calculatePcBuildRanges(totalBudget, configType);
-console.log(pcBuild);
 
 module.exports = router;

@@ -39,7 +39,6 @@ export interface ProductDetail {
           url: REQUEST_URL.GET_PRODUCT_BY_ID(id),
           method: "GET",
         });
-        console.log("API Response:", response);
         return response as ProductDetail;
       },
       enabled: !!id, // Chỉ gọi API khi có id

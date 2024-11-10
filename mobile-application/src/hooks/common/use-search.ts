@@ -19,9 +19,7 @@ const useSearch = () => {
           method: "POST",
           data: { name },
         });
-        console.log('Full API response:', res);
         const responseData = res.data || res;
-        console.log('API response data:', responseData);
         return responseData;
       } catch (err) {
         console.error('API call failed:', err);

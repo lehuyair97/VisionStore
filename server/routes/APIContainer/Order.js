@@ -23,23 +23,63 @@ exports.getOrderById = async (req, res) => {
   }
 };
 
+
 exports.getOrdersByUserId = async (req, res) => {
+  const { customerId } = req.params;
   try {
-    const { customerId } = req.params;
     const orders = await orderModel.find({ customerId: customerId });
-    res.status(200).json({ data: orders });
+    res.status(200).json({ data: orders[0] });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 exports.createOrder = async (req, res) => {
-  const { voucherID } = req.body;
+  const { customerId, carts, voucherID } = req.body;
+
   try {
-    const newOrder = await orderModel.create(req.body);
-    res.status(201).json({ data: newOrder });
-    if (voucherID) {
-      await voucherModel.findByIdAndDelete(voucherID);
+    let existingOrder = await orderModel.findOne({
+      customerId,
+    });
+
+    if (existingOrder) {
+      carts.forEach((cartItem) => {
+        const existingCartItem = existingOrder.carts.find(
+          (item) => item.productId === cartItem.productId
+        );
+
+        if (existingCartItem) {
+          existingCartItem.quantity += cartItem.quantity;
+        } else {
+          existingOrder.carts.push(cartItem);
+        }
+      });
+
+      existingOrder.totalBill = existingOrder.carts.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
+
+      existingOrder.markModified("carts");
+      await existingOrder.save();
+
+      res.status(200).json({ data: existingOrder });
+    } else {
+      const newOrder = await orderModel.create({
+        ...req.body,
+        carts,
+        voucherID,
+        totalBill: carts.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        ),
+      });
+
+      res.status(201).json({ data: newOrder });
+
+      if (voucherID) {
+        await voucherModel.findByIdAndDelete(voucherID);
+      }
     }
   } catch (error) {
     res.status(500).json({ message: error.message });

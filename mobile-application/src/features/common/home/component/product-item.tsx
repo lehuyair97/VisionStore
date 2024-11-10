@@ -33,7 +33,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
         <Block style={styles.warrantyContainer}>
           <Text style={styles.warrantyText}>{product.warrantyPeriod}</Text>
         </Block>
-        <Text style={styles.productName}>{product.name}</Text>
+        <Text numberOfLines={2} style={styles.productName}>{product.name}</Text>
         <Block height={10} />
         <Block style={styles.priceContainer}>
           <Text style={styles.productPrice}>{product.price}</Text>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   productImage: {
     width: 100,
     height: 90,
-    resizeMode: "contain",
+    resizeMode: "center",
   },
   warrantyContainer: {
     backgroundColor: Colors.whiteF8,
@@ -71,10 +71,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   productName: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     marginTop: 5,
     color: Colors.primary,
+    minHeight:40,
+    marginHorizontal:18
   },
   priceContainer: {
     backgroundColor: Colors.whiteF8,

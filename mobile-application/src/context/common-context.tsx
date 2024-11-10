@@ -9,6 +9,7 @@ export const CommonProvider = ({ children }) => {
       setCategoryIDSelected,
     });
   }, [categoryIDSelected, setCategoryIDSelected]);
+
   return (
     <CommonContext.Provider value={value}>{children}</CommonContext.Provider>
   );

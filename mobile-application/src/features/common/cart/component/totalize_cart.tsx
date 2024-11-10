@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Block from "@components/block";
 import { Icon } from '@components'; // Giả sử bạn có một component Icon
 import Colors from '@theme/colors';
-import { useNavigation } from '@react-navigation/native'; // Thêm dòng này
 
 
 interface TotalizeCartProps {
   onPress?: () => void;
   onSelectAll?: (selectAll: boolean) => void;
   totalPrice: number;
+  isSelectedAll: boolean
   
   
 }
-const TotalizeCart = ({onPress, onSelectAll, totalPrice}: TotalizeCartProps) => {
-    const navigation = useNavigation();
+const TotalizeCart = ({onPress, onSelectAll, totalPrice, isSelectedAll}: TotalizeCartProps) => {
   const [isAllSelected, setIsAllSelected] = useState(false);
 
   const toggleSelectAll = () => {
@@ -22,7 +21,9 @@ const TotalizeCart = ({onPress, onSelectAll, totalPrice}: TotalizeCartProps) => 
     setIsAllSelected(newSelectAllState);
     onSelectAll && onSelectAll(newSelectAllState);
   };
-
+  useEffect(()=>{
+    setIsAllSelected(isSelectedAll)
+  },[isSelectedAll])
   return (
     
     <Block style={styles.container}>
