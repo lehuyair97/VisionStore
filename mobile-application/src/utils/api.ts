@@ -16,6 +16,7 @@ export const REQUEST_URL = {
   SIGN_IN_WITH_GOOGLE: "/sign-in-google",
   CREATE_USER: "/users",
   CATEGORY: "/category",
+  DELETE_ORDERS_BY_IDS: "/orders",
 
   GET_BRANDS: "/brands",
   GET_CART: "/orders",
@@ -65,7 +66,7 @@ export const REQUEST_URL = {
 };
 // "http://192.168.1.100:3000/api"
 const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.116:3000/api";
+  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.120:3000/api";
 
 export type AxiosParams = {
   url: string;

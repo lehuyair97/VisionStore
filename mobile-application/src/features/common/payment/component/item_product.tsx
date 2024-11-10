@@ -13,7 +13,6 @@ interface ItemProductProps {
 
 const ItemProduct = ({ selectedProducts }: ItemProductProps) => {
 
-    console.log("selectedProducts", selectedProducts);
     return (
         <Block backgroundColor={"container"}>
             <FlatList

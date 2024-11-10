@@ -34,7 +34,7 @@ export interface Cart {
 }
 
 const useCart = () => {
-  const {data, isPending, error, isLoading} = useQuery({
+  const {data, isPending, error, isLoading, refetch} = useQuery({
     queryKey: ["cart"],
     queryFn: async () => {
       return (await api({
@@ -43,7 +43,7 @@ const useCart = () => {
       })) as Cart[];
     },
   });
-  return { data, isPending, error, isLoading };
+  return { data, isPending, error, isLoading, refetch };
 };
 
 export default useCart;

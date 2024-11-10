@@ -111,7 +111,7 @@ export default function Home() {
       <ScrollView
         contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
       >
-        <AppBarCustom title="VisionSore" titleStyle={{ fontWeight: "bold", color: Colors.primary }}
+        <AppBarCustom paddingTop={0} title="VisionSore" titleStyle={{ fontWeight: "bold", color: Colors.primary }}
           childrenRight={
               <Row>
               <TouchableOpacity onPress={() => navigation.navigate(ROUTES.Search as keyof ParamListBase)}>

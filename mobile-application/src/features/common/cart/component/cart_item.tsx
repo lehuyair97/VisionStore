@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View,  Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon, Row, Text } from '@components';
 import Block from '@components/block';
@@ -11,16 +11,22 @@ interface CartItemProps {
   item: Cart;
   isSelected: boolean;
   onSelect: (id: string) => void;
-
+  onUpdateTotalPrice: (id: string, price: number) => void;
 }
 
-const CartItem = ({ item, isSelected, onSelect }: CartItemProps) => {
+const CartItem = ({ item, isSelected, onSelect, onUpdateTotalPrice }: CartItemProps) => {
 
     
 
   const product = item.carts && item.carts[0];
   const { quantity, increaseQuantity, decreaseQuantity } = useQuantity({ initialQuantity: product.quantity });
+  const totalPrice = product.price * quantity;
 
+  useEffect(() => {
+    onUpdateTotalPrice(item._id, totalPrice);
+  }, [totalPrice, item._id]);
+
+  
 
   if (!product) {
     return <Text>Product information is not available</Text>;
@@ -41,7 +47,7 @@ const CartItem = ({ item, isSelected, onSelect }: CartItemProps) => {
         <Text fontSize={16} fontWeight={"bold"} color="black2A" style={styles.name}>{product.productName}</Text>
         <Text fontSize={14} fontWeight={"300"} color="black2A" style={styles.description}>{product.description}</Text>
         <Row between mt={"_15"} center>
-          <Text fontSize={14} fontWeight={"300"} color="black2A" style={styles.price}>{product.price} đ</Text>
+          <Text fontSize={14} fontWeight={"300"} color="black2A" style={styles.price}>{totalPrice} đ</Text>
           <CustomControllerNums
           fontSize={14}
           padding={6}

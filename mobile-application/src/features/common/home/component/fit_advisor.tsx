@@ -61,6 +61,8 @@ const FitAdvisor = ({ data, onPress, selectedId }: FitAdvisorProps) => {
         renderItem={renderItem}
         keyExtractor={(item) => item._id}
         horizontal // Đặt FlatList thành dạng ngang
+        showsHorizontalScrollIndicator={false}
+
       />
     </View>
   );

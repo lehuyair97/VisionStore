@@ -10,9 +10,10 @@ interface ListCartProps {
   products: Cart[];
   selectedItems: string[];
   setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
+  onUpdateTotalPrice: (id: string, price: number) => void;
 }
 
-const ListCart = ({ products, selectedItems, setSelectedItems }: ListCartProps) => {
+const ListCart = ({ products, selectedItems, setSelectedItems, onUpdateTotalPrice }: ListCartProps) => {
 
   const toggleSelect = (id: string) => {
     setSelectedItems(prevSelected =>
@@ -42,6 +43,7 @@ const ListCart = ({ products, selectedItems, setSelectedItems }: ListCartProps) 
             item={item}
             isSelected={selectedItems.includes(item._id)}
             onSelect={toggleSelect}
+            onUpdateTotalPrice={onUpdateTotalPrice}
           />
         );
       }}

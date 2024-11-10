@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   itemWrapper: {
     backgroundColor: "#FFF",
     borderRadius: 10,
+    marginRight: 25,
     alignItems: "center",
     margin: 6,
     width: SCREEN_WIDTH / 2 - 40,

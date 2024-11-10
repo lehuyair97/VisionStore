@@ -4,6 +4,8 @@ import Text from "@components/text";
 import Colors from "@theme/colors";
 import { StatusBar } from "expo-status-bar";
 import { TextStyle } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { goBack } from "@navigation/config/navigation-service";
 interface AppBarProps {
     title?: string;
     titleStyle?: TextStyle;
@@ -18,16 +20,22 @@ interface AppBarProps {
     paddingHorizontal?: number;
     childrenRight?: React.ReactNode;
     paddingVertical?: number;
+    paddingTop?: number;
 
 }
 
-const AppBarCustom = ({ title, iconLeft, iconRight, iconRightName, isBackground, colorIconLeft, colorIconRight, childrenLeft, titleCenter, paddingHorizontal, childrenRight, titleStyle, paddingVertical }: AppBarProps) => {
+const AppBarCustom = ({ title, iconLeft, iconRight, iconRightName, isBackground, colorIconLeft, colorIconRight, childrenLeft, titleCenter, paddingHorizontal, childrenRight, titleStyle, paddingVertical, paddingTop }: AppBarProps) => {
     return (
-        <Block bg={isBackground ? "primary" : "transparent"} paddingTop={"_5"} style={{paddingHorizontal: paddingHorizontal ?? 0, paddingVertical: paddingVertical ?? 0, paddingTop: 30}} >
+        <Block bg={isBackground ? "primary" : "transparent"}
+         paddingTop={"_5"} 
+         style={{paddingHorizontal: paddingHorizontal ?? 0, paddingVertical: paddingVertical ?? 0, paddingTop: paddingTop ?? 30}} >
             <StatusBar style="light" backgroundColor="transparent" />
             <Block width={"100%"}>
                 <Row>
-                    {iconLeft && <Icon type="fontAwesome" name="arrow-left" size={20} color={colorIconLeft ?? Colors.container} />}
+                    {iconLeft &&
+                    <TouchableOpacity onPress={() => goBack()}>
+                    <Icon type="fontAwesome" name="arrow-left" size={20} color={colorIconLeft ?? Colors.container} />
+                    </TouchableOpacity>}
                     {childrenLeft && <Block>
                     {childrenLeft}
                 </Block>}

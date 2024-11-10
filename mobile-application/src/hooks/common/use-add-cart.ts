@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
+import { goBack } from "@navigation/config/navigation-service";
 
 // Giao diện cho giao dịch thanh toán
 interface PaymentTransaction {
@@ -83,8 +84,9 @@ const useAddCart = () => {
       }
     },
     onSuccess: (data) => {
-      toast.success("Product added to cart successfully!");
-      console.log("Added product:", data);
+      toast.success("Thêm vào giỏ hàng thành công!");
+      console.log("Product added to cart successfully!");
+      goBack();
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);

@@ -93,6 +93,9 @@ const DetailProduct = () => {
   ];
 
   const handleAddCart = () => {
+    console.log("Product Detail:", productDetail);
+    console.log("Selected Color:", selectedColor);
+    console.log("Selected Memory:", selectedMemory);
     const orderData: OrderData = {
       customerId: "605c5b2e33f2e45b8b5d537f",
       customerName: "Thao",
@@ -126,7 +129,7 @@ const DetailProduct = () => {
 
     addCart(orderData, {
       onSuccess: () => {
-        // navigation.navigate(ROUTES.Home);
+        navigation.navigate(ROUTES.Home); 
         console.log("Success");
       },
       onError: () => {
@@ -187,12 +190,12 @@ const DetailProduct = () => {
         <Block marginTop={"_40"}>
           <Row center between>
 
-              <CustomControllerNums
-                width={150}
-                decreaseQuantity={decreaseQuantity}
-                increaseQuantity={increaseQuantity}
-                quantity={quantity}
-              />
+            <CustomControllerNums
+              width={150}
+              decreaseQuantity={decreaseQuantity}
+              increaseQuantity={increaseQuantity}
+              quantity={quantity}
+            />
             <TouchableOpacity style={styles.buyButton} onPress={handleAddCart}>
               <Text style={styles.buyButtonText}>Mua</Text>
             </TouchableOpacity>

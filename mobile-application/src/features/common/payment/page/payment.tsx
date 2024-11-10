@@ -12,6 +12,7 @@ import { StyleSheet } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { Cart } from "@hooks/common/use-cart";
 import AppBarCustom from "@features/common/home/component/appbar_custom";
+import { ScrollView } from "react-native-virtualized-view";
 const Payment = () => {
     const route = useRoute();
     const { selectedProducts } = route.params as { selectedProducts: Cart[] };
@@ -26,6 +27,7 @@ const Payment = () => {
             <Block backgroundColor={"gray_profile"} flex={1}>
                 <AppBarCustom title="Thanh toán" iconLeft titleCenter isBackground paddingHorizontal={20} paddingVertical={10}/>
                 <Block m={"_10"}/>
+                <ScrollView>
                 {selectedProducts.length > 0 && <Address address={selectedProducts[0]} />}
                 <Block m={"_10"}/>
                 <ItemProduct selectedProducts={selectedProducts} />
@@ -36,7 +38,8 @@ const Payment = () => {
                     discount={discount} 
                     finalTotal={finalTotal} 
                 />
-                <Block m={"_10"}/>
+                <Block height={100}/>
+                </ScrollView>
                 <View style={styles.totalizeContainer}>
                     <Pay finalTotal={finalTotal} />
                 </View>
@@ -47,12 +50,6 @@ const Payment = () => {
 
 export default Payment;
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      
-      paddingVertical: 25,
-      
-    },
     totalizeContainer: {
       position: 'absolute',
       bottom: 0,

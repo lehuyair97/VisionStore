@@ -44,6 +44,7 @@ const ProductBrand: React.FC<ProductBrandProps> = ({
           <ProductItem product={item} onPress={handleNavigateToDetailProduct} />
         )}
         keyExtractor={(item) => item._id}
+        showsHorizontalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={{ width: 20 }} />} 
 
       />
@@ -55,6 +56,8 @@ const ProductBrand: React.FC<ProductBrandProps> = ({
       data={filteredData}
       renderItem={renderProductGroup}
       keyExtractor={(item) => item._id}
+      
+      
       
 
     />
