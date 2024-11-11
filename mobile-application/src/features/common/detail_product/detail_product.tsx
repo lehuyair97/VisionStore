@@ -103,7 +103,7 @@ const DetailProduct = () => {
         userId: "605c5b2e33f2e45b8b5d537f",
         orderId: "605c5b2e33f2e45b8b5d5380",
         paymentMethod: "credit card",
-        paymentStatus: "completed",
+        paymentStatus: "cart",
         _id: "6724da62f0a671aa5f05bb2e",
         paymentDate: "2024-11-01T13:40:50.566Z",
       },
@@ -123,7 +123,6 @@ const DetailProduct = () => {
 
     addCart(orderData, {
       onSuccess: () => {
-        // navigation.navigate(ROUTES.Home);
         console.log("Success");
       },
       onError: () => {

@@ -66,7 +66,7 @@ export const REQUEST_URL = {
   ADD_COMMENT: (productID) => `/comment?productID=${productID}`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
 };
-// "http://192.168.1.100:3000/api"
+// "http://192.168.1.253:3000/api";
 const BASE_URL =
   process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.116:3000/api";
 

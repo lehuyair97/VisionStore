@@ -33,18 +33,35 @@ const orderModel = new mongoose.Schema({
   optionsMemory: {
     type: String,
   },
-  carts: {
-    type: Array,
-    required: true,
-  },
+  carts: [
+    {
+      paymentStatus: {
+        type: String,
+        enum: [
+          "cart",
+          "pending",
+          "processing",
+          "shipped",
+          "delivered",
+          "canceled",
+        ],
+        default: "cart",
+      },
+      price: Number,
+      productName: String,
+      description:String,
+      quantity: Number,
+      image: String,
+    },
+  ],
   orderDate: {
     type: String,
     default: () => moment().format("dddd, DD/MM/YYYY HH:mm:ss"),
   },
   voucher: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Voucher' 
-}
+    ref: "Voucher",
+  },
 });
 
 const Order = mongoose.model("Order", orderModel);

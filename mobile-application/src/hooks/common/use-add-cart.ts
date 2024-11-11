@@ -1,4 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "./../../utils/helper";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
 
@@ -58,18 +59,14 @@ interface AddCartType {
   carts: CartItem[];
   orderDate: string;
 }
-
+ 
 const useAddCart = () => {
-  const {
-    data,
-    error,
-    mutate,
-    status,
-  } = useMutation<any, Error, AddCartType>({
+  const queryClient = useQueryClient();
+  const { data, error, mutate, status } = useMutation<any, Error, AddCartType>({
     mutationFn: async (data: AddCartType) => {
       try {
         const res = await api({
-          url: REQUEST_URL.GET_CART, 
+          url: REQUEST_URL.GET_CART,
           method: "POST",
           data: data,
         });
@@ -81,16 +78,24 @@ const useAddCart = () => {
     },
     onSuccess: (data) => {
       toast.success("Product added to cart successfully!");
-     
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
-      console.error('Mutation error:', error);
+      console.error("Mutation error:", error);
+    },
+    onSettled: async (data, error: any) => {
+      if (error) {
+        console.log(error?.response?.data?.message || "Lỗi không xác định");
+      } else if (data) {
+        queryClient.invalidateQueries({
+          queryKey: ["cart"],
+        });
+      }
     },
     networkMode: "always",
   });
 
-  const isLoading = status === 'pending';
+  const isLoading = status === "pending";
 
   return {
     data,

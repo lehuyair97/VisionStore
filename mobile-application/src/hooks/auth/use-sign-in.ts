@@ -11,7 +11,7 @@ export type signInReponse = {
 };
 
 export type User = {
-  _id: string;
+  _id?: string;
   userName?: string;
   email: string;
   display_name?: string;
@@ -22,7 +22,7 @@ export type User = {
   favorites?: any[];
   payment_transaction?: any;
   createdAt?: Date;
-  addressSelected: {
+  addressSelected?: {
     location: string;
     detail: string
   };

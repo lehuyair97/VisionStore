@@ -20,7 +20,6 @@ export default function Cart() {
   const { data: carts, isLoading, error } = useCart(userInfo?._id);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-
   const handleSelectAll = (selectAll: boolean) => {
     if (selectAll && carts) {
       setSelectedItems(carts?.carts.map((product) => product.productId));

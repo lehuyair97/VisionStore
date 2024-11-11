@@ -23,7 +23,6 @@ exports.getOrderById = async (req, res) => {
   }
 };
 
-
 exports.getOrdersByUserId = async (req, res) => {
   const { customerId } = req.params;
   try {
@@ -36,7 +35,6 @@ exports.getOrdersByUserId = async (req, res) => {
 
 exports.createOrder = async (req, res) => {
   const { customerId, carts, voucherID } = req.body;
-
   try {
     let existingOrder = await orderModel.findOne({
       customerId,
@@ -49,9 +47,11 @@ exports.createOrder = async (req, res) => {
         );
 
         if (existingCartItem) {
+
           existingCartItem.quantity += cartItem.quantity;
         } else {
-          existingOrder.carts.push(cartItem);
+          existingOrder.carts = [...existingOrder.carts, {...cartItem}]
+          console.log(existingOrder)
         }
       });
 
@@ -81,6 +81,90 @@ exports.createOrder = async (req, res) => {
         await voucherModel.findByIdAndDelete(voucherID);
       }
     }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.updateOrderStatus = async (req, res) => {
+  const { customerId, cart } = req.body;
+  try {
+    const order = await orderModel.findOne({ customerId });
+    if (!order) {
+      return res
+        .status(404)
+        .json({ message: "Order not found for this customer" });
+    }
+
+    cart.forEach((cartItem) => {
+      const orderCartItem = order.carts.find(
+        (item) => item._id.toString() === cartItem._id
+      );
+
+      if (orderCartItem) {
+        orderCartItem.paymentStatus =
+          cartItem.status || orderCartItem.paymentStatus;
+        if (cartItem.quantity) {
+          orderCartItem.quantity = cartItem.quantity;
+        }
+      }
+    });
+
+    order.totalBill = order.carts.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+    await order.save();
+
+    res
+      .status(200)
+      .json({ message: "Order updated successfully", data: order });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.updateOrderCartQuanlity = async (req, res) => {
+  const { customerId, productId, action , quantity  } = req.body;
+  try {
+    const order = await orderModel.findOne({ customerId });
+    if (!order) {
+      return res
+        .status(404)
+        .json({ message: "Order not found for this customer" });
+    }
+
+    const orderCartItem = order.carts.find(
+      (item) => item._id.toString() === productId
+    );
+
+    if (orderCartItem) {
+      if (action === "plus") {
+        orderCartItem.quantity += quantity;
+      } else if (action === "minus") {
+        orderCartItem.quantity -= quantity;
+
+        if (orderCartItem.quantity <= 0) {
+          order.carts = order.carts.filter(
+            (item) => item._id.toString() !== productId
+          );
+        }
+      }
+    } else {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
+
+    order.totalBill = order.carts.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+
+    await order.save();
+
+    res
+      .status(200)
+      .json({ message: "Order cart updated successfully", data: order });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

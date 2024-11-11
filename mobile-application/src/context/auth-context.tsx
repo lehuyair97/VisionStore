@@ -57,8 +57,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const isValidToken = await validateToken();
       if (isValidToken) {
         setAuthenticationStatus("AUTHENTICATED");
-        const info = await getUserInfoStorage();
-        setUserInfo(info);
+        await getUserInfoStorage().then((info) =>
+          setUserInfo(info)
+        );
+
         return;
       }
       await refreshToken();

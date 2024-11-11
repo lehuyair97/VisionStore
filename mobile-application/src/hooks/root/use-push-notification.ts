@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import  { useEffect, useRef } from "react";
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";

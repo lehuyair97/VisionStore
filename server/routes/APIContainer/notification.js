@@ -89,7 +89,7 @@ const sendNotificationToAllUsers = async () => {
 // setInterval(() => {
 //   console.log(`[${new Date().toISOString()}] Đang gửi thông báo tự động đến tất cả người dùng...`);
 //   sendNotificationToAllUsers();
-// }, 3 * 1000); // 15 seconds for testing
+// }, 6 * 1000); // 15 seconds for testing
 
 // Scheduled notification at 5 PM every day
 cron.schedule("0 17 * * *", () => {
