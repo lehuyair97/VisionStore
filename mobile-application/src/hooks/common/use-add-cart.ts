@@ -55,7 +55,7 @@ interface AddCartType {
     _id: string;
     paymentDate: string;
   };
-  totalBill: number;
+  totalBill?: number;
   carts: CartItem[];
   orderDate: string;
 }

@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/native";
 import theme from "@theme";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -12,7 +11,6 @@ const MainContainer = ({
   edges,
   ...rest
 }: NativeSafeAreaViewProps) => {
-  const isFocused = useIsFocused();
   return (
     <SafeAreaView
       style={[{ flex: 1, backgroundColor: theme.colors.whiteF8 }, style]}

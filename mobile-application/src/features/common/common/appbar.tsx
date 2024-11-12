@@ -3,8 +3,6 @@ import Block from "@components/block";
 import Text from "@components/text";
 import { goBack } from "@navigation/config/navigation-service";
 import Colors from "@theme/colors";
-import { EDGES } from "@utils/helper";
-import { StatusBar } from "expo-status-bar";
 import { TouchableOpacity } from "react-native-gesture-handler";
 interface AppBarProps {
   title?: string;
@@ -32,7 +30,6 @@ const AppBar = ({
       paddingBottom={"_25"}
       paddingHorizontal={"_20"}
     >
-      <StatusBar style="light" backgroundColor="transparent" />
       <Row between center>
         <TouchableOpacity onPress={goBack}>
           <Icon

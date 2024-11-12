@@ -39,6 +39,33 @@ exports.createBrand = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.createBrandNoUpload = async (req, res) => {
+  try {
+    const brandData = req.body;
+    const newBrand = await Brands.create(brandData);
+    res.status(201).json(newBrand);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+exports.updateBrandNoUpload = async (req, res) => {
+  try {
+    const brandId = req.params.id;
+    const updatedData = req.body;
+    const updatedBrand = await Brands.findByIdAndUpdate(brandId, updatedData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedBrand) {
+      return res.status(404).json({ message: "Brand not found" });
+    }
+
+    res.status(200).json(updatedBrand);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 exports.updateBrand = async (req, res) => {
   const { id } = req.params;

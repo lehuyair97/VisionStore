@@ -9,7 +9,7 @@ export interface Brand {
     brandType: string;
 }
 
-const useBrand = () => {
+const useGetBrand = () => {
   const {data, isPending,error, isLoading} = useQuery({
     queryKey: ["brand"],
     queryFn: async () => {
@@ -23,4 +23,4 @@ const useBrand = () => {
   return { data, isPending, error, isLoading };
 };
 
-export default useBrand;
+export default useGetBrand;

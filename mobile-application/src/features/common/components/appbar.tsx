@@ -2,7 +2,6 @@ import { Icon, Row } from "@components";
 import Block from "@components/block";
 import Text from "@components/text";
 import Colors from "@theme/colors";
-import { StatusBar } from "expo-status-bar";
 interface AppBarProps {
     title?: string;
     iconLeft?: boolean;
@@ -16,7 +15,6 @@ interface AppBarProps {
 const AppBar = ({title, iconLeft, iconRight, iconRightName, isBackground, colorIconLeft , colorIconRight}: AppBarProps) => {
     return (
         <Block bg={isBackground ? "primary" : "transparent"} paddingTop={"_40"} paddingBottom={"_25"} paddingHorizontal={"_20"}>
-            <StatusBar style="light" backgroundColor="transparent" />
             <Row between center>
                  <Icon type="fontAwesome" name="arrow-left" size={20} color={colorIconLeft ?? Colors.container}/>
                 <Text fontSize={16} fontWeight={"500"}>{title}</Text>
