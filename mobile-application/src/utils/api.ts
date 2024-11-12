@@ -68,9 +68,8 @@ export const REQUEST_URL = {
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
 };
 
-const BASE_URL = "http://192.168.1.144:3000/api";
-
-// process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.116:3000/api";
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.116:3000/api";
 
 export type AxiosParams = {
   url: string;

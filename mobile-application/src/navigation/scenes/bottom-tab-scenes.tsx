@@ -96,7 +96,7 @@ const BottomTabScenes = () => {
       tabBarButton: (props) => <Pressable {...props} />,
     },
     CartStack: {
-      tabBarLabel: ({ focused }) => renderTabBarLabel("Thư viện", focused),
+      tabBarLabel: ({ focused }) => renderTabBarLabel("Giỏ hàng", focused),
       tabBarIcon: ({ focused }) => renderTabBarIcon("CartStack", focused),
       tabBarButton: (props) => <Pressable {...props} />,
     },

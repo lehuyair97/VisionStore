@@ -101,6 +101,15 @@ export const iconMap: { [key: string]: string } = {
   "Phụ kiện": "headphones",
 };
 
+export const shipingStatus = [
+  { id: "1", name: "Chờ thanh toán", icon: "credit-card" },
+  { id: "2", name: "Đang Xử lý", icon: "user" },
+  { id: "3", name: "Đang vận chuyển", icon: "truck" },
+  { id: "4", name: "Đã giao", icon: "clipboard" },
+  { id: "5", name: "Đổi trả", icon: "rotate-left" },
+];
+
+
 export const deliveryMethods = [
   {
     method: "Giao nhanh",

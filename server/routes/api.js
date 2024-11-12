@@ -130,12 +130,14 @@ router.delete("/orders/:id", orderAPI.deleteOrderById);
 router.get("/brands", brandAPI.getAllBrands);
 router.get("/brands/:id", brandAPI.getBrandById);
 router.post(
-  "/brands",
+  "/brandsHasUpload",
   multer({ storage: getStorage("brands") }).single("logo"),
   brandAPI.createBrand
 );
+router.post("/brands", brandAPI.createBrand);
+router.put("/brands/:id", brandAPI.updateBrand);
 router.put(
-  "/brands/:id",
+  "/brandsHasUpload/:id",
   multer({ storage: getStorage("brands") }).single("logo"),
   brandAPI.updateBrand
 );

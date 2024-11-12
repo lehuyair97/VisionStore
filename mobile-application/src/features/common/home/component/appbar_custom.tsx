@@ -3,7 +3,6 @@ import Block from "@components/block";
 import Text from "@components/text";
 import { goBack, navigate } from "@navigation/config/navigation-service";
 import Colors from "@theme/colors";
-import { StatusBar } from "expo-status-bar";
 import { TextStyle } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 interface AppBarProps {
@@ -47,7 +46,6 @@ const AppBarCustom = ({
         paddingTop: 30,
       }}
     >
-      <StatusBar style="light" backgroundColor="transparent" />
       <Block width={"100%"}>
         <Row>
           {iconLeft && (

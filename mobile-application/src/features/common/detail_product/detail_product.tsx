@@ -55,7 +55,7 @@ interface OrderData {
     _id: string;
     paymentDate: string;
   };
-  totalBill: number;
+  totalBill?: number;
   carts: CartItem[];
   orderDate: string;
 }
@@ -107,7 +107,6 @@ const DetailProduct = () => {
         _id: "6724da62f0a671aa5f05bb2e",
         paymentDate: "2024-11-01T13:40:50.566Z",
       },
-      totalBill: productDetail?.price || 0,
       carts: [
         {
           productId,

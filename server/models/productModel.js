@@ -9,21 +9,7 @@ const productSchema = new mongoose.Schema({
   descriptions: { type: String },
   thumbnail: { type: String },
   image: { type: String },
-  optionsColor: {
-    type: [
-      {
-        color: { type: String },
-        name: { type: String },
-      },
-    ],
-  },
-  optionsMemory: {
-    type: [
-      {
-        name: { type: String },
-      },
-    ],
-  },
+  option: {},
   category_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",

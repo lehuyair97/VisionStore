@@ -163,7 +163,7 @@ exports.deleteProductById = async (req, res) => {
   }
 };
 
-exports.searchProducts = async (req, res) => {
+  exports.searchProducts = async (req, res) => {
   try {
     const { name } = req.body; // Lấy tên từ body của yêu cầu
     const filter = {};
@@ -184,4 +184,4 @@ exports.searchProducts = async (req, res) => {
     console.error("Error searching products:", error); // Ghi lại lỗi chi tiết
     res.status(500).json({ message: error.message });
   }
-};
+  };

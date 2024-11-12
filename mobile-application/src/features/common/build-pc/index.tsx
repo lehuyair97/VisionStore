@@ -10,7 +10,6 @@ import BuildAutomatic from "./components/build-automatic";
 import BuildManual from "./components/build-manual";
 import TabBarHome, { TAB_BUILD } from "./components/tab-bar";
 import { navigate } from "@navigation/config/navigation-service";
-import { StatusBar } from "react-native";
 
 export type Route = {
   key: string;

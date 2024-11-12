@@ -1,3 +1,5 @@
+import useRefreshToken from "@hooks/auth/use-refresh-token";
+import { getUserInfoStorage, setUserInfoStorage } from "@utils/storage";
 import {
   createContext,
   useCallback,
@@ -5,19 +7,15 @@ import {
   useMemo,
   useState,
 } from "react";
+import { User } from "../hooks/auth/use-sign-in";
 import {
-  setAccessToken as setAccessTokenStorage,
   deleteAccessToken,
-  validateToken,
-  setRefreshToken as setRefreshTokenStorage,
   deleteRefreshToken,
   getRefreshToken,
-  getAccessToken,
+  setAccessToken as setAccessTokenStorage,
+  setRefreshToken as setRefreshTokenStorage,
+  validateToken
 } from "../utils/token";
-import { setUserInfoStorage, getUserInfoStorage } from "@utils/storage";
-import { User } from "../hooks/auth/use-sign-in";
-import useRefreshToken from "@hooks/auth/use-refresh-token";
-import dayjs from "dayjs";
 
 export type AuthenticationStatus =
   | "REFRESHING"
@@ -57,9 +55,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const isValidToken = await validateToken();
       if (isValidToken) {
         setAuthenticationStatus("AUTHENTICATED");
-        await getUserInfoStorage().then((info) =>
-          setUserInfo(info)
-        );
+        await getUserInfoStorage().then((info) => {
+          if (info) {
+            setUserInfo(info);
+          }
+        });
 
         return;
       }

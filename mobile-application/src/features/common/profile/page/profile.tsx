@@ -8,49 +8,12 @@ import HeaderProfile from "../component/header_profile";
 import OrderManagement from "../component/order_management";
 import Trademark from "../component/trademark";
 import { useAuth } from "@hooks/auth";
-
-const data = [
-  // Tạo dữ liệu cho FlatList
-  { id: "1", title: "Chờ thanh toán", icon: "credit-card" },
-  { id: "2", title: "Đang Xử lý", icon: "user" },
-  { id: "3", title: "Đang vận chuyển", icon: "truck" },
-  { id: "4", title: "Đã giao", icon: "clipboard" },
-  { id: "5", title: "Đổi trả", icon: "rotate-left" },
-  // Thêm các mục khác nếu cần
-];
-
-const dataTrademark = [
-  // Tạo dữ liệu cho FlatList
-  {
-    id: "1",
-    title: "Asus",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU9uWRAuTwzHZXLCKjD_p-DrJqLbYcjQVlKg&s",
-  },
-  {
-    id: "2",
-    title: "Dell",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOlpCfzsaHmQd-Ph0XaBqTGPbpfAY4qmg8bQ&s",
-  },
-  {
-    id: "3",
-    title: "Acer",
-    image:
-      "https://static.vecteezy.com/system/resources/previews/019/136/299/non_2x/acer-logo-acer-icon-free-free-vector.jpg",
-  },
-  {
-    id: "4",
-    title: "HP",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiTKPS7AES9C41BuuHsJLeEeoCoyC1AoQ6hA&s",
-  },
-
-  // Thêm các mục khác nếu cần
-];
+import useGetBrand from "@hooks/common/use-get-brand";
+import { shipingStatus } from "@utils/containts";
 
 export default function Profile() {
   const { userInfo } = useAuth();
+  const { data: brands } = useGetBrand();
 
   return (
     <MainContainer
@@ -64,9 +27,9 @@ export default function Profile() {
           email={userInfo?.email}
         />
         <Block mt={"_12"} />
-        <OrderManagement data={data} />
+        <OrderManagement data={shipingStatus} />
         <Block mt={"_12"} />
-        <Trademark data={dataTrademark} />
+        <Trademark data={brands} />
         <Block mt={"_12"} />
         <FeaturesProfile />
       </ScrollView>
