@@ -52,6 +52,7 @@ const orderModel = new mongoose.Schema({
       description:String,
       quantity: Number,
       image: String,
+      productId: String
     },
   ],
   orderDate: {

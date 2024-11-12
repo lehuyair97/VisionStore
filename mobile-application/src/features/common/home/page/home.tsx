@@ -53,7 +53,6 @@ export default function Home() {
       icon: iconMap[item.name] || "home",
       type: item?.type,
     })) || [];
-  console.log(productsBySubCategoryChild);
 
   const openSubCategories = () => {
     if (refRBSheet?.current) {
@@ -117,7 +116,7 @@ export default function Home() {
 
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
-  if (!categories || categories.length === 0)
+  if (!categories || categories?.length === 0)
     return <Text>No categories available</Text>;
 
   return (

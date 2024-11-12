@@ -42,16 +42,14 @@ exports.createOrder = async (req, res) => {
 
     if (existingOrder) {
       carts.forEach((cartItem) => {
-        const existingCartItem = existingOrder.carts.find(
-          (item) => item.productId === cartItem.productId
-        );
+        const existingCartItem = existingOrder.carts.find((item) => {
+          return item.productId === cartItem.productId;
+        });
 
         if (existingCartItem) {
-
           existingCartItem.quantity += cartItem.quantity;
         } else {
-          existingOrder.carts = [...existingOrder.carts, {...cartItem}]
-          console.log(existingOrder)
+          existingOrder.carts = [...existingOrder.carts, { ...cartItem }];
         }
       });
 
@@ -59,7 +57,6 @@ exports.createOrder = async (req, res) => {
         (total, item) => total + item.price * item.quantity,
         0
       );
-
       existingOrder.markModified("carts");
       await existingOrder.save();
 
@@ -82,7 +79,7 @@ exports.createOrder = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -115,6 +112,7 @@ exports.updateOrderStatus = async (req, res) => {
       (total, item) => total + item.price * item.quantity,
       0
     );
+    order.markModified('carts')
     await order.save();
 
     res
@@ -126,7 +124,8 @@ exports.updateOrderStatus = async (req, res) => {
 };
 
 exports.updateOrderCartQuanlity = async (req, res) => {
-  const { customerId, productId, action , quantity  } = req.body;
+  const { customerId, productId, action, quantity } = req.body;
+
   try {
     const order = await orderModel.findOne({ customerId });
     if (!order) {
@@ -136,18 +135,18 @@ exports.updateOrderCartQuanlity = async (req, res) => {
     }
 
     const orderCartItem = order.carts.find(
-      (item) => item._id.toString() === productId
+      (item) => item.productId.toString() === productId
     );
 
     if (orderCartItem) {
-      if (action === "plus") {
+      if (action === "increase") {
         orderCartItem.quantity += quantity;
-      } else if (action === "minus") {
+      } else if (action === "decrease") {
         orderCartItem.quantity -= quantity;
 
         if (orderCartItem.quantity <= 0) {
           order.carts = order.carts.filter(
-            (item) => item._id.toString() !== productId
+            (item) => item.productId.toString() !== productId
           );
         }
       }
@@ -159,7 +158,7 @@ exports.updateOrderCartQuanlity = async (req, res) => {
       (total, item) => total + item.price * item.quantity,
       0
     );
-
+    order.markModified('carts')
     await order.save();
 
     res

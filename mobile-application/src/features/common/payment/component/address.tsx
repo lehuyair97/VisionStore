@@ -1,7 +1,7 @@
 import { Icon, Row } from "@components";
 import Block from "@components/block";
 import Text from "@components/text";
-import { Cart } from "@hooks/common/use-cart";
+import { Cart } from "@hooks/common/use-get-cart";
 import Colors from "@theme/colors";
 
 

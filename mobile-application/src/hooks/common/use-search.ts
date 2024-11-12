@@ -1,10 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
-
-
-
-
 const useSearch = () => {
   const {
     data,

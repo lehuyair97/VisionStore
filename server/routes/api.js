@@ -122,6 +122,7 @@ router.get("/orders", orderAPI.getAllOrders);
 router.get("/orders/:id", orderAPI.getOrderById);
 router.get("/orders/users/:customerId", orderAPI.getOrdersByUserId);
 router.post("/orders", orderAPI.createOrder);
+router.post("/orders/quantity", orderAPI.updateOrderCartQuanlity);
 router.put("/orders/:id", orderAPI.updateOrderById);
 router.delete("/orders/:id", orderAPI.deleteOrderById);
 

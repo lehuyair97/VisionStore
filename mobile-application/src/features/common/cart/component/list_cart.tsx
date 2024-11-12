@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FlatList } from "react-native";
 import CartItem from "./cart_item";
-import { Cart } from "@hooks/common/use-cart";
+import { Cart } from "@hooks/common/use-get-cart";
 import Text from "@components/text";
 import useQuantity from "@hooks/common/util/useQuantity";
 

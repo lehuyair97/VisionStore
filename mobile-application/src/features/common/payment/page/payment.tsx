@@ -2,7 +2,7 @@ import { Block, MainContainer } from "@components";
 import { RBSheetRef } from "@features/common/components/bottom-sheet";
 import AppBarCustom from "@features/common/home/component/appbar_custom";
 import { useAuth } from "@hooks/auth";
-import { Cart } from "@hooks/common/use-cart";
+import { Cart } from "@hooks/common/use-get-cart";
 import { useRoute } from "@react-navigation/native";
 import Colors from "@theme/colors";
 import { EDGES } from "@utils/helper";

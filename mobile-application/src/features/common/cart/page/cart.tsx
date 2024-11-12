@@ -11,7 +11,7 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { useAuth } from "@hooks/auth";
-import useCart from "@hooks/common/use-cart";
+import useCart from "@hooks/common/use-get-cart";
 import { Block, Text } from "@components";
 
 export default function Cart() {

@@ -19,6 +19,7 @@ export const REQUEST_URL = {
 
   GET_BRANDS: "/brands",
   GET_CART: "/orders",
+  CHANGE_QUANTITY_CART: "/orders/quantity",
   GET_CART_BY_USERID: (customerId: string) => `orders/users/${customerId}`,
   SEARCH: "/products/search",
 
@@ -66,9 +67,10 @@ export const REQUEST_URL = {
   ADD_COMMENT: (productID) => `/comment?productID=${productID}`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
 };
-// "http://192.168.1.253:3000/api";
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.116:3000/api";
+
+const BASE_URL = "http://192.168.1.144:3000/api";
+
+// process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.116:3000/api";
 
 export type AxiosParams = {
   url: string;

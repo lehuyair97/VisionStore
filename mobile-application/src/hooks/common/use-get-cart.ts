@@ -36,7 +36,7 @@ export interface Cart {
   __v: number;
 }
 
-const useCart = (customerId:string) => {
+const useGetCart = (customerId:string) => {
   const {data, isPending, error, isLoading} = useQuery({
     queryKey: ["cart"],
     queryFn: async () => {
@@ -49,4 +49,4 @@ const useCart = (customerId:string) => {
   return { data: data?.data, isPending, error, isLoading };
 };
 
-export default useCart;
+export default useGetCart;

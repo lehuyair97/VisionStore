@@ -1,7 +1,7 @@
 import { Block, Row } from "@components";
 import Text from "@components/text";
 import { Image, View } from "react-native";
-import { Cart } from "@hooks/common/use-cart";
+import { Cart } from "@hooks/common/use-get-cart";
 import { SCREEN_WIDTH } from "@utils/helper";
 
 const RenderProduct = ({ item }: { item: any }) => {

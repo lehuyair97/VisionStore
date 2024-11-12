@@ -4,7 +4,7 @@ import RenderProduct from "@features/common/common/render_product";
 import { FlatList } from "react-native";
 import RowTow from "./row_tow";
 import Colors from "@theme/colors";
-import { Cart } from "@hooks/common/use-cart";
+import { Cart } from "@hooks/common/use-get-cart";
 
 
 interface ItemProductProps {

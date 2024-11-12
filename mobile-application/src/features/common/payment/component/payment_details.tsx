@@ -1,7 +1,7 @@
 import { Block, Icon, Row, Text } from "@components";
 import Colors from "@theme/colors";
 import TextRow from "./text_row";
-import { Cart } from "@hooks/common/use-cart";
+import { Cart } from "@hooks/common/use-get-cart";
 
 interface PaymentDetailsProps {
   totalProductPrice: number;
