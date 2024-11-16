@@ -7,14 +7,12 @@ interface PaymentDetailsProps {
   totalProductPrice: number;
   shippingCost: number;
   discount: number;
-  finalTotal: number;
 }
 
 const PaymentDetails = ({
   totalProductPrice,
   shippingCost,
   discount,
-  finalTotal,
 }: PaymentDetailsProps) => {
   const totalPrice = [
     {
@@ -53,13 +51,6 @@ const PaymentDetails = ({
       {totalPrice.map((item, index) => (
         <TextRow key={index} title={item.title} price={item.price} />
       ))}
-      <TextRow
-        title="Tổng thanh toán"
-        price={`${finalTotal}đ`}
-        bold={true}
-        size={16}
-        color={Colors.primary}
-      />
     </Block>
   );
 };

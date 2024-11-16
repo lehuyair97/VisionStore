@@ -109,7 +109,6 @@ export const shipingStatus = [
   { id: "5", name: "Đổi trả", icon: "rotate-left" },
 ];
 
-
 export const deliveryMethods = [
   {
     method: "Giao nhanh",
@@ -123,4 +122,24 @@ export const deliveryMethods = [
     estimated_delivery_time: dayjs().add(3, "day").format("DD-MM-YYYY"),
     price: 25,
   },
+];
+export const paymentMethods = [
+  {
+    method: "Thanh Toán tại nhà",
+    icon: {
+      type: "antDesign",
+      name: "home",
+    },
+  },
+  {
+    method: "Paypal",
+    icon: {
+      type: "materialIcons",
+      name: "paypal",
+    },
+  },
+];
+export const profileActions = [
+  { icon: "edit", title: "Cập nhật trang cá nhân", route: "EditProfile" },
+  { icon: "user-secret", title: "Đổi mật khẩu", route: "ChangePassword" },
 ];

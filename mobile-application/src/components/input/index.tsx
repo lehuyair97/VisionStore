@@ -6,8 +6,7 @@ import { makeStyles } from "@theme";
 import { FormInputProps } from "./type";
 
 const FormInput = (props: FormInputProps) => {
-  const { name, error, control, required = true, ...rest } = props;
-
+  const { name, error, control, required = true,editable, ...rest } = props;
   const styles = useStyles();
 
   return (
@@ -20,6 +19,7 @@ const FormInput = (props: FormInputProps) => {
       }) => (
         <TextInput
           {...rest}
+          editable={editable}
           ref={ref}
           required={required}
           style={styles.inputStyle}

@@ -57,13 +57,13 @@ interface AddCartType {
   };
   totalBill?: number;
   carts: CartItem[];
-  orderDate: string;
+
 }
  
 const useAddCart = () => {
   const queryClient = useQueryClient();
   const { data, error, mutate, status } = useMutation<any, Error, AddCartType>({
-    mutationFn: async (data: AddCartType) => {
+    mutationFn: async (data: any) => {
       try {
         const res = await api({
           url: REQUEST_URL.GET_CART,

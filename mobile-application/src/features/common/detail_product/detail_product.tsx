@@ -90,34 +90,11 @@ const DetailProduct = () => {
   ];
 
   const handleAddCart = () => {
-    const orderData: OrderData = {
+    const orderData: any = {
       customerId: userInfo?._id,
-      customerName: userInfo?.display_name,
-      customerEmail: userInfo?.email,
-      customerAddress: null,
-      customerPhoneNumber: 1234567890,
-      optionsColor: selectedColor?.name || "",
-      optionsMemory: selectedMemory?.name || "",
-      paymentTransactions: {
-        id: "transaction123",
-        userId: "605c5b2e33f2e45b8b5d537f",
-        orderId: "605c5b2e33f2e45b8b5d5380",
-        paymentMethod: "credit card",
-        paymentStatus: "cart",
-        _id: "6724da62f0a671aa5f05bb2e",
-        paymentDate: "2024-11-01T13:40:50.566Z",
-      },
-      carts: [
-        {
-          productId,
-          productName: productDetail?.name || "",
-          quantity,
-          price: productDetail?.price || 0,
-          image: productDetail?.image || "",
-          description: productDetail?.description || "",
-        },
-      ],
-      orderDate: new Date().toISOString(),
+      productId,
+      quantity
+
     };
 
     addCart(orderData, {

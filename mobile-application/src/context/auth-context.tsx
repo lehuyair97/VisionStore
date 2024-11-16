@@ -14,9 +14,9 @@ import {
   getRefreshToken,
   setAccessToken as setAccessTokenStorage,
   setRefreshToken as setRefreshTokenStorage,
-  validateToken
+  validateToken,
 } from "../utils/token";
-
+import useGetProfile from "@hooks/common/use-get-profile";
 export type AuthenticationStatus =
   | "REFRESHING"
   | "AUTHENTICATED"
@@ -49,24 +49,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { submit: submitRefreshToken } = useRefreshToken();
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
   const [userInfo, setUserInfo] = useState<User | null>();
+  const {data: userData} = useGetProfile(userInfo?._id);
 
   useEffect(() => {
     const validateAndSetAuth = async () => {
       const isValidToken = await validateToken();
       if (isValidToken) {
         setAuthenticationStatus("AUTHENTICATED");
-        await getUserInfoStorage().then((info) => {
-          if (info) {
-            setUserInfo(info);
-          }
-        });
-
+        const userInfo = await getUserInfoStorage()
+        setUserInfo(userInfo)
         return;
       }
       await refreshToken();
     };
     validateAndSetAuth();
   }, []);
+
+  useEffect(()=>{
+    setUserInfo(userData)
+  },[userData])
 
   const logout = async () => {
     await deleteAccessToken();
@@ -80,9 +81,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (refreshToken) {
       const { accessToken } = await submitRefreshToken(refreshToken);
       if (accessToken) {
+        const userInfo = await getUserInfoStorage()
         setAccessToken(accessToken);
         setAccessTokenStorage(accessToken);
         setAuthenticationStatus("AUTHENTICATED");
+        setUserInfo(userInfo)
       }
     }
   };

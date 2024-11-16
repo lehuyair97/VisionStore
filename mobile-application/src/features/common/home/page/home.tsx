@@ -25,7 +25,10 @@ import FitAdvisor from "../component/fit_advisor";
 import FitFinder from "../component/fit_finder";
 import ProductBrand from "../component/product-grouped-by-brand";
 import { CategoryCustomProps } from "./types";
+import useCommon from "@hooks/common/use-common";
 export default function Home() {
+  const {messageUnread} = useCommon()
+
   const { data: categories, isLoading, error } = useCategory();
   const [categorySelected, setCategorySelected] =
     useState<CategoryCustomProps | null>(null);
@@ -142,12 +145,30 @@ export default function Home() {
                 />
               </TouchableOpacity>
               <Block width={20} />
-              <Icon
-                type="fontAwesome"
-                name="bell"
-                size={20}
-                color={Colors.black2A}
-              />
+              <TouchableOpacity
+                onPress={() => navigate(ROUTES.NotificationScreen)}
+              >
+                <Icon
+                  type="fontAwesome"
+                  name="bell"
+                  size={20}
+                  color={Colors.black2A}
+                />
+                <Block
+                  position={"absolute"}
+                  top={-5}
+                  right={-4}
+                  width={14}
+                  height={14}
+                  borderRadius={'full'}
+                  backgroundColor={"red_500"}
+                  alignItems={'center'}
+                  alignContent={'center'}
+                  justifyContent={'center'}
+                >
+                  <Text textAlign={'center'} fontSize={8} >{messageUnread ?? messageUnread}</Text>
+                </Block>
+              </TouchableOpacity>
             </Row>
           }
         />

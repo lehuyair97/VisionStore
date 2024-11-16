@@ -1,6 +1,7 @@
 export function localImages() {
   return {
     logo: require("../images/logo.png"),
+    default_avatar: require("../images/default_avatar.jpg"),
     ic_google: require("../images/ic_google.png"),
     ic_facebook: require("../images/ic_facebook.png"),
     ic_home: require("../images/ic_home.png"),

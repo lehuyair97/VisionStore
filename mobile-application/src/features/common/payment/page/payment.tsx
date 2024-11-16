@@ -3,29 +3,46 @@ import { RBSheetRef } from "@features/common/components/bottom-sheet";
 import AppBarCustom from "@features/common/home/component/appbar_custom";
 import { useAuth } from "@hooks/auth";
 import { Cart } from "@hooks/common/use-get-cart";
+import useProgressPayment from "@hooks/common/use-progress-payment";
+import { ROUTES } from "@navigation/config/routes";
 import { useRoute } from "@react-navigation/native";
 import Colors from "@theme/colors";
 import { EDGES } from "@utils/helper";
 import { useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import Address from "../component/address";
+import UserInfo from "../component/address";
+import Delivery from "../component/deliver-method";
 import ItemProduct from "../component/item_product";
 import Pay from "../component/pay";
+import PaymentMethod from "../component/payment-method";
 import PaymentDetails from "../component/payment_details";
 import RowTow from "../component/row_tow";
 import Vouchers from "../component/vouchers";
-import Delivery from "../component/deliver-method";
+import { navigate } from "@navigation/config/navigation-service";
+import { Alert } from "react-native";
+import { deliveryMethods, paymentMethods } from "@utils/containts";
 const Payment = () => {
   const route = useRoute();
+  const { userInfo } = useAuth();
+  const { usePay } = useProgressPayment();
   const refRBSheetVoucher = useRef<RBSheetRef>();
   const refRBSheetDelivery = useRef<RBSheetRef>();
+  const refRBSheetPayment = useRef<RBSheetRef>();
   const [voucherSelected, setVoucherSelected] = useState<any>();
-  const [deliveryMethodSelected, setDeliverMethodSelected] = useState<any>();
-  const { selectedProducts, carts, totalPrice } = route.params as {
+  const [deliveryMethodSelected, setDeliverMethodSelected] = useState<any>(
+    deliveryMethods[0]
+  );
+  const [paymentMethodSelected, setPaymentMethodSelected] = useState<any>(paymentMethods[0]);
+
+  const { selectedProducts, totalPrice } = route.params as {
     selectedProducts: Cart[];
     carts: any;
     totalPrice: number;
   };
+  const shippingCost = deliveryMethodSelected?.price ?? 0;
+  const discount = voucherSelected
+    ? (voucherSelected?.discount * totalPrice) / 100
+    : 0;
+  const finalTotal = totalPrice + shippingCost - discount;
 
   const handleOpenVouchers = () => {
     if (refRBSheetVoucher?.current) {
@@ -50,11 +67,41 @@ const Payment = () => {
       refRBSheetDelivery?.current?.close();
     }
   };
-  const shippingCost = deliveryMethodSelected?.price ?? 0;
-  const discount = voucherSelected
-    ? (voucherSelected?.discount * totalPrice) / 100
-    : 0;
-  const finalTotal = totalPrice + shippingCost - discount;
+  const handleOpenPaymentMethodSelected = () => {
+    if (refRBSheetPayment?.current) {
+      refRBSheetPayment?.current?.open();
+    }
+  };
+  const handlePaymentMethodSelected = (item: any) => {
+    setPaymentMethodSelected(item);
+    if (refRBSheetPayment?.current) {
+      refRBSheetPayment?.current?.close();
+    }
+  };
+
+  const handlePayment = async () => {
+    if (!deliveryMethodSelected) {
+      Alert.alert("Vui lòng chọn ");
+    }
+    const order = {
+      customerId: userInfo?._id,
+      customerName: userInfo?.display_name,
+      customerEmail: userInfo?.email,
+      customerAddress: userInfo?.addressSelected,
+      customerPhoneNumber: userInfo?.phoneNumber,
+      option: {},
+      paymentMethod: paymentMethodSelected?.method,
+      deliveryMethod: deliveryMethodSelected,
+      items: [...selectedProducts],
+      orderDate: new Date().toISOString(),
+      totalBill: finalTotal,
+      status: paymentMethodSelected?.method === "paypal" ? "shipping" : null,
+    };
+    const res = await usePay(order);
+    if (res?.isSuccess) {
+      navigate(ROUTES.OrderSuccessfully);
+    }
+  };
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
@@ -67,11 +114,10 @@ const Payment = () => {
           paddingHorizontal={20}
           paddingVertical={10}
         />
-        <Block m={"_10"} />
-        {selectedProducts.length > 0 && <Address address={carts} />}
-        <Block m={"_10"} />
+        {selectedProducts.length > 0 && <UserInfo userInfo={userInfo} />}
+        <Block height={8} />
         <ItemProduct selectedProducts={selectedProducts} />
-        <Block m={"_10"} />
+        <Block height={8} />
         <RowTow
           title="Voucher"
           icon="ticket"
@@ -88,43 +134,44 @@ const Payment = () => {
           onPress={handleOpenDeliverySelected}
         />
 
+        <RowTow
+          title="Phương thức thanh toán"
+          iconType="materialIcons"
+          icon="payment"
+          title_method={paymentMethodSelected?.method}
+          color_title_method={Colors.black}
+          onPress={handleOpenPaymentMethodSelected}
+        />
+
         <PaymentDetails
           totalProductPrice={totalPrice}
           shippingCost={shippingCost}
           discount={discount}
-          finalTotal={finalTotal}
         />
         <Block m={"_10"} />
-        <View style={styles.totalizeContainer}>
-          <Pay finalTotal={finalTotal} />
-        </View>
+        <Block position={"absolute"} bottom={0} left={0} right={0}>
+          <Pay finalTotal={finalTotal} onPress={handlePayment} />
+        </Block>
       </Block>
       <Vouchers
-        onVoucherSelected={(item) => handleVoucherSelected(item)}
+        onVoucherSelected={handleVoucherSelected}
         refRBSheet={refRBSheetVoucher}
         height={500}
       />
       <Delivery
-        setDeliverySelected={(item) => handleDeliverySelected(item)}
+        deliveryMethods={deliveryMethods}
+        setDeliverySelected={handleDeliverySelected}
         refRBSheet={refRBSheetDelivery}
         height={300}
+      />
+      <PaymentMethod
+        paymentMethods={paymentMethods}
+        setPaymentMethod={handlePaymentMethodSelected}
+        refRBSheet={refRBSheetPayment}
+        height={320}
       />
     </MainContainer>
   );
 };
 
 export default Payment;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-
-    paddingVertical: 25,
-  },
-  totalizeContainer: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    borderTopColor: "#ccc",
-  },
-});

@@ -11,16 +11,11 @@ import { useAuth } from "@hooks/auth";
 const FeaturesProfile = () => {
   const { logout } = useAuth();
   const featuresData = [
-    {
-      icon: "history",
-      title: "Lịch sử giao dịch",
-      onPress: () => {},
-    },
-    { icon: "gift", title: "Kho Voucher", onPress: () => {} },
+    { icon: "clock-o", title: "Xem gần đây", onPress: () => {} },
     { icon: "star", title: "Đánh giá", onPress: () => {} },
   ];
-  const notificationsData = [
-    { icon: "bell", title: "Quản lý Thông Báo", onPress: () => {} },
+  const profiles = [
+    { icon: "location-arrow", title: "Địa chỉ giao hàng", onPress: () => {} },
     { icon: "credit-card", title: "Quản lý Thanh Toán", onPress: () => {} },
     {
       icon: "sign-out",
@@ -49,9 +44,9 @@ const FeaturesProfile = () => {
         />
       ))}
       <Block mt={"_10"} />
-      <Text style={commonStyles.title}>Thông báo</Text>
+      <Text style={commonStyles.title}>Cá nhân</Text>
       <Block mt={"_10"} />
-      {notificationsData.map((notification, index) => (
+      {profiles.map((notification, index) => (
         <EachFeature
           key={index}
           icon={notification.icon}

@@ -18,7 +18,7 @@ export type User = {
   password: string;
   avatar?: string;
   address?: any;
-  phoneNumber?: number;
+  phoneNumber?: string;
   favorites?: any[];
   payment_transaction?: any;
   createdAt?: Date;

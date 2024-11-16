@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
-const { paymentTransactionsSchema } = require("./userModel");
+const { paymentTransactionsSchema } = require("../models/userModel");
 
 const orderModel = new mongoose.Schema({
   customerId: {
@@ -8,56 +8,46 @@ const orderModel = new mongoose.Schema({
     ref: "users",
     required: true,
   },
-  customerName: {
-    type: String,
-  },
-  customerEmail: {
-    type: String,
-  },
-  customerAddress: {
-    type: String,
-  },
-  customerPhoneNumber: {
-    type: Number,
-  },
-  paymentTransactions: {
-    type: paymentTransactionsSchema,
-  },
+  customerName: String,
+  customerEmail: String,
+  customerAddress: String,
+  customerPhoneNumber: Number,
+  paymentTransactions: paymentTransactionsSchema,
+  paymentMethod: {},
+  deliveryMethod: {},
   totalBill: {
     type: Number,
     required: true,
   },
-  optionsColor: {
-    type: String,
-  },
-  optionsMemory: {
-    type: String,
-  },
-  carts: [
+  option:{},
+  items: [
     {
-      paymentStatus: {
-        type: String,
-        enum: [
-          "cart",
-          "pending",
-          "processing",
-          "shipped",
-          "delivered",
-          "canceled",
-        ],
-        default: "cart",
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true,
       },
-      price: Number,
       productName: String,
-      description:String,
+      price: Number,
+      description: String,
       quantity: Number,
       image: String,
-      productId: String
     },
   ],
   orderDate: {
     type: String,
     default: () => moment().format("dddd, DD/MM/YYYY HH:mm:ss"),
+  },
+  status: {
+    type: String,
+    enum: [
+      "pending",
+      "processing",
+      "shipping",
+      "delivered",
+      "canceled",
+    ],
+    default: "pending",
   },
   voucher: {
     type: mongoose.Schema.Types.ObjectId,

@@ -16,6 +16,8 @@ interface WebSocketContextProps {
   setComment: React.Dispatch<React.SetStateAction<any>>;
   voucher: any;
   setVoucher: React.Dispatch<React.SetStateAction<any>>;
+  notifications: any;
+  setNotifications: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const WebSocketContext = createContext<
@@ -25,7 +27,8 @@ export const WebSocketContext = createContext<
 const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const [message, setMessage] = useState<any>([]);
   const [comment, setComment] = useState<any>([]);
-  const [voucher, setVoucher] = useState<any>([])
+  const [voucher, setVoucher] = useState<any>([]);
+  const [notifications, setNotifications] = useState<any>([]);
   const socket = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -37,16 +40,19 @@ const WebSocketProvider = ({ children }: { children: ReactNode }) => {
 
     socket.current.on("messageStatus", (message) => {
       setMessage(message);
-      console.log('here Message', message)
-
+      console.log("here Message", message);
     });
-    socket.current.on("commentStatus", (message)=>{
-      setComment(message)
-    })
-    socket.current.on("voucherStatus", (message)=>{
-      setVoucher(message)
-      console.log('here voucher', message)
-    })
+    socket.current.on("commentStatus", (message) => {
+      setComment(message);
+    });
+    socket.current.on("notificationStatus", (message) => {
+      setNotifications(message);
+      console.log("here notificationStatus", message);
+    });
+    socket.current.on("voucherStatus", (message) => {
+      setVoucher(message);
+      console.log("here voucher", message);
+    });
     socket.current.on("disconnect", () => {
       console.log("Web socket disconnected");
     });
@@ -74,9 +80,21 @@ const WebSocketProvider = ({ children }: { children: ReactNode }) => {
       comment,
       setComment,
       voucher,
-      setVoucher
+      setVoucher,
+      notifications,
+      setNotifications
     }),
-    [message, sendMessage]
+    [
+      message,
+      setMessage,
+      sendMessage,
+      comment,
+      setComment,
+      voucher,
+      setVoucher,
+      notifications,
+      setNotifications
+    ]
   );
 
   return (

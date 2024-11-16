@@ -18,9 +18,9 @@ export const REQUEST_URL = {
   CATEGORY: "/category",
 
   GET_BRANDS: "/brands",
-  GET_CART: "/orders",
-  CHANGE_QUANTITY_CART: "/orders/quantity",
-  GET_CART_BY_USERID: (customerId: string) => `orders/users/${customerId}`,
+  GET_CART: "/cart",
+  CHANGE_QUANTITY_CART: "/cart/quantity",
+  GET_CART_BY_USERID: (customerId: string) => `cart/users/${customerId}`,
   SEARCH: "/products/search",
 
   CREATE_USER_WITH_IMAGE: "/users/upload",
@@ -55,22 +55,32 @@ export const REQUEST_URL = {
   CREATE_PRODUCT: "/products",
   UPDATE_PRODUCT: (id) => `/products/${id}`,
   DELETE_PRODUCT: (id) => `/products/${id}`,
+  GET_ALL_CARDS: "/cart",
+  GET_CARD_BY_ID: (id) => `/cart/${id}`,
+  GET_CARDS_BY_USER_ID: (customerId) => `/cart/users/${customerId}`,
+  CREATE_CARD: "/cart",
+  UPDATE_CARD: (id) => `/cart/${id}`,
+  DELETE_CARD: (id) => `/cart/${id}`,
   GET_ALL_ORDERS: "/orders",
   GET_ORDER_BY_ID: (id) => `/orders/${id}`,
-  GET_ORDERS_BY_USER_ID: (customerId) => `/orders/users/${customerId}`,
   CREATE_ORDER: "/orders",
-  UPDATE_ORDER: (id) => `/orders/${id}`,
+  UPDATE_ORDER_STATUS: (id) => `/orders/status/${id}`,
+  GET_ORDERS_BY_STATUS: "/orders/status",
   DELETE_ORDER: (id) => `/orders/${id}`,
   GET_ACTIVE_VOUCHERS: "/active-voucher",
   GET_VOUCHERS: "/voucher",
   USE_VOUCHER: (code, userID) => `/use-voucher?code=${code}&userID=${userID}`,
   ADD_COMMENT: (productID) => `/comment?productID=${productID}`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
+  CREATE_NOTIFICATION: () => `/notifications`,
+  GET_ALL_NOTIFICATIONS: (limit = 20, page = 1) => `/notifications?limit=${limit}&page=${page}`,
+  GET_NOTIFICATIONS_BY_USER_ID: (userId, limit = 20, page = 1) => `/notifications/user/${userId}?limit=${limit}&page=${page}`,
+  MARK_AS_READ: (id) => `/notifications/${id}/read`,
+  DELETE_NOTIFICATION_BY_ID: (id) => `/notifications/${id}`,
 };
 
-const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.2.116:3000/api";
-
+const BASE_URL = "http://192.168.210.213:3000/api";
+// process.env.EXPO_PUBLIC_API_URL ?? 
 export type AxiosParams = {
   url: string;
   method: Method;

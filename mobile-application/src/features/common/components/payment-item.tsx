@@ -1,20 +1,30 @@
+import { IconType } from "@assets/icons";
+import { Icon } from "@components";
 import React from "react";
 import { Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 type PaymentItemProps = {
-  icon: string;
+  icon: any;
   methodName: string;
   onPress: () => void;
+  isSelected: boolean;
 };
 
 const PaymentItem: React.FC<PaymentItemProps> = ({
   icon,
   methodName,
   onPress,
+  isSelected,
 }) => {
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={{ uri: icon }} style={styles.icon} />
+    <TouchableOpacity
+      style={[
+        styles.container,
+        isSelected && { borderColor: "red", borderWidth: 1 },
+      ]}
+      onPress={onPress}
+    >
+      <Icon type={icon?.type} name={icon?.name} color={"black"} size={24} />
       <Text style={styles.methodName}>{methodName}</Text>
     </TouchableOpacity>
   );
@@ -34,6 +44,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    gap: 10,
   },
   icon: {
     width: 40,

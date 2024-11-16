@@ -34,13 +34,13 @@ io.on("connection", (socket) => {
 });
 
 const broadcast = (data) => {
-  io.emit("message", data); 
+  io.emit("message", data);
 };
 
 const sendMessageToClient = (userId, data) => {
   const client = clients.get(userId);
   if (client) {
-    client.emit("message", data); 
+    client.emit("message", data);
   }
 };
 
@@ -55,14 +55,16 @@ const handleEvent = (type, data) => {
     case "message":
       broadcastMessageStatus(data);
       break;
+    case "notification":
+      broadcastNotificationStatus(data);
+      break;
     default:
       console.log("Unknown event type");
   }
 };
 
-
 const broadcastVoucherStatus = (data) => {
-  io.emit("voucherStatus", data); 
+  io.emit("voucherStatus", data);
 };
 
 const broadcastCommentStatus = (data) => {
@@ -70,8 +72,13 @@ const broadcastCommentStatus = (data) => {
 };
 
 const broadcastMessageStatus = (data) => {
-  io.emit("messageStatus", data); 
+  io.emit("messageStatus", data);
 };
+
+const broadcastNotificationStatus = (data) => {
+  io.emit("notificationStatus", data);
+};
+
 
 const sendEventToClient = (userId, type, data) => {
   const client = clients.get(userId);
@@ -96,4 +103,10 @@ server.listen(8080, () => {
   console.log("Server running on port 8080");
 });
 
-module.exports = { io, broadcast, sendMessageToClient, handleEvent, sendEventToClient };
+module.exports = {
+  io,
+  broadcast,
+  sendMessageToClient,
+  handleEvent,
+  sendEventToClient,
+};
