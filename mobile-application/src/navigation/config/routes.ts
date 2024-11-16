@@ -5,7 +5,10 @@ import DetailProduct from "@features/common/detail_product/detail_product";
 import Search from "@features/common/search/page/search";
 import DetailBrand from "@features/common/detail_brand/page/detail_brand";
 import { Signin, Signup } from "@features/auth";
-
+import OrderSuccessfully from "@features/common/order-sucessfully";
+import NotificationScreen from "@features/common/notification-screen";
+import EditProfile from "@features/common/edit-profile";
+import ChangePassword from "@features/common/change_password/page/change_password";
 export const notLoggedInScreens = {
   Signin: Signin,
   SignUp: Signup,
@@ -17,6 +20,10 @@ export const loggedInScreens = {
   DetailProduct: DetailProduct,
   Search: Search,
   DetailBrand: DetailBrand,
+  OrderSuccessfully: OrderSuccessfully,
+  NotificationScreen: NotificationScreen,
+  EditProfile: EditProfile,
+  ChangePassword: ChangePassword,
 };
 
 export const ROUTES = createEnum({
@@ -25,10 +32,14 @@ export const ROUTES = createEnum({
   SignUp: "SignUp",
 
   //Common Routes
-  BottomTabScenes:"BottomTabScenes",
+  BottomTabScenes: "BottomTabScenes",
   Home: "HomeStack",
-  DetailProduct:"DetailProduct",
+  DetailProduct: "DetailProduct",
   Search: "Search",
   DetailBrand: "DetailBrand",
   BuildPC: "BuildPCStack",
+  OrderSuccessfully: "OrderSuccessfully",
+  NotificationScreen: "NotificationScreen",
+  EditProfile: "EditProfile",
+  ChangePassword: "ChangePassword",
 });

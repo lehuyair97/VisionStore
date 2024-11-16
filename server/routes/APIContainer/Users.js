@@ -1,4 +1,5 @@
 const { OAuth2Client } = require("google-auth-library");
+const _ = require("lodash");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const { User } = require("./../../models/userModel");
 const {
@@ -79,21 +80,52 @@ exports.getUserById = async (req, res) => {
 exports.changePassword = async (req, res) => {
   try {
     const { id } = req.params;
-    const { password, ...userData } = req.body;
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      userData.password = hashedPassword;
+    const { oldPassword, newPassword } = req.body;
+    if (!id || !oldPassword || !newPassword) {
+      return res.status(400).json({
+        message: "User ID, old password, and new password are required.",
+        isSuccess: false,
+      });
     }
-    const updatedUser = await User.findByIdAndUpdate(id, userData, {
-      new: true,
-    });
-    if (!updatedUser) {
-      return res.status(404).json({ message: `User not found with ID: ${id}` });
+    if (typeof newPassword !== "string" || newPassword.trim().length < 6) {
+      return res.status(400).json({
+        message: "Mật khẩu mới phải trên 6 ký tự.",
+        isSuccess: false,
+      });
+    }
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        message: `User not found with ID: ${id}`,
+        isSuccess: false,
+      });
+    }
+    const isOldPasswordCorrect = await bcrypt.compare(
+      oldPassword,
+      user.password
+    );
+    if (!isOldPasswordCorrect) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "Mật khẩu hiện tại chưa chính xác",
+      });
     }
 
-    res.status(200).json(updatedUser);
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedNewPassword;
+    await user.save();
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Password updated successfully.",
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error changing password:", error.message);
+    return res.status(500).json({
+      message: "An error occurred while changing the password.",
+      error: error.message,
+    });
   }
 };
 
@@ -120,7 +152,7 @@ exports.updateFavorite = async (req, res) => {
   }
 };
 
-exports.updateInfo = async (req, res) => {
+exports.updateAndReplaceInfo = async (req, res) => {
   try {
     const { id } = req.params;
     const newUser = req.body;
@@ -146,6 +178,47 @@ exports.updateInfo = async (req, res) => {
   }
 };
 
+exports.updateInfo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const allowedFields = [
+      "display_name",
+      "phoneNumber",
+      "avatar",
+      "address",
+      "addressSelected",
+      "favorites",
+      "device_token",
+    ];
+    const updates = _.pick(req.body, allowedFields);
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: "No valid fields to update" });
+    }
+    const currentUser = await User.findById(id);
+    if (!currentUser) {
+      return res.status(404).json({ message: `User not found with ID: ${id}` });
+    }
+
+    const hasChanges = Object.keys(updates).some(
+      (key) => currentUser[key] !== updates[key]
+    );
+
+    if (!hasChanges) {
+      return res.status(400).json({ message: "No changes detected" });
+    }
+    const updatedUser = await User.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    return res.status(200).json({ isSuccess: true, user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user:", error.message);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -164,27 +237,22 @@ exports.login = async (req, res) => {
     const { email, password, device_token } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
- 
-    // Tìm người dùng trong cơ sở dữ liệu
     const user = await User.findOne({ email });
-    if(device_token){
-      user.device_token = device_token
-      user.save()
+    if (device_token) {
+      user.device_token = device_token;
+      user.save();
     }
-    // Nếu không tìm thấy người dùng
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // So sánh password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect password" });
     }
-
-    // Tạo accessToken và refreshToken
     const accessToken = createAccessToken(user);
     const refreshToken = createRefreshToken(user);
     await saveRefreshToken(refreshToken, user._id);
@@ -199,7 +267,6 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 exports.refreshToken = async (req, res) => {
   const { token } = req.body;
@@ -262,7 +329,7 @@ exports.signinWithGoogle = async (req, res) => {
         email,
         avatar: picture,
         password: "default",
-        device_token: device_token || '',
+        device_token: device_token || "",
       });
     } else if (device_token && user.device_token !== device_token) {
       user.device_token = device_token;

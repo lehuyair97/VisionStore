@@ -1,58 +1,63 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
+import { MMKV } from 'react-native-mmkv';
+
+
+const storage = new MMKV();
 
 const ACCESS_TOKEN = "access_token";
 const REFRESH_TOKEN = "refresh_token";
 
-export const setAccessToken = async (token: string) => {
+export const setAccessToken = (token: string) => {
   try {
-    await AsyncStorage.setItem(ACCESS_TOKEN, token);
+    storage.set(ACCESS_TOKEN, token);
   } catch (error) {
     console.error("Error setting access token", error);
   }
 };
 
-export const getAccessToken = async () => {
+export const getAccessToken = (): string | null => {
   try {
-    return await AsyncStorage.getItem(ACCESS_TOKEN);
+    return storage.getString(ACCESS_TOKEN) || null;
   } catch (error) {
     console.error("Error getting access token", error);
     return null;
   }
 };
 
-export const setRefreshToken = async (token: string) => {
+export const setRefreshToken = (token: string) => {
   try {
-    await AsyncStorage.setItem(REFRESH_TOKEN, token);
+    storage.set(REFRESH_TOKEN, token);
   } catch (error) {
     console.error("Error setting refresh token", error);
   }
 };
 
-export const getRefreshToken = async () => {
+export const getRefreshToken = (): string | null => {
   try {
-    return await AsyncStorage.getItem(REFRESH_TOKEN);
+    return storage.getString(REFRESH_TOKEN) || null;
   } catch (error) {
     console.error("Error getting refresh token", error);
     return null;
   }
 };
 
-export const deleteAccessToken = async () => {
+export const deleteAccessToken = () => {
   try {
-    await AsyncStorage.removeItem(ACCESS_TOKEN);
+    storage.delete(ACCESS_TOKEN);
   } catch (error) {
     console.error("Error deleting access token", error);
   }
 };
 
-export const deleteRefreshToken = async () => {
+export const deleteRefreshToken = () => {
   try {
-    await AsyncStorage.removeItem(REFRESH_TOKEN);
+    storage.delete(REFRESH_TOKEN);
   } catch (error) {
     console.error("Error deleting refresh token", error);
   }
 };
+
+
 
 type DecodedToken = {
   exp: number;

@@ -110,6 +110,22 @@ exports.getProductById = async (req, res) => {
   }
 };
 
+exports.getProductBySubCategoryID = async (req, res) => {
+  console.log('here')
+  console.log(req)
+  
+  try {
+    const products = await Product.find({sub_category_id: req.params.id})
+ 
+    if (!products) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getProductsByBrandId = async (req, res) => {
   const { categoryId, brandId } = req.query;
   const filter = {};
@@ -165,23 +181,21 @@ exports.deleteProductById = async (req, res) => {
 
   exports.searchProducts = async (req, res) => {
   try {
-    const { name } = req.body; // Lấy tên từ body của yêu cầu
+    const { name } = req.body; 
     const filter = {};
 
     if (name) {
-      filter.name = { $regex: name, $options: "i" }; // Tìm kiếm không phân biệt chữ hoa chữ thường
+      filter.name = { $regex: name, $options: "i" }; 
     }
 
-    // Chỉ tìm kiếm theo tên, không sử dụng _id
     const products = await Product.find(filter);
-
     if (!products.length) {
       return res.status(404).json({ message: "Không tìm thấy sản phẩm" });
     }
 
     res.status(200).json(products);
   } catch (error) {
-    console.error("Error searching products:", error); // Ghi lại lỗi chi tiết
+    console.error("Error searching products:", error); 
     res.status(500).json({ message: error.message });
   }
   };

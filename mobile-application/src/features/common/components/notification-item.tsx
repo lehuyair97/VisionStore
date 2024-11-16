@@ -1,25 +1,42 @@
+import { localImages } from "@assets/icons/images";
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
 
 type NotificationItemProps = {
-  productImage: string; 
+  title: string;         
   notificationText: string; 
-  timeReceived: string; 
+  timeReceived: string;   
+  isRead: boolean; 
+  onPress: ()=>void         
 };
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
-  productImage,
+  title,
   notificationText,
   timeReceived,
+  isRead,
+  onPress
 }) => {
   return (
-    <View style={styles.container}>
-      <Image source={{ uri: productImage }} style={styles.productImage} />
+    <TouchableOpacity
+    onPress={onPress}
+      style={[
+        styles.container,
+        { backgroundColor: isRead ? "#fff" : "#FFEBEB" }, 
+      ]}
+    >
+      <Image
+        source={localImages().logo}
+        style={styles.productImage}
+      />
       <View style={styles.textContainer}>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.notificationText}>{notificationText}</Text>
         <Text style={styles.timeReceived}>{timeReceived}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -28,14 +45,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
-    marginVertical: 8,
-    backgroundColor: "#fff",
+
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+
   },
   productImage: {
     width: 50,
@@ -46,9 +58,15 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
   },
+  title: {
+    fontSize: 18,
+    color: "#B71C1C",
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
   notificationText: {
     fontSize: 16,
-    color: "#333",
+    color: "#4F4F4F",
     marginBottom: 4,
   },
   timeReceived: {

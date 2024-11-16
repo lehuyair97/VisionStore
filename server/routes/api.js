@@ -7,11 +7,13 @@ const bodyParser = require("body-parser");
 const userAPI = require("./APIContainer/Users");
 const categoryAPI = require("./APIContainer/Category");
 const productAPI = require("./APIContainer/Product");
+const cartAPI = require("./APIContainer/cart");
 const orderAPI = require("./APIContainer/Order");
 const brandAPI = require("./APIContainer/Brand");
 const subCategoryAPI = require("./APIContainer/SubCategory");
 const authMiddleware = require("../middleware/authMiddleware");
-const notificationAPI = require("./APIContainer/notification");
+const FCMAPI = require("./APIContainer/firebase_noti");
+const notificationAPI = require("./APIContainer/Notification");
 const voucherAPI = require("./APIContainer/Voucher");
 const commentAPI = require("./APIContainer/Comment");
 const messageAPI = require("./APIContainer/Message");
@@ -60,7 +62,7 @@ router.get("/images/brands/:filename", (req, res) => {
 //Token routes
 router.post("/refreshtoken", userAPI.refreshToken);
 
-router.post("/send-notification", notificationAPI.pushNotification);
+router.post("/send-notification-fcm", FCMAPI.pushNotification);
 // // Users Controller
 router.post(
   "/users/upload",
@@ -70,9 +72,9 @@ router.post(
 router.post("/users", userAPI.createUser);
 router.get("/users", userAPI.getAllUsers);
 router.get("/users/:id", userAPI.getUserById);
-router.put("/change_pw/:id", userAPI.changePassword);
+router.post("/change_pw/:id", userAPI.changePassword);
 router.put("/favorites/:id", userAPI.updateFavorite);
-router.put("/updateInfo/:id", userAPI.updateInfo);
+router.patch("/updateInfo/:id", userAPI.updateInfo);
 router.delete("/users/:id", userAPI.deleteUser);
 router.post("/login", userAPI.login);
 router.post("/sign-in-google", userAPI.signinWithGoogle);
@@ -116,15 +118,31 @@ router.post("/products", productAPI.createProduct);
 router.put("/products/:id", productAPI.updateProductById);
 router.delete("/products/:id", productAPI.deleteProductById);
 router.post("/products/search", productAPI.searchProducts);
+router.get("/products/subcategory/:id", productAPI.getProductBySubCategoryID);
+
+// // carts
+router.post("/cart", cartAPI.addToCart);
+router.post("/cart/quantity", cartAPI.updateQuantity);
+router.delete("/cart/:customerId/:productId", cartAPI.removeFromCart);
+router.get("/cart/users/:customerId", cartAPI.getCart);
+
+// // nitificaiotn routes
+router.post("/notifications", notificationAPI.createNotification);
+router.get("/notifications", notificationAPI.getAllNotifications);
+router.get(
+  "/notifications/user/:userId",
+  notificationAPI.getNotificationsByUserId
+);
+router.put("/notifications/:id/read", notificationAPI.markAsRead);
+router.delete("/notifications/:id", notificationAPI.deleteNotificationById);
 
 // // Order routes
 router.get("/orders", orderAPI.getAllOrders);
 router.get("/orders/:id", orderAPI.getOrderById);
-router.get("/orders/users/:customerId", orderAPI.getOrdersByUserId);
 router.post("/orders", orderAPI.createOrder);
-router.post("/orders/quantity", orderAPI.updateOrderCartQuanlity);
-router.put("/orders/:id", orderAPI.updateOrderById);
-router.delete("/orders/:id", orderAPI.deleteOrderById);
+router.put("/orders/status:id", orderAPI.updateOrderStatus);
+router.get("/orders/status", orderAPI.getOrdersByStatus);
+router.delete("/orders/:id", orderAPI.deleteOrder);
 
 // // Brand routes
 router.get("/brands", brandAPI.getAllBrands);

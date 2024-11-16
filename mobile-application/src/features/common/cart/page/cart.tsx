@@ -18,6 +18,7 @@ export default function Cart() {
   const { userInfo } = useAuth();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const { data: carts, isLoading, error } = useCart(userInfo?._id);
+ 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const handleSelectAll = (selectAll: boolean) => {
@@ -32,7 +33,7 @@ export default function Cart() {
       .filter((item) => selectedItems.includes(item?.productId))
       .reduce((temp, current) => temp + current?.quantity * current?.price, 0);
     setTotalPrice(total);
-  }, [selectedItems]);
+  }, [selectedItems,carts]);
 
   const handleNavigateToPayment = () => {
     const selectedProducts = carts?.carts?.filter((product) =>
@@ -42,7 +43,7 @@ export default function Cart() {
       Alert.alert("Thông báo", "Không có sản phẩm nào để thanh toán");
       return;
     }
-    navigation.navigate("Payment", { selectedProducts, carts, totalPrice });
+    navigation.navigate("Payment", { selectedProducts, totalPrice });
   };
 
   if (isLoading) {

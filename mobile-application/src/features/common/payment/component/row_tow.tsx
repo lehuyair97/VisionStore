@@ -25,9 +25,9 @@ const RowTow = ({
   return (
     <TouchableOpacity onPress={onPress}>
       <Block
-        paddingHorizontal={"_20"}
-        paddingVertical={"_20"}
-        marginBottom={"_15"}
+        paddingHorizontal={"_15"}
+        paddingVertical={"_15"}
+        marginBottom={"s"}
         bg={"container"}
       >
         <Row between center>

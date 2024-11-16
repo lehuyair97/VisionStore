@@ -1,7 +1,6 @@
 import { Block, Icon, Row, Text } from "@components";
 import BottomSheet from "@features/common/components/bottom-sheet";
 import DeliveryMethodItem from "@features/common/components/delivery-method-item";
-import { deliveryMethods } from "@utils/containts";
 import { Helper } from "@utils/helper";
 import React from "react";
 import { FlatList } from "react-native";
@@ -9,11 +8,13 @@ interface DeliveryProps {
   height?: number;
   refRBSheet: React.RefObject<any>;
   setDeliverySelected: (deliveryMethod: any) => void;
+  deliveryMethods: any
 }
 export default function Delivery({
   height,
   refRBSheet,
   setDeliverySelected,
+  deliveryMethods
 }: DeliveryProps) {
   return (
     <BottomSheet height={height} refRBSheet={refRBSheet}>

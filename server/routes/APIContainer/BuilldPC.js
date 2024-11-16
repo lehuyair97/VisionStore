@@ -104,7 +104,6 @@ function calculatePcBuildRanges(totalBudget, configType) {
         Cooling: [0, 5],
     }
 };
-console.log('huhu casi nafy khó gõ quá đi')
 if (totalBudget > 20000000 && totalBudget <= 40000000) {
     configs.developer.CPU = [30, 40];
     configs.developer.GPU = [10, 15]; 

@@ -1,198 +1,118 @@
-const orderModel = require("../../models/orderModel");
-const voucherModel = require("../../models/voucherModel");
+const Order = require("../../models/orderModel");
+const Cart = require("../../models/cartModel");
+const Notification = require("../../models/notificationModel");
+const { handleEvent } = require("../../config/websocket");
 
-exports.getAllOrders = async (req, res) => {
+async function createOrder(req, res) {
+  const orderData = req.body;
+  const { customerId, items } = orderData;
   try {
-    const orders = await orderModel.find({});
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    const newOrder = new Order(orderData);
+    await newOrder.save();
 
-exports.getOrderById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const order = await orderModel.findById({ _id: id });
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-    res.status(200).json(order);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-exports.getOrdersByUserId = async (req, res) => {
-  const { customerId } = req.params;
-  try {
-    const orders = await orderModel.find({ customerId: customerId });
-    res.status(200).json({ data: orders[0] });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-exports.createOrder = async (req, res) => {
-  const { customerId, carts, voucherID } = req.body;
-  try {
-    let existingOrder = await orderModel.findOne({
-      customerId,
-    });
-
-    if (existingOrder) {
-      carts.forEach((cartItem) => {
-        const existingCartItem = existingOrder.carts.find((item) => {
-          return item.productId === cartItem.productId;
-        });
-
-        if (existingCartItem) {
-          existingCartItem.quantity += cartItem.quantity;
-        } else {
-          existingOrder.carts = [...existingOrder.carts, { ...cartItem }];
-        }
-      });
-
-      existingOrder.totalBill = existingOrder.carts.reduce(
+    const cart = await Cart.findOne({ customerId });
+    if (cart) {
+      const productIdsPaid = items.map((item) => item.productId);
+      cart.carts = cart.carts.filter(
+        (item) => !productIdsPaid.includes(item.productId)
+      );
+      cart.totalBill = cart.carts.reduce(
         (total, item) => total + item.price * item.quantity,
         0
       );
-      existingOrder.markModified("carts");
-      await existingOrder.save();
-
-      res.status(200).json({ data: existingOrder });
+      await cart.save();
     } else {
-      const newOrder = await orderModel.create({
-        ...req.body,
-        carts,
-        voucherID,
-        totalBill: carts.reduce(
-          (total, item) => total + item.price * item.quantity,
-          0
-        ),
-      });
-
-      res.status(201).json({ data: newOrder });
-
-      if (voucherID) {
-        await voucherModel.findByIdAndDelete(voucherID);
-      }
+      return res.status(400).json({ error: "Giỏ hàng không tồn tại" });
     }
+
+    const notificationMessage = `Đơn hàng của bạn (Mã đơn hàng: ${newOrder._id}) đã được tạo thành công. Chúng tôi sẽ xử lý ngay!`;
+    const notification = new Notification({
+      customerId: newOrder.customerId,
+      type: "message",
+      title: "Đặt hàng thành công!",
+      message: notificationMessage,
+      orderId: newOrder._id,
+      customerId: orderData.customerId
+    });
+    await notification.save();
+
+    const notis = await Notification.find({ customerId: orderData.customerId });
+    if (notis.length > 0) {
+      console.log('true')
+      handleEvent("notification", notis);
+    }
+
+    res.status(200).json({ isSuccess: true, data: newOrder });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: "Không thể tạo đơn hàng hoặc cập nhật giỏ hàng" });
   }
-};
+}
 
-exports.updateOrderStatus = async (req, res) => {
-  const { customerId, cart } = req.body;
+
+async function deleteOrder(req, res) {
+  const { id } = req.params;
   try {
-    const order = await orderModel.findOne({ customerId });
-    if (!order) {
-      return res
-        .status(404)
-        .json({ message: "Order not found for this customer" });
-    }
+    await Order.findByIdAndDelete(id);
+    res.status(200).json({ message: "Đơn hàng đã được xóa" });
+  } catch (error) {
+    res.status(500).json({ error: "Không thể xóa đơn hàng" });
+  }
+}
 
-    cart.forEach((cartItem) => {
-      const orderCartItem = order.carts.find(
-        (item) => item._id.toString() === cartItem._id
-      );
+async function updateOrderStatus(req, res) {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const order = await Order.findById(id);
+    if (!order)
+      return res.status(404).json({ error: "Đơn hàng không tồn tại" });
 
-      if (orderCartItem) {
-        orderCartItem.paymentStatus =
-          cartItem.status || orderCartItem.paymentStatus;
-        if (cartItem.quantity) {
-          orderCartItem.quantity = cartItem.quantity;
-        }
-      }
-    });
-
-    order.totalBill = order.carts.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    order.markModified('carts')
+    order.status = status;
     await order.save();
-
-    res
-      .status(200)
-      .json({ message: "Order updated successfully", data: order });
+    res.status(200).json({ isSuccess: true, data: order });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: "Không thể cập nhật trạng thái đơn hàng" });
   }
-};
+}
 
-exports.updateOrderCartQuanlity = async (req, res) => {
-  const { customerId, productId, action, quantity } = req.body;
-
+async function getAllOrders(req, res) {
   try {
-    const order = await orderModel.findOne({ customerId });
-    if (!order) {
-      return res
-        .status(404)
-        .json({ message: "Order not found for this customer" });
-    }
-
-    const orderCartItem = order.carts.find(
-      (item) => item.productId.toString() === productId
-    );
-
-    if (orderCartItem) {
-      if (action === "increase") {
-        orderCartItem.quantity += quantity;
-      } else if (action === "decrease") {
-        orderCartItem.quantity -= quantity;
-
-        if (orderCartItem.quantity <= 0) {
-          order.carts = order.carts.filter(
-            (item) => item.productId.toString() !== productId
-          );
-        }
-      }
-    } else {
-      return res.status(404).json({ message: "Product not found in cart" });
-    }
-
-    order.totalBill = order.carts.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-    order.markModified('carts')
-    await order.save();
-
-    res
-      .status(200)
-      .json({ message: "Order cart updated successfully", data: order });
+    const orders = await Order.find();
+    res.status(200).json(orders);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: "Không thể lấy danh sách đơn hàng" });
   }
-};
+}
 
-exports.updateOrderById = async (req, res) => {
+async function getOrderById(req, res) {
+  const { id } = req.params;
   try {
-    const { _id } = req.params;
-    const updatedOrder = await orderModel.findByIdAndUpdate(_id, req.body, {
-      new: true,
-    });
-    if (!updatedOrder) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-    res.status(200).json(updatedOrder);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    const order = await Order.findById(id);
+    if (!order)
+      return res.status(404).json({ error: "Đơn hàng không tồn tại" });
 
-exports.deleteOrderById = async (req, res) => {
-  try {
-    const { _id } = req.params;
-    const deletedOrder = await orderModel.findByIdAndDelete(_id);
-    if (!deletedOrder) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-    res.status(204).end();
+    res.status(200).json(order);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: "Không thể lấy thông tin đơn hàng" });
   }
+}
+
+async function getOrdersByStatus(req, res) {
+  const { status } = req.params;
+  try {
+    const orders = await Order.find({ "carts.paymentStatus": status });
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: "Không thể lấy đơn hàng theo trạng thái" });
+  }
+}
+
+module.exports = {
+  createOrder,
+  deleteOrder,
+  updateOrderStatus,
+  getAllOrders,
+  getOrderById,
+  getOrdersByStatus,
 };

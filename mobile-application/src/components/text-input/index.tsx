@@ -194,7 +194,7 @@ function TextInputComponent(props: InputProps, ref: any) {
         placeholderTextColor={theme.colors.gray888}
         cursorColor={theme.colors.title}
         selectionColor={theme.colors.title}
-        editable={!disabled}
+        editable={props.editable ?? !disabled}
         value={value}
         onFocus={_onFocus}
         onBlur={_onBlur}

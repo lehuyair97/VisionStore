@@ -13,9 +13,8 @@ export const commonStyles = StyleSheet.create({
         color: "gray",
     },
     container: {
-        paddingHorizontal: 20,
-        paddingTop: 15,
         paddingBottom: 15,
         backgroundColor: Colors.container,
+        marginTop:20,
     }
 });
