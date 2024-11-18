@@ -2,25 +2,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
 
-const useChangePassword = (customerId: string) => {
+const useAddRecentProduct = (customerId: string) => {
   const queryClient = useQueryClient();
   const { data, error, mutateAsync, isPending } = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (productId: string) => {
       try {
         const res = await api({
-          url: REQUEST_URL.CHANGE_PASSWORD(customerId),
+          url: REQUEST_URL.RECENT_PRODUCTS(customerId),
           method: "POST",
-          data: data,
+          data: { productId },
         });
         return res.data || res;
-      } catch (err: any) {
-        return err?.response?.data;
+      } catch (err) {
+        throw err;
       }
     },
     onSuccess: (data) => {
-      if (data?.isSuccess) {
-        toast.success(`Đổi mật khẩu thành công!`);
-      }
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
@@ -28,7 +25,7 @@ const useChangePassword = (customerId: string) => {
     onSettled(data, error) {
       if (data) {
         queryClient.invalidateQueries({
-          queryKey: ["Password", customerId],
+          queryKey: ["RecentProducts", customerId],
         });
       }
     },
@@ -38,8 +35,8 @@ const useChangePassword = (customerId: string) => {
     data,
     error,
     isPending,
-    changePassword: mutateAsync,
+    addRecentProduct: mutateAsync,
   };
 };
 
-export default useChangePassword;
+export default useAddRecentProduct;

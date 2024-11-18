@@ -1,30 +1,33 @@
 import { Icon } from "@components";
 import Colors from "@theme/colors";
 import { Row } from "@components";
-import { TextInput } from "react-native";
+import { TouchableOpacity } from "react-native";
 import Block from "@components/block";
 import InputSearch from "./input_search";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { goBack } from "@navigation/config/navigation-service";
 
 const AppBarSearch = ({
   searchTerm,
   setSearchTerm,
   onSearch,
+  onLeftIconPress,
+  leftIconName,
 }: {
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
   onSearch: () => void;
+  onLeftIconPress?: () => void;
+  leftIconName?: string;
 }) => {
   return (
     <Row
       center
       style={{ backgroundColor: Colors.white255, paddingHorizontal: 20 }}
     >
-      <TouchableOpacity onPress={goBack}>
+      <TouchableOpacity onPress={onLeftIconPress ?? goBack}>
         <Icon
           type="fontAwesome"
-          name="chevron-left"
+          name={leftIconName ?? "chevron-left"}
           size={20}
           color={Colors.black2A}
         />

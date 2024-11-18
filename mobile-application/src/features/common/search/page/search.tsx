@@ -1,14 +1,13 @@
-import { FlatList, StyleSheet, View } from "react-native";
-import { Button, MainContainer, Text } from "@components";
-import { EDGES } from "@utils/helper";
-import Colors from "@theme/colors";
-import AppBarSearch from "../component/appbar_serch";
-import { useEffect, useState } from "react";
-import ProductSearchItem from "../component/product-search-item";
-import useSearch from "@hooks/common/use-search";
+import { MainContainer, Text } from "@components";
 import Block from "@components/block";
+import useSearch from "@hooks/common/use-search";
 import { ROUTES } from "@navigation/config/routes";
-import { useNavigation, NavigationProp, ParamListBase } from "@react-navigation/native";
+import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
+import { EDGES } from "@utils/helper";
+import { useEffect, useState } from "react";
+import { FlatList, View } from "react-native";
+import AppBarSearch from "../component/appbar_serch";
+import ProductSearchItem from "../component/product-search-item";
 
 
 const Search = () => {
@@ -18,16 +17,15 @@ const Search = () => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
 
-  const handleNavigateToDetailProduct = (id: string) => {
+  const handleNavigateToDetailProduct = (item: any) => {
     navigation.navigate(ROUTES.DetailProduct as keyof ParamListBase, {
-      productId: id
+      productId: item?._id
     });
   };
   const handleSearch = () => {
     if (searchTerm.trim()) {
       search(searchTerm);
     } else {
-      console.log("Search term is empty");
     }
   };
   useEffect(() => {
@@ -38,7 +36,7 @@ const Search = () => {
       <Block height={16}/>
      {products ? <FlatList
         data={products}
-        renderItem={({ item }) => <ProductSearchItem item={item} handleNavigateToDetailProduct={handleNavigateToDetailProduct} />}
+        renderItem={({ item }) => <ProductSearchItem item={item} onPress={handleNavigateToDetailProduct} />}
         keyExtractor={(item) => item._id} 
       /> 
       : <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>

@@ -1,22 +1,25 @@
 import React, { useState } from "react";
-import { TouchableOpacity, View, Text, Image, StyleSheet } from "react-native";
-import { Block } from "@components";
+import { TouchableOpacity, View, Image, StyleSheet } from "react-native";
+import { Block, Text } from "@components";
 import Colors from "@theme/colors";
 import { localImages } from "@assets/icons/images";
 import { SCREEN_WIDTH } from "@utils/helper";
 
 interface ProductItemProps {
-  product: {
-    _id: string;
-    image: string;
-    warrantyPeriod: string;
-    name: string;
-    price: string;
-  } | any;
+  product:
+    | {
+        _id: string;
+        image: string;
+        warrantyPeriod: string;
+        name: string;
+        price: string;
+      }
+    | any;
   onPress: (id: string) => void;
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
+  const price = product?.price?.toLocaleString();
   const [imageError, setImageError] = useState(false);
   return (
     <TouchableOpacity onPress={() => onPress(product._id)}>
@@ -33,10 +36,15 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
         <Block style={styles.warrantyContainer}>
           <Text style={styles.warrantyText}>{product.warrantyPeriod}</Text>
         </Block>
-        <Text numberOfLines={2} style={styles.productName}>{product.name}</Text>
+        <Text numberOfLines={2} style={styles.productName}>
+          {product.name}
+        </Text>
         <Block height={10} />
         <Block style={styles.priceContainer}>
-          <Text style={styles.productPrice}>{product.price}</Text>
+          <Text style={styles.productPrice}>
+            {price}
+            <Text color={'primary'} fontSize={7}>  VND</Text>
+          </Text>
         </Block>
         <Block height={10} />
       </View>
@@ -46,11 +54,11 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
 
 const styles = StyleSheet.create({
   itemWrapper: {
+    marginTop:10,
     backgroundColor: "#FFF",
     borderRadius: 10,
     alignItems: "center",
-    margin: 6,
-    width: SCREEN_WIDTH / 2 - 40,
+    width: SCREEN_WIDTH / 2 - 30,
   },
   productImage: {
     width: 100,
@@ -75,8 +83,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 5,
     color: Colors.primary,
-    minHeight:40,
-    marginHorizontal:18
+    minHeight: 40,
+    marginHorizontal: 18,
   },
   priceContainer: {
     backgroundColor: Colors.whiteF8,
@@ -84,7 +92,7 @@ const styles = StyleSheet.create({
     borderRadius: 17,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 30,
+    paddingHorizontal: 15,
   },
   productPrice: {
     fontSize: 14,

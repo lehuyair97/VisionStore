@@ -23,7 +23,6 @@ const useAddComment = () => {
       });
     },
     onError: (e: any) => {
-      console.log(e);
     },
     onSuccess: (data: any) => {},
   });

@@ -17,14 +17,15 @@ export type User = {
   display_name?: string;
   password: string;
   avatar?: string;
-  address?: any;
+  address?: { location: string; detail: string; isSelected: boolean }[];
   phoneNumber?: string;
   favorites?: any[];
   payment_transaction?: any;
   createdAt?: Date;
   addressSelected?: {
     location: string;
-    detail: string
+    detail: string;
+    isSelected: boolean;
   };
 };
 

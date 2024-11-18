@@ -72,12 +72,17 @@ router.post(
 router.post("/users", userAPI.createUser);
 router.get("/users", userAPI.getAllUsers);
 router.get("/users/:id", userAPI.getUserById);
+router.post("/users/recentproducts/:id", userAPI.addRecentProducts);
+router.get("/users/recentproducts/:id", userAPI.getRecentProducts);
 router.post("/change_pw/:id", userAPI.changePassword);
 router.put("/favorites/:id", userAPI.updateFavorite);
+router.put("/users/replaceupdate/:id", userAPI.updateAndReplaceInfo);
 router.patch("/updateInfo/:id", userAPI.updateInfo);
 router.delete("/users/:id", userAPI.deleteUser);
 router.post("/login", userAPI.login);
 router.post("/sign-in-google", userAPI.signinWithGoogle);
+router.put('/users/update-address/:id',userAPI.updateAddress)
+router.put('/users/remove-address/:id',userAPI.deleteAddress)
 
 // // Category routes
 router.get("/category", categoryAPI.getAllCategories);
@@ -118,6 +123,8 @@ router.post("/products", productAPI.createProduct);
 router.put("/products/:id", productAPI.updateProductById);
 router.delete("/products/:id", productAPI.deleteProductById);
 router.post("/products/search", productAPI.searchProducts);
+router.post("/products/components/search/:id", productAPI.searchProductsOfComponents);
+
 router.get("/products/subcategory/:id", productAPI.getProductBySubCategoryID);
 
 // // carts

@@ -9,6 +9,9 @@ import OrderSuccessfully from "@features/common/order-sucessfully";
 import NotificationScreen from "@features/common/notification-screen";
 import EditProfile from "@features/common/edit-profile";
 import ChangePassword from "@features/common/change_password/page/change_password";
+import RecentProducts from "@features/common/profile/component/recent-products";
+import PaymentManagerment from "@features/common/profile/component/payment-managerment";
+import DeliveryManagerment from "@features/common/profile/component/delivery-managerment";
 export const notLoggedInScreens = {
   Signin: Signin,
   SignUp: Signup,
@@ -24,6 +27,9 @@ export const loggedInScreens = {
   NotificationScreen: NotificationScreen,
   EditProfile: EditProfile,
   ChangePassword: ChangePassword,
+  RecentProducts: RecentProducts,
+  PaymentManagerment: PaymentManagerment,
+  DeliveryManagerment: DeliveryManagerment,
 };
 
 export const ROUTES = createEnum({
@@ -42,4 +48,7 @@ export const ROUTES = createEnum({
   NotificationScreen: "NotificationScreen",
   EditProfile: "EditProfile",
   ChangePassword: "ChangePassword",
+  RecentProducts: "RecentProducts",
+  PaymentManagerment: "PaymentManagerment",
+  DeliveryManagerment: "DeliveryManagerment",
 });

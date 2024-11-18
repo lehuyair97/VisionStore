@@ -1,43 +1,37 @@
 import { useMutation } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
-const useSearch = () => {
-  const {
-    data,
-    error,
-    mutate,
-    status, 
-  } = useMutation<any, Error, string>({
-    mutationFn: async (name: string) => {
+const useSearchProductsOfComponent = (sub_category_id: string) => {
+  const { data, error, mutateAsync, status } = useMutation({
+    mutationFn: async (textSearch: string) => {
       try {
         const res = await api({
-          url: REQUEST_URL.SEARCH,
+          url: REQUEST_URL.SEARCH_PRODUCT_OF_COMPONENT(sub_category_id),
           method: "POST",
-          data: { name },
+          data: { name: textSearch },
         });
         const responseData = res.data || res;
         return responseData;
       } catch (err) {
-        console.error('API call failed:', err);
+        console.error("API call failed:", err);
         throw err;
       }
     },
-    onSuccess: (data) => {
-    },
+    onSuccess: (data) => {},
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
     },
     networkMode: "always",
   });
 
-  const isLoading = status === 'pending';
+  const isLoading = status === "pending";
 
   return {
     data,
     error,
     isLoading,
-    search: mutate, 
+    search: mutateAsync,
   };
 };
 
-export default useSearch;
+export default useSearchProductsOfComponent;

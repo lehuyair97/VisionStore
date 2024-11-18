@@ -38,27 +38,7 @@ type DetailProductParams = {
   };
 };
 
-interface OrderData {
-  customerId: string;
-  customerName: string;
-  customerEmail: string;
-  customerAddress: string;
-  customerPhoneNumber: number;
-  optionsColor: string;
-  optionsMemory: string;
-  paymentTransactions: {
-    id: string;
-    userId: string;
-    orderId: string;
-    paymentMethod: string;
-    paymentStatus: string;
-    _id: string;
-    paymentDate: string;
-  };
-  totalBill?: number;
-  carts: CartItem[];
-  orderDate: string;
-}
+
 
 const DetailProduct = () => {
   const route = useRoute<RouteProp<DetailProductParams, "DetailProduct">>();
@@ -98,12 +78,7 @@ const DetailProduct = () => {
     };
 
     addCart(orderData, {
-      onSuccess: () => {
-        console.log("Success");
-      },
-      onError: () => {
-        console.log("Error");
-      },
+
     });
   };
 

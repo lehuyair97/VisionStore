@@ -2,7 +2,6 @@ const Voucher = require("./../../models/voucherModel");
 const { handleEvent } = require("./../../config/websocket");
 
 exports.createVoucher = async (req, res) => {
-  console.log(req.body);
   try {
     const { discount, expiration_date, type, title, description } = req.body;
 

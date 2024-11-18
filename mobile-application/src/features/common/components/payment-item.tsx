@@ -7,7 +7,8 @@ type PaymentItemProps = {
   icon: any;
   methodName: string;
   onPress: () => void;
-  isSelected: boolean;
+  isSelected?: boolean;
+  isDisable?: boolean;
 };
 
 const PaymentItem: React.FC<PaymentItemProps> = ({
@@ -15,12 +16,15 @@ const PaymentItem: React.FC<PaymentItemProps> = ({
   methodName,
   onPress,
   isSelected,
+  isDisable,
 }) => {
   return (
     <TouchableOpacity
+      disabled={isDisable}
       style={[
         styles.container,
         isSelected && { borderColor: "red", borderWidth: 1 },
+        isDisable && { backgroundColor: "#e0e0e0" },
       ]}
       onPress={onPress}
     >
@@ -42,15 +46,14 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+
     gap: 10,
   },
   icon: {
     width: 40,
     height: 40,
     marginRight: 12,
-    borderRadius: 20,
+    borderRadius: 10,
   },
   methodName: {
     fontSize: 16,

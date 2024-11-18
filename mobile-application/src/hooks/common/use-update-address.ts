@@ -2,33 +2,37 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
 
-const useChangePassword = (customerId: string) => {
+type AddressType = {
+  newAddress: {
+    detail: string;
+    location: string;
+  };
+  isSelected: boolean;
+  addressId?: string;
+};
+const useUpdateAddress = (customerId: string) => {
   const queryClient = useQueryClient();
   const { data, error, mutateAsync, isPending } = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (address: AddressType) => {
       try {
         const res = await api({
-          url: REQUEST_URL.CHANGE_PASSWORD(customerId),
-          method: "POST",
-          data: data,
+          url: REQUEST_URL.UPDATE_ADDRESS(customerId),
+          method: "PUT",
+          data: address,
         });
         return res.data || res;
-      } catch (err: any) {
-        return err?.response?.data;
+      } catch (err) {
+        throw err;
       }
     },
-    onSuccess: (data) => {
-      if (data?.isSuccess) {
-        toast.success(`Đổi mật khẩu thành công!`);
-      }
-    },
+    onSuccess: (data) => {},
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
     },
     onSettled(data, error) {
       if (data) {
         queryClient.invalidateQueries({
-          queryKey: ["Password", customerId],
+          queryKey: ["UserProfile", customerId],
         });
       }
     },
@@ -38,8 +42,8 @@ const useChangePassword = (customerId: string) => {
     data,
     error,
     isPending,
-    changePassword: mutateAsync,
+    updateAddress: mutateAsync,
   };
 };
 
-export default useChangePassword;
+export default useUpdateAddress;

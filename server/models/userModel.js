@@ -20,6 +20,10 @@ const Role = {
 const addressSchema = new mongoose.Schema({
   location: String,
   detail: String,
+  isSelected: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const userSchema = new mongoose.Schema({
@@ -43,6 +47,7 @@ const userSchema = new mongoose.Schema({
     enum: Object.values(Role),
     default: Role.CLIENT,
   },
+  recent_products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 
 const User = mongoose.model("User", userSchema);

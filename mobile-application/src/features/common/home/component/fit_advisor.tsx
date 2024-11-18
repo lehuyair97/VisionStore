@@ -6,7 +6,7 @@ import { View, Text, FlatList, TouchableOpacity } from "react-native";
 
 interface FitAdvisorProps {
   onPress: (id: string) => void;
-  data: Brand[];
+  data: Brand[] | any;
   selectedId: string | null;
 }
 
@@ -46,7 +46,7 @@ const FitAdvisor = ({ data, onPress, selectedId }: FitAdvisorProps) => {
             fontWeight: "500",
           }}
         >
-          {item.name}
+          {item.brand}
         </Text>
       </Block>
     </TouchableOpacity>

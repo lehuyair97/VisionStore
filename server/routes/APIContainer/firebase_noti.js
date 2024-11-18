@@ -73,8 +73,6 @@ const sendNotificationToAllUsers = async () => {
   const tokens = users.map(user => user.device_token).filter(Boolean);
 
   if (tokens.length > 0) {
-    console.log(`[${new Date().toISOString()}] Sending notification to ${tokens.length} devices...`);
-    
     const promises = tokens.map(token => sendNotification(title, body, token));
     await Promise.all(promises)
       .catch(error => console.error("Error during batch notification:", error.message));

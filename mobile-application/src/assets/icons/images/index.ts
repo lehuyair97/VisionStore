@@ -14,6 +14,14 @@ export function localImages() {
     ic_profile_fill: require("../images/ic_profile_fill.png"),
     ic_mac: require("../mac.png"),
     ic_plus: require("../images/ic_plus.png"),
-    ic_minus: require("../images/ic_minus.png")
+    ic_minus: require("../images/ic_minus.png"),
+    ic_cooling: require("../images/ic_cooling.jpg"),
+    ic_cpu: require("../images/ic_cpu.png"),
+    ic_case: require("../images/ic_case.jpg"),
+    ic_gpu: require("../images/ic_gpu.png"),
+    ic_mainboard: require("../images/ic_mainboard.jpg"),
+    ic_power: require("../images/ic_mainboard.jpg"),
+    ic_storage: require("../images/ic_storage.png"),
+    ic_ram: require("../images/ic_ram.png")
   };
 }

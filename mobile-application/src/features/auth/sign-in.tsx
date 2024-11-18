@@ -3,7 +3,6 @@ import { Block, Button, Input, MainContainer, Row, Text } from "@components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth, useSignIn } from "@hooks/auth";
 import useSignInGoogle from "@hooks/auth/use-signin-google";
-import usePushNotification from "@hooks/root/use-push-notification";
 import { ROUTES } from "@navigation/config/routes";
 import { signInForm } from "@navigation/config/types";
 import messaging from "@react-native-firebase/messaging";
@@ -19,7 +18,6 @@ function Signin({ navigation }) {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
   const { submit: signInByGoogle } = useSignInGoogle();
-  const { submit: submitPushNotification } = usePushNotification();
   const {
     control,
     getValues,

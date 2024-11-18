@@ -38,13 +38,11 @@ async function createOrder(req, res) {
 
     const notis = await Notification.find({ customerId: orderData.customerId });
     if (notis.length > 0) {
-      console.log('true')
       handleEvent("notification", notis);
     }
 
     res.status(200).json({ isSuccess: true, data: newOrder });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Không thể tạo đơn hàng hoặc cập nhật giỏ hàng" });
   }
 }

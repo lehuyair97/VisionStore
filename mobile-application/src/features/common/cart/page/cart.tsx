@@ -13,12 +13,13 @@ import {
 import { useAuth } from "@hooks/auth";
 import useCart from "@hooks/common/use-get-cart";
 import { Block, Text } from "@components";
+import EmptyData from "@features/common/components/empty-data";
 
 export default function Cart() {
   const { userInfo } = useAuth();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const { data: carts, isLoading, error } = useCart(userInfo?._id);
- 
+
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const handleSelectAll = (selectAll: boolean) => {
@@ -33,8 +34,7 @@ export default function Cart() {
       .filter((item) => selectedItems.includes(item?.productId))
       .reduce((temp, current) => temp + current?.quantity * current?.price, 0);
     setTotalPrice(total);
-  }, [selectedItems,carts]);
-
+  }, [selectedItems, carts]);
   const handleNavigateToPayment = () => {
     const selectedProducts = carts?.carts?.filter((product) =>
       selectedItems.includes(product.productId)
@@ -54,13 +54,9 @@ export default function Cart() {
     );
   }
 
-  if (!carts) {
+  if (!carts?.carts) {
     return (
-      <Block flex={1} justifyContent={"center"} alignContent={"center"}>
-        <Text color={"black"} textAlign={"center"}>
-          {"Hiện bạn chưa có sản phẩm nào"}
-        </Text>
-      </Block>
+      <EmptyData content="Bạn chưa có sản phẩm nào trong giỏ hàng" />
     );
   }
 

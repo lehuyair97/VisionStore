@@ -15,7 +15,6 @@ const bcrypt = require("bcrypt");
 
 exports.createUser = async (req, res) => {
   try {
-    // Kiểm tra xem email đã tồn tại hay chưa
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(400).json({
@@ -149,6 +148,86 @@ exports.updateFavorite = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+exports.addRecentProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { productId } = req.body;
+
+    if (!id || !productId) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "User ID and Product ID are required.",
+      });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: `User not found with ID: ${id}`,
+      });
+    }
+    user.recent_products = user.recent_products.filter(
+      (item) => item.toString() !== productId
+    );
+    user.recent_products.unshift(productId);
+    if (user.recent_products.length > 6) {
+      user.recent_products = user.recent_products.slice(0, 6);
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Added new recent product.",
+      recent_products: user.recent_products,
+    });
+  } catch (error) {
+    console.error("Error adding recent product:", error.message);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred while adding the recent product.",
+      error: error.message,
+    });
+  }
+};
+
+exports.getRecentProducts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "User ID is required.",
+      });
+    }
+    const user = await User.findById(id).populate({
+      path: "recent_products",
+      options: { sort: { Timestamp: -1 } },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: `User not found with ID: ${id}`,
+      });
+    }
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Fetched recent products successfully.",
+      recent_products: user.recent_products || [],
+    });
+  } catch (error) {
+    console.error("Error fetching recent products:", error.message);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred while fetching recent products.",
+      error: error.message,
+    });
   }
 };
 
@@ -348,5 +427,142 @@ exports.signinWithGoogle = async (req, res) => {
   } catch (error) {
     console.error("Error during Google sign-in:", error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.updateAddress = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isSelected, addressId, ...newAddress } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: `User not found with ID: ${id}`,
+      });
+    }
+    if (addressId) {
+      const addressIndex = user.address.findIndex(
+        (addr) => addr._id.toString() === addressId
+      );
+
+      if (addressIndex === -1) {
+        return res.status(404).json({
+          isSuccess: false,
+          message: `Address not found with ID: ${addressId}`,
+        });
+      }
+
+      user.address[addressIndex] = {
+        ...user.address[addressIndex]._doc,
+        ...newAddress,
+      };
+
+      if (isSelected === true) {
+        user.address.forEach((addr, index) => {
+          user.address[index].isSelected = index === addressIndex;
+        });
+
+        user.addressSelected = {
+          location: user.address[addressIndex].location,
+          detail: user.address[addressIndex].detail,
+        };
+      }
+    } else {
+      const newAddressObj = { ...newAddress, isSelected: !!isSelected };
+      user.address.push(newAddressObj);
+
+      if (isSelected === true) {
+        user.address.forEach((addr) => {
+          addr.isSelected = false;
+        });
+
+        user.addressSelected = {
+          location: newAddressObj.location,
+          detail: newAddressObj.detail,
+        };
+
+        user.address[user.address.length - 1].isSelected = true;
+      }
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Address updated successfully.",
+      address: user.address,
+      addressSelected: user.addressSelected,
+    });
+  } catch (error) {
+    console.error("Error updating address:", error.message);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred while updating the address.",
+      error: error.message,
+    });
+  }
+};
+
+exports.deleteAddress = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { addressId } = req.body;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: `User not found with ID: ${id}`,
+      });
+    }
+
+    if (
+      !user.address ||
+      !Array.isArray(user.address) ||
+      user.address.length === 0
+    ) {
+      return res.status(400).json({
+        isSuccess: false,
+        message: "No addresses found for this user.",
+      });
+    }
+
+    const addressIndex = user.address.findIndex(
+      (addr) => addr._id.toString() === addressId
+    );
+    if (addressIndex === -1) {
+      return res.status(404).json({
+        isSuccess: false,
+        message: `Address not found with ID: ${addressId}`,
+      });
+    }
+
+    const removedAddress = user.address.splice(addressIndex, 1)[0];
+
+    if (
+      user.addressSelected &&
+      user.addressSelected.detail === removedAddress?.detail
+    ) {
+      user.addressSelected = user.address[0] || null;
+      if (user.address[0]) {
+        user.address[0].isSelected = true;
+      }
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      isSuccess: true,
+      message: "Address deleted successfully.",
+      address: user.address,
+      addressSelected: user.addressSelected,
+    });
+  } catch (error) {
+    console.error("Error deleting address:", error.message);
+    return res.status(500).json({
+      isSuccess: false,
+      message: "An error occurred while deleting the address.",
+      error: error.message,
+    });
   }
 };

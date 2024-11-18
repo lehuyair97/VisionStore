@@ -139,6 +139,58 @@ export const paymentMethods = [
     },
   },
 ];
+export const paymentManagerment = [
+  {
+    method: "Paypal",
+    icon: {
+      type: "materialIcons",
+      name: "paypal",
+    },
+  },
+  {
+    method: "Amazone",
+    icon: {
+      type: "antDesign",
+      name: "amazon",
+    },
+  },
+
+  {
+    method: "Apple Pay",
+    icon: {
+      type: "fontAwesome5",
+      name: "apple-pay",
+    },
+  },
+];
+
+export const deliveryMethodActions = [
+  {
+    method: "Đặt làm mặc định",
+    icon: {
+      type: "entypo",
+      name: "check",
+    },
+    action: "setDefault",
+  },
+  {
+    method: "Sửa",
+    icon: {
+      type: "antDesign",
+      name: "edit",
+    },
+    action: "edit",
+  },
+
+  {
+    method: "Xóa",
+    icon: {
+      type: "antDesign",
+      name: "delete",
+    },
+    action: "delete",
+  },
+];
 export const profileActions = [
   { icon: "edit", title: "Cập nhật trang cá nhân", route: "EditProfile" },
   { icon: "user-secret", title: "Đổi mật khẩu", route: "ChangePassword" },

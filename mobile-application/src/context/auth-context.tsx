@@ -1,13 +1,7 @@
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import { User } from "../hooks/auth/use-sign-in";
 import useRefreshToken from "@hooks/auth/use-refresh-token";
 import { getUserInfoStorage, setUserInfoStorage } from "@utils/storage";
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { User } from "../hooks/auth/use-sign-in";
 import {
   deleteAccessToken,
   deleteRefreshToken,
@@ -17,24 +11,13 @@ import {
   validateToken,
 } from "../utils/token";
 import useGetProfile from "@hooks/common/use-get-profile";
-export type AuthenticationStatus =
-  | "REFRESHING"
-  | "AUTHENTICATED"
-  | "UNAUTHENTICATED";
 
-export type CheckInStatus = {
-  lastCheckInTime: string;
-  checkInCount: number;
-};
+export type AuthenticationStatus = "REFRESHING" | "AUTHENTICATED" | "UNAUTHENTICATED";
 
 type TAuthContext = {
   authenticationStatus: AuthenticationStatus;
   accessToken?: string;
-  handleLoginSuccess: (data: {
-    accessToken: string;
-    refreshToken: string;
-    user: User;
-  }) => void;
+  handleLoginSuccess: (data: { accessToken: string; refreshToken: string; user: User }) => void;
   setAuthenticationStatus: (status: AuthenticationStatus) => void;
   logout: () => Promise<void>;
   userInfo: User;
@@ -44,51 +27,53 @@ type TAuthContext = {
 export const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [authenticationStatus, setAuthenticationStatus] =
-    useState<AuthenticationStatus>("UNAUTHENTICATED");
+  const [authenticationStatus, setAuthenticationStatus] = useState<AuthenticationStatus>("UNAUTHENTICATED");
   const { submit: submitRefreshToken } = useRefreshToken();
   const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
-  const [userInfo, setUserInfo] = useState<User | null>();
-  const {data: userData} = useGetProfile(userInfo?._id);
+  const [userInfo, setUserInfo] = useState<User | null>(null);
+  const { data: userData } = useGetProfile(userInfo?._id);
 
-  useEffect(() => {
-    const validateAndSetAuth = async () => {
-      const isValidToken = await validateToken();
-      if (isValidToken) {
-        setAuthenticationStatus("AUTHENTICATED");
-        const userInfo = await getUserInfoStorage()
-        setUserInfo(userInfo)
-        return;
-      }
+  const validateAndSetAuth = useCallback(async () => {
+    const isValidToken = await validateToken();
+    if (isValidToken) {
+      setAuthenticationStatus("AUTHENTICATED");
+      const userInfo = await getUserInfoStorage();
+      setUserInfo(userInfo);
+    } else {
       await refreshToken();
-    };
-    validateAndSetAuth();
+    }
   }, []);
 
-  useEffect(()=>{
-    setUserInfo(userData)
-  },[userData])
+  useEffect(() => {
+    validateAndSetAuth();
+  }, [validateAndSetAuth]);
 
-  const logout = async () => {
+  useEffect(() => {
+    if (!userData) {
+      setUserInfo(userData);
+    }
+  }, [userData]);
+
+  const logout = useCallback(async () => {
     await deleteAccessToken();
     await deleteRefreshToken();
     await setUserInfoStorage(null);
     setAuthenticationStatus("UNAUTHENTICATED");
-  };
+  }, []);
 
-  const refreshToken = async () => {
-    const refreshToken = await getRefreshToken();
-    if (refreshToken) {
-      const { accessToken } = await submitRefreshToken(refreshToken);
+  const refreshToken = useCallback(async () => {
+    const storedRefreshToken = await getRefreshToken();
+    if (storedRefreshToken) {
+      const { accessToken } = await submitRefreshToken(storedRefreshToken);
       if (accessToken) {
-        const userInfo = await getUserInfoStorage()
+        const userInfo = await getUserInfoStorage();
         setAccessToken(accessToken);
         setAccessTokenStorage(accessToken);
         setAuthenticationStatus("AUTHENTICATED");
-        setUserInfo(userInfo)
+        setUserInfo(userInfo);
       }
     }
-  };
+  }, [submitRefreshToken]);
 
   const handleLoginSuccess = useCallback(
     async (data: { accessToken: string; refreshToken: string; user: User }) => {
@@ -101,6 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
     []
   );
+
   const value = useMemo(
     () => ({
       authenticationStatus,
@@ -111,15 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       userInfo,
       setUserInfo,
     }),
-    [
-      authenticationStatus,
-      setAuthenticationStatus,
-      logout,
-      accessToken,
-      handleLoginSuccess,
-      userInfo,
-      setUserInfo,
-    ]
+    [authenticationStatus, logout, accessToken, handleLoginSuccess, userInfo]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

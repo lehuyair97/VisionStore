@@ -1,4 +1,4 @@
-import { Button, Input, MainContainer } from "@components";
+import { Button, Input, MainContainer, Text } from "@components";
 import Block from "@components/block";
 import AppBarCustom from "@features/common/home/component/appbar_custom";
 import { commonStyles } from "@features/common/profile/styles/styles";
@@ -15,10 +15,7 @@ interface ChangePasswordForm {
 
 const ChangePassword = () => {
   const { userInfo } = useAuth();
-  const { changePassword, error: errorChangePW } = useChangePassword(
-    userInfo?._id
-  );
-
+  const { changePassword, data } = useChangePassword(userInfo?._id);
   const {
     control,
     handleSubmit,
@@ -30,7 +27,6 @@ const ChangePassword = () => {
 
   const handleChangePassword = async (data) => {
     const res = await changePassword(data);
-    console.log("value", res);
   };
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT} style={commonStyles.container}>
@@ -51,6 +47,7 @@ const ChangePassword = () => {
           control={control}
           error={errors.oldPassword?.message}
           showError={!!errors.oldPassword?.message}
+          secureTextEntry={true}
         />
         <Input
           name="newPassword"
@@ -62,6 +59,12 @@ const ChangePassword = () => {
           showError={!!errors.newPassword?.message}
           secureTextEntry={true}
         />
+        {data?.isSuccess === false && (
+          <Text mt={"s"} color={"red_500"}>
+            {data?.message}
+          </Text>
+        )}
+
         <Button
           buttonStyle={{ marginTop: 30 }}
           label="Đổi mật khẩu"

@@ -1,8 +1,9 @@
 import { Block, Icon, MainContainer, Row, Text } from "@components";
 import { RBSheetRef } from "@features/common/components/bottom-sheet";
-import SubCategoryBottomSheet from "@features/common/components/sub-categories";
+import { useAuth } from "@hooks/auth";
+import useAddRecentProduct from "@hooks/common/use-add-recent-products";
 import useCategory from "@hooks/common/use-category";
-import useBrand from "@hooks/common/use-get-brand";
+import useCommon from "@hooks/common/use-common";
 import useGetProductGroupedByChildSubCategory from "@hooks/common/use-get-product-grouped-by-Sub-category-child-id";
 import useGetProductGrouped from "@hooks/common/use-get-products-grouped";
 import useGetSubCategoryByType from "@hooks/common/use-get-sub-category-by-type";
@@ -16,31 +17,40 @@ import {
 import Colors from "@theme/colors";
 import { banners, iconMap } from "@utils/containts";
 import { EDGES } from "@utils/helper";
-import { useEffect, useRef, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
-import AppBarCustom from "../component/appbar_custom";
-import Banner from "../component/banner";
-import FitAdvisor from "../component/fit_advisor";
-import FitFinder from "../component/fit_finder";
-import ProductBrand from "../component/product-grouped-by-brand";
 import { CategoryCustomProps } from "./types";
-import useCommon from "@hooks/common/use-common";
-export default function Home() {
-  const {messageUnread} = useCommon()
 
+const AppBarCustom = lazy(() => import("../component/appbar_custom"));
+const Banner = lazy(() => import("../component/banner"));
+const FitAdvisor = lazy(() => import("../component/fit_advisor"));
+const FitFinder = lazy(() => import("../component/fit_finder"));
+const ProductBrand = lazy(
+  () => import("../component/product-grouped-by-brand")
+);
+const SubCategoryBottomSheet = lazy(
+  () => import("@features/common/components/sub-categories")
+);
+
+export default function Home() {
+  const { userInfo } = useAuth();
+  const { addRecentProduct } = useAddRecentProduct(userInfo?._id);
+  const { messageUnread } = useCommon();
   const { data: categories, isLoading, error } = useCategory();
   const [categorySelected, setCategorySelected] =
     useState<CategoryCustomProps | null>(null);
-  const [selectedIdBrand, setSelectedIdBrand] = useState("");
-  const refRBSheet = useRef<RBSheetRef>();
+  const [resetTrigger, setResetTrigger] = useState(0);
+  const [selectedIdBrand, setSelectedIdBrand] = useState<string>("");
+  const refRBSheet = useRef<RBSheetRef>(null);
   const [subCategories, setSubCategories] = useState<any>();
-  const [products, setProducts] = useState<any>();
-  const [subCategoryChildSelected, setsubCategoryChildSelected] =
+  const [products, setProducts] = useState<any>([]);
+  const [subCategoryChildSelected, setSubCategoryChildSelected] =
     useState<any>();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
   const {
-    refetch: submmitSubCategory,
+    refetch: submitSubCategory,
     isRefetchError,
     isRefetching,
   } = useGetSubCategoryByType(categorySelected?.type, false);
@@ -49,30 +59,40 @@ export default function Home() {
   );
   const { data: productsBySubCategoryChild } =
     useGetProductGroupedByChildSubCategory(subCategoryChildSelected?._id);
-  const transformedCategories =
-    categories?.map((item) => ({
-      id: item._id,
-      title: item.name,
-      icon: iconMap[item.name] || "home",
-      type: item?.type,
-    })) || [];
 
-  const openSubCategories = () => {
-    if (refRBSheet?.current) {
-      refRBSheet.current.open();
-    }
-  };
-  const closeSubCategories = () => {
-    if (refRBSheet?.current) {
-      refRBSheet.current.close();
-    }
-  };
+  const transformedCategories = useMemo(
+    () =>
+      categories?.map((item) => ({
+        id: item._id,
+        title: item.name,
+        icon: iconMap[item.name] || "home",
+        type: item?.type,
+      })) || [],
+    [categories]
+  );
+
+  const transformedBrands = useMemo(
+    () =>
+      products?.map((brandItem) => ({
+        _id: brandItem._id,
+        brand: brandItem.brand,
+      })) || [],
+    [products]
+  );
+
+  const extendedBrands = useMemo(
+    () => [{ _id: "", brand: "Tất cả" }, ...transformedBrands],
+    [transformedBrands]
+  );
+
+  const openSubCategories = () => refRBSheet?.current?.open();
+  const closeSubCategories = () => refRBSheet?.current?.close();
 
   useEffect(() => {
     if (!categorySelected && transformedCategories.length > 0) {
       setCategorySelected(transformedCategories[0]);
     }
-  }, [transformedCategories]);
+  }, [transformedCategories, categorySelected]);
 
   useEffect(() => {
     if (
@@ -81,13 +101,15 @@ export default function Home() {
     ) {
       const fetchSubCategory = async () => {
         openSubCategories();
-        const res = await submmitSubCategory();
+        const res = await submitSubCategory();
         setSubCategories(res?.data);
       };
       fetchSubCategory();
     }
-  }, [categorySelected]);
+  }, [categorySelected, submitSubCategory, resetTrigger]);
+
   useEffect(() => {
+    setSelectedIdBrand("");
     if (
       categorySelected?.type === "accessories" ||
       categorySelected?.type === "components"
@@ -96,17 +118,11 @@ export default function Home() {
     } else {
       setProducts(productsByCategory);
     }
-  }, [productsByCategory, productsBySubCategoryChild]);
-  const { data: brands } = useBrand();
-  const extendedBrands = brands
-    ? [
-        { _id: "", name: "Tất cả", description: "", logo: "", brandType: "" },
-        ...brands,
-      ]
-    : [];
+  }, [productsByCategory, productsBySubCategoryChild, categorySelected]);
 
-  const handleNavigateToDetailProduct = (id: string) => {
+  const handleNavigateToDetailProduct = async (id: string) => {
     navigate(ROUTES.DetailProduct as keyof ParamListBase, { productId: id });
+    await addRecentProduct(id);
   };
 
   const handleNavigateToDetailBrand = (id: string, brandName: string) => {
@@ -119,87 +135,104 @@ export default function Home() {
 
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
-  if (!categories || categories?.length === 0)
+  if (!categories || categories.length === 0)
     return <Text>No categories available</Text>;
-
+  if (!productsByCategory && !productsBySubCategoryChild) {
+    return <ActivityIndicator />;
+  }
   return (
-    <MainContainer edges={EDGES.LEFT_RIGHT}>
-      <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
-      >
-        <AppBarCustom
-          title="VisionSore"
-          titleStyle={{ fontWeight: "bold", color: Colors.primary }}
-          childrenRight={
-            <Row>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate(ROUTES.Search as keyof ParamListBase)
-                }
-              >
-                <Icon
-                  type="fontAwesome"
-                  name="search"
-                  size={20}
-                  color={Colors.black2A}
-                />
-              </TouchableOpacity>
-              <Block width={20} />
-              <TouchableOpacity
-                onPress={() => navigate(ROUTES.NotificationScreen)}
-              >
-                <Icon
-                  type="fontAwesome"
-                  name="bell"
-                  size={20}
-                  color={Colors.black2A}
-                />
-                <Block
-                  position={"absolute"}
-                  top={-5}
-                  right={-4}
-                  width={14}
-                  height={14}
-                  borderRadius={'full'}
-                  backgroundColor={"red_500"}
-                  alignItems={'center'}
-                  alignContent={'center'}
-                  justifyContent={'center'}
+    <Suspense
+      fallback={
+        <Block flex={1} justifyContent={"center"} alignItems={"center"}>
+          <ActivityIndicator size={30} />
+        </Block>
+      }
+    >
+      <MainContainer edges={EDGES.LEFT_RIGHT}>
+        <ScrollView
+          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 40 }}
+        >
+          <AppBarCustom
+            title="VisionStore"
+            titleStyle={{ fontWeight: "bold", color: Colors.primary }}
+            childrenRight={
+              <Row>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(ROUTES.Search as keyof ParamListBase)
+                  }
                 >
-                  <Text textAlign={'center'} fontSize={8} >{messageUnread ?? messageUnread}</Text>
-                </Block>
-              </TouchableOpacity>
-            </Row>
-          }
+                  <Icon
+                    type="fontAwesome"
+                    name="search"
+                    size={20}
+                    color={Colors.black2A}
+                  />
+                </TouchableOpacity>
+                <Block width={20} />
+                <TouchableOpacity
+                  onPress={() => navigate(ROUTES.NotificationScreen)}
+                >
+                  <Icon
+                    type="fontAwesome"
+                    name="bell"
+                    size={20}
+                    color={Colors.black2A}
+                  />
+                  <Block
+                    position="absolute"
+                    top={-5}
+                    right={-4}
+                    width={14}
+                    height={14}
+                    borderRadius="full"
+                    backgroundColor="red_500"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Text textAlign="center" fontSize={8}>
+                      {messageUnread ?? messageUnread}
+                    </Text>
+                  </Block>
+                </TouchableOpacity>
+              </Row>
+            }
+          />
+          <Banner images={banners} />
+          <FitFinder
+            data={transformedCategories}
+            selected={categorySelected}
+            onPress={(category) => {
+              if (category.id === categorySelected?.id) {
+                setResetTrigger((prev) => prev + 1);
+              } else {
+                setCategorySelected(category);
+              }
+            }}
+          />
+          <FitAdvisor
+            data={extendedBrands}
+            selectedId={selectedIdBrand}
+            onPress={setSelectedIdBrand}
+          />
+          <ProductBrand
+            brandSelected={selectedIdBrand}
+            data={products}
+            handleNavigateToDetailProduct={handleNavigateToDetailProduct}
+            handleNavigateToDetailBrand={handleNavigateToDetailBrand}
+          />
+        </ScrollView>
+        <SubCategoryBottomSheet
+          isFetching={isRefetching}
+          refRBSheet={refRBSheet}
+          subCategories={subCategories?.sub_category_list}
+          category={categorySelected?.type}
+          onsubCategoryChildSelected={(item) => {
+            setSubCategoryChildSelected(item);
+            closeSubCategories();
+          }}
         />
-        <Banner images={banners} />
-        <FitFinder
-          data={transformedCategories}
-          selected={categorySelected}
-          onPress={setCategorySelected}
-        />
-        <FitAdvisor
-          data={extendedBrands}
-          selectedId={selectedIdBrand}
-          onPress={setSelectedIdBrand}
-        />
-        <ProductBrand
-          brandSelected={selectedIdBrand}
-          data={products}
-          handleNavigateToDetailProduct={handleNavigateToDetailProduct}
-          handleNavigateToDetailBrand={handleNavigateToDetailBrand}
-        />
-      </ScrollView>
-      <SubCategoryBottomSheet
-        isFetching={isRefetching}
-        refRBSheet={refRBSheet}
-        subCategories={subCategories?.sub_category_list}
-        category={categorySelected?.type}
-        onsubCategoryChildSelected={(item) => {
-          setsubCategoryChildSelected(item);
-          closeSubCategories();
-        }}
-      />
-    </MainContainer>
+      </MainContainer>
+    </Suspense>
   );
 }

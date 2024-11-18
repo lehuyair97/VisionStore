@@ -22,7 +22,7 @@ export const REQUEST_URL = {
   CHANGE_QUANTITY_CART: "/cart/quantity",
   GET_CART_BY_USERID: (customerId: string) => `cart/users/${customerId}`,
   SEARCH: "/products/search",
-
+  SEARCH_PRODUCT_OF_COMPONENT: (id) => `/products/components/search/${id}`,
   CREATE_USER_WITH_IMAGE: "/users/upload",
   GET_ALL_USERS: "/users",
 
@@ -30,7 +30,9 @@ export const REQUEST_URL = {
   CHANGE_PASSWORD: (id) => `/change_pw/${id}`,
   UPDATE_FAVORITE: (id) => `/favorites/${id}`,
   UPDATE_INFO: (id) => `/updateInfo/${id}`,
+  UPDATE_ADDRESS: (id) => `/users/update-address/${id}`,
   DELETE_USER: (id) => `/users/${id}`,
+  DELETE_ADDRESS: (id) => `/users/remove-address/${id}`,
   GET_ALL_CATEGORIES: "/category",
   GET_CATEGORY_BY_ID: (id) => `/category/${id}`,
   CREATE_CATEGORY: "/category",
@@ -73,14 +75,17 @@ export const REQUEST_URL = {
   ADD_COMMENT: (productID) => `/comment?productID=${productID}`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
   CREATE_NOTIFICATION: () => `/notifications`,
-  GET_ALL_NOTIFICATIONS: (limit = 20, page = 1) => `/notifications?limit=${limit}&page=${page}`,
-  GET_NOTIFICATIONS_BY_USER_ID: (userId, limit = 20, page = 1) => `/notifications/user/${userId}?limit=${limit}&page=${page}`,
+  GET_ALL_NOTIFICATIONS: (limit = 20, page = 1) =>
+    `/notifications?limit=${limit}&page=${page}`,
+  GET_NOTIFICATIONS_BY_USER_ID: (userId, limit = 20, page = 1) =>
+    `/notifications/user/${userId}?limit=${limit}&page=${page}`,
   MARK_AS_READ: (id) => `/notifications/${id}/read`,
   DELETE_NOTIFICATION_BY_ID: (id) => `/notifications/${id}`,
+  RECENT_PRODUCTS: (id) => `/users/recentproducts/${id}`,
 };
 
-const BASE_URL = "http://192.168.210.213:3000/api";
-// process.env.EXPO_PUBLIC_API_URL ?? 
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.78:3000/api";
 export type AxiosParams = {
   url: string;
   method: Method;

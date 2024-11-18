@@ -27,3 +27,8 @@ export const validateChangePW = z.object({
   oldPassword: z.string().min(1, "Vui lòng không để trống mật khẩu cũ"),
   newPassword: z.string().min(1, "Vui lòng không để trống mật khẩu mới"),
 });
+
+export const validNewAddress = z.object({
+  detail: z.string().min(1, "Vui lòng không để trống"),
+  location: z.string().min(1,'Vui lòng không để trống')
+})
