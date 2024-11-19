@@ -85,7 +85,7 @@ export const REQUEST_URL = {
 };
 
 const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.78:3000/api";
+  "http:/192.168.1.238:3000/api";
 export type AxiosParams = {
   url: string;
   method: Method;

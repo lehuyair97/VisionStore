@@ -1,3 +1,5 @@
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, View } from "react-native";
 import { Text } from "@components";
 import Block from "@components/block";
 import BottomSheet from "@features/common/components/bottom-sheet";
@@ -5,31 +7,59 @@ import AppBarSearch from "@features/common/search/component/appbar_serch";
 import ProductSearchItem from "@features/common/search/component/product-search-item";
 import useSearchProductsOfComponent from "@hooks/common/use-search-products-of-components";
 import { SCREEN_HEIGHT } from "@utils/helper";
-import { useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
 
-const SelectProduct = ({ refRBSheet, subCategoryId, onItemSelected }) => {
+export type RBSheetRef = {
+  open: () => void;
+  close: () => void;
+  isOpen: boolean;
+};
+
+const SelectProduct = ({
+  subCategoryId,
+  onItemSelected,
+  setIsOpen,
+  isOpen,
+  refRBSheet,
+}: {
+  subCategoryId: string;
+  onItemSelected: (item: any) => void;
+  setIsOpen: (item: boolean) => void;
+  isOpen: boolean;
+  refRBSheet: React.RefObject<RBSheetRef>;
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const {
-    data: products,
-    isLoading,
-    search,
-  } = useSearchProductsOfComponent(subCategoryId);
+  const [products, setProducts] = useState<any[]>([]);
+  const { isLoading, search } = useSearchProductsOfComponent(subCategoryId);
+
+  const handleOpen = () => {
+    refRBSheet.current?.open();
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    refRBSheet.current?.close();
+    setIsOpen(false);
+  };
 
   const handleFetchData = async () => {
-    await search(searchTerm);
+    const data = await search(searchTerm);
+    if (data) {
+      setProducts(data);
+    }
   };
+
   useEffect(() => {
-    if (refRBSheet?.current?.open()) {
+    if (isOpen) {
+      setProducts([]);
       handleFetchData();
     }
-  }, [refRBSheet?.current]);
+  }, [isOpen]);
 
   return (
-    <BottomSheet height={SCREEN_HEIGHT - 40} refRBSheet={refRBSheet}>
+    <BottomSheet refRBSheet={refRBSheet} height={SCREEN_HEIGHT - 40}>
       <AppBarSearch
         leftIconName="chevron-down"
-        onLeftIconPress={() => refRBSheet?.current?.close()}
+        onLeftIconPress={handleClose}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         onSearch={handleFetchData}
@@ -47,7 +77,10 @@ const SelectProduct = ({ refRBSheet, subCategoryId, onItemSelected }) => {
         <FlatList
           data={products}
           renderItem={({ item }) => (
-            <ProductSearchItem item={item} onPress={onItemSelected} />
+            <ProductSearchItem
+              item={item}
+              onPress={() => onItemSelected(item)}
+            />
           )}
           keyExtractor={(item) => item._id}
         />

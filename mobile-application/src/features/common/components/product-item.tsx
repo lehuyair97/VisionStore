@@ -29,24 +29,23 @@ const ProductItem = ({
       <Row center between>
         <Image
           source={
-            product?.image
-              ? {
-                  uri: product?.product?.image
-                    ? product?.product?.image
-                    : product?.image,
-                }
-              : product[1].defaultImage
+            product?.image && {
+              uri: product?.product?.image
+                ? product?.product?.image
+                : product?.image,
+            }
           }
           style={styles.productImage}
         />
         <Block flex={1} mx={"_10"} gap={"s"}>
-          {product?.price ? (
+          {product?.product?.price ?? product?.price ? (
             <Block>
               <Text numberOfLines={2} color={"black"} fontWeight={"600"}>
-                {product?.name}
+                {product?.product?.name ?? product?.name}
               </Text>
               <Text color={"black"} fontWeight={"600"}>
-                {product?.price?.toLocaleString()}{" "}
+                {product?.product?.price?.toLocaleString() ??
+                  product?.price?.toLocaleString()}{" "}
                 <Text color={"gray136"} textDecorationLine={"line-through"}>
                   {product?.original_price}
                 </Text>

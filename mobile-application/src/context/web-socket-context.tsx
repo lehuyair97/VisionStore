@@ -32,7 +32,7 @@ const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const socket = useRef<Socket | null>(null);
 
   useEffect(() => {
-    socket.current = io("http://192.168.210.213:8080");
+    socket.current = io("http://192.168.1.238:8080");
 
     socket.current.on("connect", () => {
       console.log("Web socket connected");
