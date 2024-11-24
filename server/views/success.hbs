@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giao Dịch Thành Công</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+
+        .amount,
+        .order-info,
+        .pay-date {
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Giao Dịch Thành Công!</h1>
+        <p class="message">Chúc mừng bạn đã hoàn tất giao dịch của mình.</p>
+
+        <p class="amount"><strong>Số tiền thanh toán:</strong> {{vnp_Amount}} VND</p>
+        <p class="order-info"><strong>Thông tin đơn hàng:</strong> {{vnp_OrderInfo}}</p>
+        <p class="pay-date"><strong>Thời gian giao dịch:</strong> {{vnp_PayDate}}</p>
+    </div>
+</body>
+</html>

@@ -22,7 +22,7 @@ export default function Comment({ productID }: { productID: string }) {
       setCount(data?.count);
       setAverageRating(data?.averageRating);
     }
-    if (comment?.comments) {
+    if (comment?.comments?.productID === productID) {
       setCombinedComments(comment?.comments);
       setCount(comment?.count);
       setAverageRating(comment?.averageRating);

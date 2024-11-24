@@ -10,7 +10,6 @@ const AppBarCart = () => {
         <Block  style={[commonStyles.container,{padding: 20,backgroundColor:Colors.container}]}>
             <Row between>
                 <Text fontSize={20} fontWeight="bold" color="black">Giỏ hàng</Text>
-                <Icon type="fontAwesome" name="search" size={20} color={Colors.primary} />
             </Row>
            
         </Block>

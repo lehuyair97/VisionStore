@@ -1,0 +1,33 @@
+<body>
+    <script>
+        window.onload = function() {
+            const responseCode = '{{vnp_ResponseCode}}'; 
+            const transactionStatus = '{{vnp_TransactionStatus}}'; 
+
+            if (responseCode === '00' && transactionStatus === '00') {
+                window.location.href = `/api/success?amount={{vnp_Amount}}&orderInfo={{vnp_OrderInfo}}&payDate={{vnp_PayDate}}`;
+            } 
+        };
+    </script>
+
+    {{#if (eq vnp_ResponseCode "00")}}
+        {{#if (eq vnp_TransactionStatus "00")}}
+        {{else}}
+            <div class="failure">
+                <h3>Giao dịch thất bại!</h3>
+                <p>Lý do: {{vnp_Message}}</p>
+                <p>Vui lòng kiểm tra lại giao dịch.</p>
+            </div>
+        {{/if}}
+    {{else}}
+        <div class="failure">
+            <h3>Giao dịch thất bại!</h3>
+            <p>Lý do: {{vnp_Message}}</p>
+            <p>Vui lòng thử lại sau.</p>
+        </div>
+    {{/if}}
+
+    <p style="text-align: center">
+        <a class="button" href="/api/create_payment_url">Về danh sách</a>
+    </p>
+</body>

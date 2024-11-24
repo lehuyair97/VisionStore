@@ -2,12 +2,16 @@ import { memo } from "react";
 import { Image } from "react-native";
 import { validateUser } from "@utils/validate";
 
-import { MainContainer, Block, Input, Button } from "@components";
+import { MainContainer, Block, Input, Button, Row } from "@components";
 import { localImages } from "@assets/icons/images";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpForm } from "@navigation/config/types";
 import { useAuth, useSignUp } from "@hooks/auth";
+import Text from "@components/text";
+import { navigate } from "@navigation/config/navigation-service";
+import { ROUTES } from "@navigation/config/routes";
+import theme from "@theme";
 
 const SignUp = () => {
   const { submit: submitSignUp } = useSignUp();
@@ -99,6 +103,17 @@ const SignUp = () => {
           onPress={handleSignUp}
         />
       </Block>
+      <Row justifyContent="center" marginVertical={"_20"}>
+        <Text fontWeight="bold" textAlign="center" color="black" fontSize={14}>
+          Bạn đã có tài khoản?
+        </Text>
+        <Button
+          onPress={() => navigate(ROUTES.Signin)}
+          label="Đăng nhập"
+          noneStyle
+          textStyle={{ color: theme.colors.primary, fontWeight: "bold" }}
+        />
+      </Row>
     </MainContainer>
   );
 };

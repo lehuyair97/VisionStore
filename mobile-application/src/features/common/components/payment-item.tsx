@@ -4,11 +4,12 @@ import React from "react";
 import { Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 
 type PaymentItemProps = {
-  icon: any;
+  icon?: any;
   methodName: string;
   onPress: () => void;
   isSelected?: boolean;
   isDisable?: boolean;
+  image?: any;
 };
 
 const PaymentItem: React.FC<PaymentItemProps> = ({
@@ -17,6 +18,7 @@ const PaymentItem: React.FC<PaymentItemProps> = ({
   onPress,
   isSelected,
   isDisable,
+  image,
 }) => {
   return (
     <TouchableOpacity
@@ -28,7 +30,19 @@ const PaymentItem: React.FC<PaymentItemProps> = ({
       ]}
       onPress={onPress}
     >
-      <Icon type={icon?.type} name={icon?.name} color={"black"} size={24} />
+      {image ? (
+        <Image
+          source={image}
+          style={{
+            width: 26,
+            height: 26,
+            resizeMode: "contain",
+            borderRadius: 26,
+          }}
+        />
+      ) : icon ? (
+        <Icon type={icon?.type} name={icon?.name} color={"black"} size={24} />
+      ) : null}
       <Text style={styles.methodName}>{methodName}</Text>
     </TouchableOpacity>
   );

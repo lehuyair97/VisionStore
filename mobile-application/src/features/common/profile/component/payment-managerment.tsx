@@ -26,6 +26,7 @@ export default function PaymentManagerment() {
             keyExtractor={Helper.getKeyExtractor}
             renderItem={({ item, index }) => (
               <PaymentItem
+                image={item?.image}
                 icon={item?.icon}
                 methodName={item.method}
                 isSelected={index === 0}

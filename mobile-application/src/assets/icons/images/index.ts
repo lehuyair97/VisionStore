@@ -22,6 +22,8 @@ export function localImages() {
     ic_mainboard: require("../images/ic_mainboard.jpg"),
     ic_power: require("../images/ic_mainboard.jpg"),
     ic_storage: require("../images/ic_storage.png"),
-    ic_ram: require("../images/ic_ram.png")
+    ic_ram: require("../images/ic_ram.png"),
+    ic_home_red: require("../images/ic_home_red.png"),
+    ic_vnpay: require("../images/ic_vnpay.webp"),
   };
 }

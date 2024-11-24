@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from "react";
-import { User } from "../hooks/auth/use-sign-in";
 import useRefreshToken from "@hooks/auth/use-refresh-token";
+import useGetProfile from "@hooks/common/use-get-profile";
 import { getUserInfoStorage, setUserInfoStorage } from "@utils/storage";
 import {
   deleteAccessToken,
@@ -10,82 +10,118 @@ import {
   setRefreshToken as setRefreshTokenStorage,
   validateToken,
 } from "../utils/token";
-import useGetProfile from "@hooks/common/use-get-profile";
+import { User } from "../hooks/auth/use-sign-in";
 
-export type AuthenticationStatus = "REFRESHING" | "AUTHENTICATED" | "UNAUTHENTICATED";
+export type AuthenticationStatus =
+  | "REFRESHING"
+  | "AUTHENTICATED"
+  | "UNAUTHENTICATED";
 
 type TAuthContext = {
   authenticationStatus: AuthenticationStatus;
   accessToken?: string;
-  handleLoginSuccess: (data: { accessToken: string; refreshToken: string; user: User }) => void;
+  handleLoginSuccess: (data: {
+    accessToken: string;
+    refreshToken: string;
+    user: User;
+  }) => void;
   setAuthenticationStatus: (status: AuthenticationStatus) => void;
   logout: () => Promise<void>;
-  userInfo: User;
-  setUserInfo: (user: User) => void;
+  userInfo: User 
+  setUserInfo: (user: User | null) => void;
 };
 
 export const AuthContext = createContext<TAuthContext | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [authenticationStatus, setAuthenticationStatus] = useState<AuthenticationStatus>("UNAUTHENTICATED");
-  const { submit: submitRefreshToken } = useRefreshToken();
-  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+  const [authenticationStatus, setAuthenticationStatus] =
+    useState<AuthenticationStatus>("UNAUTHENTICATED");
+  const [accessToken, setAccessToken] = useState<string | undefined>();
   const [userInfo, setUserInfo] = useState<User | null>(null);
-  const { data: userData } = useGetProfile(userInfo?._id);
+
+  const { submit: submitRefreshToken } = useRefreshToken();
+  const { data: userData, refetchUserInfo } = useGetProfile(userInfo?._id || "");
+
+  const refreshToken = useCallback(async () => {
+    try {
+      const storedRefreshToken = await getRefreshToken();
+      if (storedRefreshToken) {
+        const { accessToken } = await submitRefreshToken(storedRefreshToken);
+        if (accessToken) {
+          setAccessToken(accessToken);
+          setAccessTokenStorage(accessToken);
+          setAuthenticationStatus("AUTHENTICATED");
+          await refetchUserInfo;
+        }
+      }
+    } catch (error) {
+      console.error("Refresh token failed:", error);
+      setAuthenticationStatus("UNAUTHENTICATED");
+    }
+  }, [submitRefreshToken, refetchUserInfo]);
+  const handleLoginSuccess = useCallback(
+    async (data: { accessToken: string; refreshToken: string; user: User }) => {
+      try {
+        setAccessToken(data.accessToken);
+        setUserInfo(data.user);
+        setAuthenticationStatus("AUTHENTICATED");
+        setAccessTokenStorage(data.accessToken);
+        setRefreshTokenStorage(data.refreshToken);
+        await setUserInfoStorage(data.user);
+      } catch (error) {
+        console.error("Handle login success failed:", error);
+      }
+    },
+    []
+  );
 
   const validateAndSetAuth = useCallback(async () => {
-    const isValidToken = await validateToken();
-    if (isValidToken) {
-      setAuthenticationStatus("AUTHENTICATED");
-      const userInfo = await getUserInfoStorage();
-      setUserInfo(userInfo);
-    } else {
-      await refreshToken();
+    try {
+      const isValidToken = await validateToken();
+      if (isValidToken) {
+        setAuthenticationStatus("AUTHENTICATED");
+        await refetchUserInfo();
+      } else {
+        await refreshToken();
+      }
+    } catch (error) {
+      console.error("Validation failed:", error);
+      setAuthenticationStatus("UNAUTHENTICATED");
     }
-  }, []);
+  }, [refreshToken, refetchUserInfo]);
 
   useEffect(() => {
-    validateAndSetAuth();
+    const initializeAuth = async () => {
+      try {
+        const storedUserInfo = await getUserInfoStorage();
+        if (storedUserInfo) {
+          setUserInfo(storedUserInfo);
+          await validateAndSetAuth();
+        }
+      } catch (error) {
+        console.error("Initialization failed:", error);
+      }
+    };
+    initializeAuth();
   }, [validateAndSetAuth]);
 
   useEffect(() => {
-    if (!userData) {
-      setUserInfo(userData);
+    if (userData) {
+      setUserInfo(userData); 
     }
   }, [userData]);
 
   const logout = useCallback(async () => {
-    await deleteAccessToken();
-    await deleteRefreshToken();
-    await setUserInfoStorage(null);
-    setAuthenticationStatus("UNAUTHENTICATED");
-  }, []);
-
-  const refreshToken = useCallback(async () => {
-    const storedRefreshToken = await getRefreshToken();
-    if (storedRefreshToken) {
-      const { accessToken } = await submitRefreshToken(storedRefreshToken);
-      if (accessToken) {
-        const userInfo = await getUserInfoStorage();
-        setAccessToken(accessToken);
-        setAccessTokenStorage(accessToken);
-        setAuthenticationStatus("AUTHENTICATED");
-        setUserInfo(userInfo);
-      }
+    try {
+      deleteAccessToken();
+      deleteRefreshToken();
+      await setUserInfoStorage(null);
+      setUserInfo(null);
+      setAuthenticationStatus("UNAUTHENTICATED");
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
-  }, [submitRefreshToken]);
-
-  const handleLoginSuccess = useCallback(
-    async (data: { accessToken: string; refreshToken: string; user: User }) => {
-      setAccessToken(data?.accessToken);
-      setUserInfo(data?.user);
-      setAuthenticationStatus("AUTHENTICATED");
-      setAccessTokenStorage(data?.accessToken);
-      setRefreshTokenStorage(data?.refreshToken);
-      setUserInfoStorage(data?.user);
-    },
-    []
-  );
+  }, []);
 
   const value = useMemo(
     () => ({

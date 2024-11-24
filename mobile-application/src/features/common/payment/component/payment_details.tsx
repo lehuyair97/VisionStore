@@ -17,15 +17,15 @@ const PaymentDetails = ({
   const totalPrice = [
     {
       title: "Tổng tiền hàng",
-      price: `${totalProductPrice} VNĐ`,
+      price: `${totalProductPrice.toLocaleString()} VNĐ`,
     },
     {
       title: "Tổng tiền vận chuyển",
-      price: `${shippingCost} VNĐ`,
+      price: `${shippingCost.toLocaleString()} VNĐ`,
     },
     {
       title: "Tổng tiền giảm giá",
-      price: `${discount} VNĐ`,
+      price: `${discount.toLocaleString()} VNĐ`,
     },
   ];
 

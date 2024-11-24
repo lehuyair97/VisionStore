@@ -20,7 +20,9 @@ import Vouchers from "../component/vouchers";
 import { navigate } from "@navigation/config/navigation-service";
 import { Alert } from "react-native";
 import { deliveryMethods, paymentMethods } from "@utils/containts";
+import useCreatePaymentOrderr from "@hooks/common/vnpay/use-create-payment-order";
 const Payment = () => {
+  const { createOrder } = useCreatePaymentOrderr();
   const route = useRoute();
   const { userInfo } = useAuth();
   const { usePay } = useProgressPayment();
@@ -31,8 +33,9 @@ const Payment = () => {
   const [deliveryMethodSelected, setDeliverMethodSelected] = useState<any>(
     deliveryMethods[0]
   );
-  const [paymentMethodSelected, setPaymentMethodSelected] = useState<any>(paymentMethods[0]);
-
+  const [paymentMethodSelected, setPaymentMethodSelected] = useState<any>(
+    paymentMethods[0]
+  );
   const { selectedProducts, totalPrice } = route.params as {
     selectedProducts: Cart[];
     carts: any;
@@ -78,16 +81,16 @@ const Payment = () => {
       refRBSheetPayment?.current?.close();
     }
   };
-
   const handlePayment = async () => {
     if (!deliveryMethodSelected) {
-      Alert.alert("Vui lòng chọn ");
+      Alert.alert("Vui lòng chọn phương thức thanh toán ");
+      return;
     }
     const order = {
       customerId: userInfo?._id,
       customerName: userInfo?.display_name,
       customerEmail: userInfo?.email,
-      customerAddress: userInfo?.addressSelected,
+      customerAddress: `${userInfo?.addressSelected?.detail} - ${userInfo?.addressSelected?.location}`,
       customerPhoneNumber: userInfo?.phoneNumber,
       option: {},
       paymentMethod: paymentMethodSelected?.method,
@@ -95,10 +98,22 @@ const Payment = () => {
       items: [...selectedProducts],
       orderDate: new Date().toISOString(),
       totalBill: finalTotal,
-      status: paymentMethodSelected?.method === "paypal" ? "shipping" : null,
+      status:
+        paymentMethodSelected?.method === "VN-Pay" ? "shipping" : "pending",
     };
     const res = await usePay(order);
     if (res?.isSuccess) {
+      if (paymentMethodSelected?.id === "001") {
+        const paymentUrl = await createOrder({
+          orderId: res?.data?._id,
+          amount: finalTotal * 100,
+          language: "vn",
+        });
+        if (paymentUrl) {
+          navigate("PaymentScreen", { paymentUrl, order: order });
+          return;
+        }
+      }
       navigate(ROUTES.OrderSuccessfully);
     }
   };
@@ -114,7 +129,7 @@ const Payment = () => {
           paddingHorizontal={20}
           paddingVertical={10}
         />
-        {selectedProducts.length > 0 && <UserInfo userInfo={userInfo} />}
+        {userInfo && <UserInfo userInfo={userInfo} />}
         <Block height={8} />
         <ItemProduct selectedProducts={selectedProducts} />
         <Block height={8} />
@@ -159,7 +174,6 @@ const Payment = () => {
         height={500}
       />
       <Delivery
-        deliveryMethods={deliveryMethods}
         setDeliverySelected={handleDeliverySelected}
         refRBSheet={refRBSheetDelivery}
         height={300}

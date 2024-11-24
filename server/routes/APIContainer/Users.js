@@ -45,7 +45,7 @@ exports.createUserWithImage = async (req, res) => {
       userName: req.body.userName,
       email: req.body.email,
       password: req.body.password,
-      avatar: `${req.protocol}://${req.get("host")}/api/uploads/users${
+      avatar: `${req.protocol}://${req.get("host")}/api/uploads/reviews${
         req.file.filename
       }`,
     };
@@ -463,10 +463,7 @@ exports.updateAddress = async (req, res) => {
           user.address[index].isSelected = index === addressIndex;
         });
 
-        user.addressSelected = {
-          location: user.address[addressIndex].location,
-          detail: user.address[addressIndex].detail,
-        };
+        user.addressSelected = user.address[addressIndex]
       }
     } else {
       const newAddressObj = { ...newAddress, isSelected: !!isSelected };
@@ -477,11 +474,7 @@ exports.updateAddress = async (req, res) => {
           addr.isSelected = false;
         });
 
-        user.addressSelected = {
-          location: newAddressObj.location,
-          detail: newAddressObj.detail,
-        };
-
+        user.addressSelected = newAddressObj
         user.address[user.address.length - 1].isSelected = true;
       }
     }

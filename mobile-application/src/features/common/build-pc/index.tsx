@@ -10,6 +10,8 @@ import BuildAutomatic from "./components/build-automatic";
 import BuildManual from "./components/build-manual";
 import TabBarHome, { TAB_BUILD } from "./components/tab-bar";
 import { navigate } from "@navigation/config/navigation-service";
+import Text from "@components/text";
+import useCommon from "@hooks/common/use-common";
 
 export type Route = {
   key: string;
@@ -21,6 +23,8 @@ export type Route = {
 };
 export default function BuildPC() {
   const { index, setIndex, routes } = useTabState(TAB_BUILD);
+  const { messageUnread } = useCommon();
+
   const renderScene = ({ route: { key } }: { route: Route }) => {
     const components = {
       Manual: <BuildManual />,
@@ -32,12 +36,16 @@ export default function BuildPC() {
     <MainContainer>
       <Block flex={1}>
         <Block px={"_20"} pb={'_20'}>
-          <AppBarCustom
-            title="VisionSore"
+        <AppBarCustom
+            title="VisionStore"
             titleStyle={{ fontWeight: "bold", color: Colors.primary }}
             childrenRight={
               <Row>
-                <TouchableOpacity onPress={() => navigate(ROUTES.Search)}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigate(ROUTES.Search)
+                  }
+                >
                   <Icon
                     type="fontAwesome"
                     name="search"
@@ -46,12 +54,31 @@ export default function BuildPC() {
                   />
                 </TouchableOpacity>
                 <Block width={20} />
-                <Icon
-                  type="fontAwesome"
-                  name="bell"
-                  size={20}
-                  color={Colors.black2A}
-                />
+                <TouchableOpacity
+                  onPress={() => navigate(ROUTES.NotificationScreen)}
+                >
+                  <Icon
+                    type="fontAwesome"
+                    name="bell"
+                    size={20}
+                    color={Colors.black2A}
+                  />
+                  <Block
+                    position="absolute"
+                    top={-5}
+                    right={-4}
+                    width={14}
+                    height={14}
+                    borderRadius="full"
+                    backgroundColor="red_500"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Text textAlign="center" fontSize={8}>
+                      {messageUnread ?? messageUnread}
+                    </Text>
+                  </Block>
+                </TouchableOpacity>
               </Row>
             }
           />
@@ -59,7 +86,7 @@ export default function BuildPC() {
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
-          renderTabBar={(props) => <TabBarHome {...props} />}
+          renderTabBar={(props) => <TabBarHome {...props}   />}
           onIndexChange={setIndex}
           initialLayout={{ width: SCREEN_WIDTH }}
           swipeEnabled={true}

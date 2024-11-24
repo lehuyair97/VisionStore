@@ -67,12 +67,6 @@
       "eas": {
         "projectId": "d446b33a-599d-4a9e-bfb6-157a08d5b761"
       }
-    },
-    "metaData": [
-      {
-        "name": "com.google.firebase.messaging.default_notification_color",
-        "value": "@color/notification_icon_color"
-      }
-    ]
+    }
   }
 }

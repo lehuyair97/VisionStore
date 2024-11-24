@@ -32,7 +32,7 @@ async function createOrder(req, res) {
       title: "Đặt hàng thành công!",
       message: notificationMessage,
       orderId: newOrder._id,
-      customerId: orderData.customerId
+      customerId: orderData.customerId,
     });
     await notification.save();
 
@@ -43,10 +43,11 @@ async function createOrder(req, res) {
 
     res.status(200).json({ isSuccess: true, data: newOrder });
   } catch (error) {
-    res.status(500).json({ error: "Không thể tạo đơn hàng hoặc cập nhật giỏ hàng" });
+    res
+      .status(500)
+      .json({ error: "Không thể tạo đơn hàng hoặc cập nhật giỏ hàng", error });
   }
 }
-
 
 async function deleteOrder(req, res) {
   const { id } = req.params;
@@ -73,6 +74,20 @@ async function updateOrderStatus(req, res) {
     res.status(500).json({ error: "Không thể cập nhật trạng thái đơn hàng" });
   }
 }
+async function markAsCommented(req, res) {
+  const { id } = req.params;
+  try {
+    const order = await Order.findById(id);
+    if (!order)
+      return res.status(404).json({ error: "Đơn hàng không tồn tại" });
+
+    order.hasCommented = true;
+    await order.save();
+    res.status(200).json({ isSuccess: true, data: order });
+  } catch (error) {
+    res.status(500).json({ error: "Không thể cập nhật trạng thái đơn hàng" });
+  }
+}
 
 async function getAllOrders(req, res) {
   try {
@@ -80,6 +95,23 @@ async function getAllOrders(req, res) {
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: "Không thể lấy danh sách đơn hàng" });
+  }
+}
+async function getOrdersByUserId(req, res) {
+  try {
+    const { id } = req.params;
+    const { status } = req.query;
+
+    if (!id || !status) {
+      return res
+        .status(400)
+        .json({ isSuccess: false, message: "User ID & status is required" });
+    }
+    const orders = await Order.find({ customerId: id, status: status });
+    res.status(200).json({ isSuccess: true, data: orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ isSuccess: false, message: "Something went wrong" });
   }
 }
 
@@ -113,4 +145,6 @@ module.exports = {
   getAllOrders,
   getOrderById,
   getOrdersByStatus,
+  getOrdersByUserId,
+  markAsCommented
 };

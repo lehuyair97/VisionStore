@@ -8,7 +8,7 @@ const Colors = {
   container: "#ffffff",
   whiteF3: "#F3F3F3",
   whiteSmoke: "#ffffffcc",
-  white255: "rgba(255, 255, 255, 0.6)",
+  white255: "rgba(255, 255, 255, 1)",
   whiteC4: "#c4c4c4",
   gray888: "#888888",
   gray136: "rgba(136, 136, 136, 1)",

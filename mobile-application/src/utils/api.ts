@@ -16,8 +16,11 @@ export const REQUEST_URL = {
   SIGN_IN_WITH_GOOGLE: "/sign-in-google",
   CREATE_USER: "/users",
   CATEGORY: "/category",
-
+  CREATE_PAYMENT_ORDER: "/create_payment_url",
+  RETURN_PAYMENT_ORDER: "/vnpay_return",
+  CANCLE_PAYMENT_ORDER: "/vnpay_ipn",
   GET_BRANDS: "/brands",
+  GET_BANNER: "/banner",
   GET_CART: "/cart",
   CHANGE_QUANTITY_CART: "/cart/quantity",
   GET_CART_BY_USERID: (customerId: string) => `cart/users/${customerId}`,
@@ -66,13 +69,15 @@ export const REQUEST_URL = {
   GET_ALL_ORDERS: "/orders",
   GET_ORDER_BY_ID: (id) => `/orders/${id}`,
   CREATE_ORDER: "/orders",
+  GET_ORDERS_BY_USER_ID: ({ id, status }) =>
+    `/orders/users/${id}?status=${status}`,
   UPDATE_ORDER_STATUS: (id) => `/orders/status/${id}`,
   GET_ORDERS_BY_STATUS: "/orders/status",
   DELETE_ORDER: (id) => `/orders/${id}`,
   GET_ACTIVE_VOUCHERS: "/active-voucher",
   GET_VOUCHERS: "/voucher",
   USE_VOUCHER: (code, userID) => `/use-voucher?code=${code}&userID=${userID}`,
-  ADD_COMMENT: (productID) => `/comment?productID=${productID}`,
+  ADD_COMMENT: `/comment`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
   CREATE_NOTIFICATION: () => `/notifications`,
   GET_ALL_NOTIFICATIONS: (limit = 20, page = 1) =>
@@ -80,12 +85,13 @@ export const REQUEST_URL = {
   GET_NOTIFICATIONS_BY_USER_ID: (userId, limit = 20, page = 1) =>
     `/notifications/user/${userId}?limit=${limit}&page=${page}`,
   MARK_AS_READ: (id) => `/notifications/${id}/read`,
+  MARK_AS_COMMENTED: (id) => `/orders/${id}/commented`,
   DELETE_NOTIFICATION_BY_ID: (id) => `/notifications/${id}`,
   RECENT_PRODUCTS: (id) => `/users/recentproducts/${id}`,
 };
 
 const BASE_URL =
-  "http:/192.168.1.238:3000/api";
+  process.env.EXPO_PUBLIC_API_URL ?? "http:/192.168.1.97:3000/api";
 export type AxiosParams = {
   url: string;
   method: Method;

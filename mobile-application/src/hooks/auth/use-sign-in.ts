@@ -17,7 +17,13 @@ export type User = {
   display_name?: string;
   password: string;
   avatar?: string;
-  address?: { location: string; detail: string; isSelected: boolean }[];
+  address?: {
+    location: string;
+    detail: string;
+    isSelected: boolean;
+    district_id: number;
+    ward_code: number;
+  }[];
   phoneNumber?: string;
   favorites?: any[];
   payment_transaction?: any;
@@ -26,6 +32,8 @@ export type User = {
     location: string;
     detail: string;
     isSelected: boolean;
+    district_id: number;
+    ward_code: number;
   };
 };
 

@@ -6,9 +6,12 @@ async function getCommentsData(productID) {
     "userID",
     "email userName avatar"
   );
-  
+
   const count = comments.length;
-  const totalRating = comments.reduce((sum, comment) => sum + comment.rating, 0);
+  const totalRating = comments.reduce(
+    (sum, comment) => sum + comment.rating,
+    0
+  );
   const averageRating = count > 0 ? totalRating / count : 0;
 
   return { comments, count, averageRating };
@@ -25,17 +28,33 @@ exports.getCommentsByProductID = async (req, res) => {
 };
 
 exports.addComment = async (req, res) => {
-  const { productID, userID, text, images, rating } = req.body;
+  const { productID, userID, text, rating } = req.body;
   try {
-    const newComment = new Comment({ productID, userID, text, images, rating });
+    const imageUrls = req.files
+      ? req.files.map(
+          (file) =>
+            `${req.protocol}://${req.get("host")}/api/uploads/reviews/${
+              file.filename
+            }`
+        )
+      : [];
+    const newComment = new Comment({
+      productID,
+      userID,
+      text,
+      rating: parseInt(rating),
+      images: imageUrls,
+    });
+
     await newComment.save();
     const commentsData = await getCommentsData(productID);
     handleEvent("comment", commentsData);
-    res.status(201).json(commentsData);
+    res.status(201).json({ isSuccess: true, data: commentsData });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 exports.getCommentById = async (req, res) => {
   const { id } = req.params;
   try {

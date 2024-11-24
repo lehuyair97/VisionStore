@@ -11,20 +11,16 @@ export const setUserInfoStorage = async (user: User) => {
   }
 };
 
-export const getUserInfoStorage = async (retryCount = 3): Promise<User | undefined> => {
-  let attempts = 0;
-  while (attempts < retryCount) {
+export const getUserInfoStorage = async ()=> {
     try {
       const userInfo = await AsyncStorage.getItem(userInfoStorage);
       if (userInfo) return JSON.parse(userInfo);
     } catch (e) {
       console.error("Error retrieving data from AsyncStorage:", e);
     }
-    attempts++;
-    await new Promise(resolve => setTimeout(resolve, 200));
-  }
+  await new Promise(resolve => setTimeout(resolve, 200));
   console.warn("Unable to retrieve user info after retries.");
-  return undefined;
+  return null;
 };
 
 

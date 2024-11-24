@@ -13,7 +13,7 @@ const useProgressPayment = () => {
       });
     },
     onSuccess: (data) => {
-      toast.success("Đặt đơn hàng thành công");
+      // toast.success("Đặt đơn hàng thành công");
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
@@ -21,8 +21,6 @@ const useProgressPayment = () => {
     },
     onSettled: (data, error) => {
       if (data) {
-        console.log(true);
-
         queryClient.invalidateQueries({
           queryKey: ["cart"],
         });

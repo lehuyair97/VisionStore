@@ -25,7 +25,6 @@ const useRefreshToken = () => {
     },
 
     onSuccess: (data) => {
-      console.log(data);
     },
     onError: (error: any) => {
       if (error.response) {

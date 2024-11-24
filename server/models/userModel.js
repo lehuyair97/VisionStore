@@ -20,6 +20,8 @@ const Role = {
 const addressSchema = new mongoose.Schema({
   location: String,
   detail: String,
+  district_id: Number,
+  ward_code: Number,
   isSelected: {
     type: Boolean,
     default: false,
@@ -33,7 +35,12 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   avatar: { type: String },
   address: [addressSchema],
-  addressSelected: { location: String, detail: String },
+  addressSelected: {
+    location: String,
+    detail: String,
+    district_id: Number,
+    ward_code: Number,
+  },
   phoneNumber: { type: Number },
   favorites: {
     type: Array,

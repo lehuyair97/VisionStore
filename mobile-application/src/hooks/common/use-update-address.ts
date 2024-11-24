@@ -13,7 +13,7 @@ type AddressType = {
 const useUpdateAddress = (customerId: string) => {
   const queryClient = useQueryClient();
   const { data, error, mutateAsync, isPending } = useMutation({
-    mutationFn: async (address: AddressType) => {
+    mutationFn: async (address: AddressType | any) => {
       try {
         const res = await api({
           url: REQUEST_URL.UPDATE_ADDRESS(customerId),
@@ -25,7 +25,9 @@ const useUpdateAddress = (customerId: string) => {
         throw err;
       }
     },
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      toast.success('Cập nhật thành công')
+    },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
     },

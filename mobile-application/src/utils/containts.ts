@@ -1,3 +1,5 @@
+import { localImages } from "@assets/icons/images";
+import { ROUTES } from "@navigation/config/routes";
 import dayjs from "dayjs";
 
 export const comentsData = [
@@ -102,11 +104,15 @@ export const iconMap: { [key: string]: string } = {
 };
 
 export const shipingStatus = [
-  { id: "1", name: "Chờ thanh toán", icon: "credit-card" },
-  { id: "2", name: "Đang Xử lý", icon: "user" },
-  { id: "3", name: "Đang vận chuyển", icon: "truck" },
-  { id: "4", name: "Đã giao", icon: "clipboard" },
-  { id: "5", name: "Đổi trả", icon: "rotate-left" },
+  { id: "2", name: "Đang Xử lý", icon: "user", route: 'OrderPending' },
+  {
+    id: "3",
+    name: "Đang vận chuyển",
+    icon: "truck",
+    route: 'OrderShipping',
+  },
+  { id: "4", name: "Đã giao", icon: "clipboard", route: 'OrderDelivered' },
+  { id: "5", name: "Đã hủy", icon: "trash-o", route: 'OrderCancle' },
 ];
 
 export const deliveryMethods = [
@@ -124,30 +130,14 @@ export const deliveryMethods = [
   },
 ];
 export const paymentMethods = [
-  {
-    method: "Thanh Toán tại nhà",
-    icon: {
-      type: "antDesign",
-      name: "home",
-    },
-  },
-  {
-    method: "Paypal",
-    icon: {
-      type: "materialIcons",
-      name: "paypal",
-    },
-  },
+  { id: "002", method: "Thanh Toán tại nhà", image: localImages().ic_home_red },
+  { id: "001", method: "VN-Pay", image: localImages().ic_vnpay },
 ];
 export const paymentManagerment = [
+  { id: "001", method: "VN-Pay", image: localImages().ic_vnpay },
+
   {
-    method: "Paypal",
-    icon: {
-      type: "materialIcons",
-      name: "paypal",
-    },
-  },
-  {
+    id: "002",
     method: "Amazone",
     icon: {
       type: "antDesign",
@@ -156,6 +146,7 @@ export const paymentManagerment = [
   },
 
   {
+    id: "003",
     method: "Apple Pay",
     icon: {
       type: "fontAwesome5",

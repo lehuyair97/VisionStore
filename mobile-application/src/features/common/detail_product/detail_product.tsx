@@ -16,6 +16,7 @@ import CustomControllerNums from "./custom-conntroler-nums";
 import CustomItem from "./custom_item";
 import ImgDetail from "./img_detail";
 import { useAuth } from "@hooks/auth";
+import { navigate } from "@navigation/config/navigation-service";
 type Item = {
   id: number;
   image: string;
@@ -37,8 +38,6 @@ type DetailProductParams = {
     productId: string;
   };
 };
-
-
 
 const DetailProduct = () => {
   const route = useRoute<RouteProp<DetailProductParams, "DetailProduct">>();
@@ -73,12 +72,16 @@ const DetailProduct = () => {
     const orderData: any = {
       customerId: userInfo?._id,
       productId,
-      quantity
-
+      quantity,
     };
-
-    addCart(orderData, {
-
+    addCart(orderData, {});
+  };
+  const handleBuyNow = () => {
+    const selectProduct = productDetail
+    selectProduct.quantity = 1
+    navigate("Payment", {
+      selectedProducts: [selectProduct],
+      totalPrice: productDetail.price,
     });
   };
 
@@ -134,7 +137,7 @@ const DetailProduct = () => {
           color="blue_500"
           marginTop={"_10"}
         >
-          {productDetail?.price}
+          {productDetail?.price?.toLocaleString()}
         </Text>
         <CustomItem
           selected={selectedColor?.name}
@@ -162,7 +165,7 @@ const DetailProduct = () => {
         </Row>
         <Comment productID={productId} />
       </ScrollView>
-      <ActionBottomBar onAddToCart={handleAddCart} onBuyNow={() => {}} />
+      <ActionBottomBar onAddToCart={handleAddCart} onBuyNow={handleBuyNow} />
     </MainContainer>
   );
 };

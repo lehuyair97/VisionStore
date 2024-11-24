@@ -30,5 +30,4 @@ export const validateChangePW = z.object({
 
 export const validNewAddress = z.object({
   detail: z.string().min(1, "Vui lòng không để trống"),
-  location: z.string().min(1,'Vui lòng không để trống')
 })

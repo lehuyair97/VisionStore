@@ -1,61 +1,76 @@
 import { Button, Icon, Input, MainContainer, Row, Text } from "@components";
 import Block from "@components/block";
-import { FlatList } from "react-native-gesture-handler";
-import { Helper } from "@utils/helper";
-import AppBarCustom from "@features/common/home/component/appbar_custom";
-import { useAuth } from "@hooks/auth";
-import DeliveryManagermentItem from "@features/common/components/delivery-managerment-item";
 import ModalCustom from "@features/common/components/center-modal";
-import { useForm } from "react-hook-form";
+import DeliveryManagermentItem from "@features/common/components/delivery-managerment-item";
+import AppBarCustom from "@features/common/home/component/appbar_custom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@hooks/auth";
+import useRemoveAddress from "@hooks/common/use-delete-address";
+import useUpdateAddress from "@hooks/common/use-update-address";
+import { Helper } from "@utils/helper";
 import { validNewAddress } from "@utils/validate";
 import { useRef, useState } from "react";
-import useUpdateAddress from "@hooks/common/use-update-address";
-import useRemoveAddress from "@hooks/common/use-delete-address";
+import { useForm } from "react-hook-form";
+import { Alert } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import AddressSelector from "./address-selector";
 import DeliveryManagerActions from "./delivery-manager-action";
 export default function DeliveryManagerment() {
   const refActionBottom = useRef<any>();
   const [isOpenModalNewAddress, setIsOpenModalNewAddress] =
     useState<boolean>(false);
   const { userInfo } = useAuth();
+  const [selectedProvince, setSelectedProvince] = useState<any | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<any | null>(null);
+  const [selectedWard, setSelectedWard] = useState<any | null>(null);
   const { updateAddress } = useUpdateAddress(userInfo?._id);
   const { removeAddress } = useRemoveAddress(userInfo?._id);
   const [addressSelected, setaddressSelected] = useState(null);
-  type newAddress = {
+  type detailAddress = {
     detail: string;
-    location: string;
   };
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<newAddress>({
+  } = useForm<detailAddress>({
     mode: "onChange",
     resolver: zodResolver(validNewAddress),
     defaultValues: {
       detail: "",
-      location: "",
     },
   });
-  const ad = userInfo?.address;
   const handleOpenAction = (item) => {
     setaddressSelected(item);
     setValue("detail", item?.detail);
-    setValue("location", item?.location);
 
     if (refActionBottom?.current) {
       refActionBottom.current.open();
     }
   };
   const handleAddnewAddress = async (formData) => {
+    if (!selectedWard || !selectedDistrict || !selectedProvince) {
+      Alert.alert("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
+    const location = `${selectedWard?.WardName} - ${selectedDistrict?.DistrictName} - Tỉnh ${selectedProvince?.ProvinceName} `;
+    const newAddress = {
+      detail: formData.detail,
+      location: location,
+      district_id: selectedDistrict?.DistrictID,
+      ward_code: parseInt(selectedWard?.WardCode)
+    }
     const address = {
-      ...formData,
+      ...newAddress,
       isSelected: true,
       addressId: addressSelected?._id || null,
     };
-    await updateAddress(address);
+    await updateAddress(address).then((data)=>{if(data?.isSuccess){
+      setIsOpenModalNewAddress(false)
+    }})
   };
+
   const handleActionpress = async (item: any) => {
     if (item?.action === "edit") {
       setIsOpenModalNewAddress(true);
@@ -133,13 +148,13 @@ export default function DeliveryManagerment() {
             label="Địa chỉ chi tiết"
             placeholder="Số nhà - Tên đường"
           />
-          <Input
-            control={control}
-            error={errors.location?.message}
-            showError={!!errors.location?.message}
-            name="location"
-            label="Địa chỉ của bạn"
-            placeholder="Phường - Quận - huyện"
+          <AddressSelector
+            setSelectedWard={setSelectedWard}
+            selectedWard={selectedWard}
+            setSelectedDistrict={setSelectedDistrict}
+            selectedDistrict={selectedDistrict}
+            setSelectedProvince={setSelectedProvince}
+            selectedProvince={selectedProvince}
           />
         </Block>
       </ModalCustom>

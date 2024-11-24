@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import Block from "@components/block";
 import { Icon } from "@components";
 import Colors from "@theme/colors";
+import { navigate } from "@navigation/config/navigation-service";
+import { ROUTES } from "@navigation/config/routes";
 
 interface RenderItemProps {
   item: any;
@@ -23,7 +25,12 @@ const RenderItem = ({
   colorIcon,
   setSelectedId,
 }: RenderItemProps) => (
-  <TouchableOpacity onPress={() => setSelectedId(item.id)}>
+  <TouchableOpacity
+    onPress={() => {
+      navigate(ROUTES.OrderManagerment, { routeIndex: index });
+      setSelectedId(item.id);
+    }}
+  >
     <View
       style={{
         paddingLeft: index === 0 ? 0 : 8,

@@ -12,8 +12,7 @@ import dayjs from "dayjs";
 import StarRating from "../detail_product/components/start-rating";
 
 const { width } = Dimensions.get("window");
-const imageWidth = width * 0.48 - 16; // Tính toán 48% chiều rộng màn hình, trừ đi khoảng cách giữa các hình ảnh
-
+const imageWidth = width * 0.48 - 16; 
 type Props = {
   avatar: string;
   name: string;
@@ -36,6 +35,7 @@ const CommentItem: React.FC<Props> = ({
   rating,
 }) => {
   const styles = useStyle();
+  console.log(images)
   return (
     <Block borderBottomColor={"gray_200"} borderBottomWidth={1}>
       <Row alignItems={"center"} justifyContent={"space-between"}>

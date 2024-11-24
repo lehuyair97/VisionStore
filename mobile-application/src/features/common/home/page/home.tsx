@@ -15,13 +15,13 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import Colors from "@theme/colors";
-import { banners, iconMap } from "@utils/containts";
+import { iconMap } from "@utils/containts";
 import { EDGES } from "@utils/helper";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 import { CategoryCustomProps } from "./types";
-
+import useGetBanner from "@hooks/common/use-get-banner";
 const AppBarCustom = lazy(() => import("../component/appbar_custom"));
 const Banner = lazy(() => import("../component/banner"));
 const FitAdvisor = lazy(() => import("../component/fit_advisor"));
@@ -35,6 +35,7 @@ const SubCategoryBottomSheet = lazy(
 
 export default function Home() {
   const { userInfo } = useAuth();
+  const { data: banners } = useGetBanner();
   const { addRecentProduct } = useAddRecentProduct(userInfo?._id);
   const { messageUnread } = useCommon();
   const { data: categories, isLoading, error } = useCategory();
@@ -48,7 +49,6 @@ export default function Home() {
   const [subCategoryChildSelected, setSubCategoryChildSelected] =
     useState<any>();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-
   const {
     refetch: submitSubCategory,
     isRefetchError,
@@ -198,7 +198,7 @@ export default function Home() {
               </Row>
             }
           />
-          <Banner images={banners} />
+          <Banner data={banners} />
           <FitFinder
             data={transformedCategories}
             selected={categorySelected}
