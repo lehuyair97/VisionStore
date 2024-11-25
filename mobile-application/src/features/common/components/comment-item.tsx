@@ -10,9 +10,10 @@ import { Block, Icon, Row, Text } from "@components";
 import { makeStyles } from "@theme";
 import dayjs from "dayjs";
 import StarRating from "../detail_product/components/start-rating";
+import ProductItem from "./product-item";
 
 const { width } = Dimensions.get("window");
-const imageWidth = width * 0.48 - 16; 
+const imageWidth = width * 0.48 - 16;
 type Props = {
   avatar: string;
   name: string;
@@ -22,6 +23,8 @@ type Props = {
   likes: number;
   timestamp: string;
   rating?: number;
+  product?: any;
+  isUserReview?: boolean
 };
 
 const CommentItem: React.FC<Props> = ({
@@ -33,9 +36,11 @@ const CommentItem: React.FC<Props> = ({
   likes,
   timestamp,
   rating,
+  product,
+  isUserReview
 }) => {
   const styles = useStyle();
-  console.log(images)
+  console.log(images);
   return (
     <Block borderBottomColor={"gray_200"} borderBottomWidth={1}>
       <Row alignItems={"center"} justifyContent={"space-between"}>
@@ -48,16 +53,18 @@ const CommentItem: React.FC<Props> = ({
         >
           {name}
         </Text>
-        <TouchableOpacity style={styles.likeButton}>
-          <Row center gap={"s"}>
-            <Text mt={"s"} color={"gray136"}>
-              Hữu ích {likes}{" "}
-            </Text>
-            <TouchableOpacity>
-              <Icon type="antDesign" name="like2" size={24} color="blue" />
-            </TouchableOpacity>
-          </Row>
-        </TouchableOpacity>
+        {!isUserReview && (
+          <TouchableOpacity style={styles.likeButton}>
+            <Row center gap={"s"}>
+              <Text mt={"s"} color={"gray136"}>
+                Hữu ích {likes}{" "}
+              </Text>
+              <TouchableOpacity>
+                <Icon type="antDesign" name="like2" size={24} color="blue" />
+              </TouchableOpacity>
+            </Row>
+          </TouchableOpacity>
+        )}
       </Row>
       <Block my={"_10"}>
         <Text fontSize={16} color={"gray136"}>
@@ -83,6 +90,7 @@ const CommentItem: React.FC<Props> = ({
         <Text color={"gray136"}>{dayjs(timestamp).format("DD/MM/YYYY")}</Text>
         <StarRating rating={rating} />
       </Row>
+      {product && <ProductItem item={product} isComment />}
     </Block>
   );
 };

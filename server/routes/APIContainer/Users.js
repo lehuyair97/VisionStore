@@ -56,6 +56,30 @@ exports.createUserWithImage = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.updateAvatar = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ message: "userID is required" });
+  }
+  if (!req.file) {
+    return res.status(400).json({ message: "Avatar image is required" });
+  }
+ 
+  try {
+    const avatar = `${req.protocol}://${req.get("host")}/api/uploads/users/${req.file.filename}`;
+    const user = await User.findByIdAndUpdate(id, { avatar: avatar }, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({
+      message: "Avatar updated successfully",
+      avatar: user.avatar, 
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: error.message });
+  }
+};
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -463,7 +487,7 @@ exports.updateAddress = async (req, res) => {
           user.address[index].isSelected = index === addressIndex;
         });
 
-        user.addressSelected = user.address[addressIndex]
+        user.addressSelected = user.address[addressIndex];
       }
     } else {
       const newAddressObj = { ...newAddress, isSelected: !!isSelected };
@@ -474,7 +498,7 @@ exports.updateAddress = async (req, res) => {
           addr.isSelected = false;
         });
 
-        user.addressSelected = newAddressObj
+        user.addressSelected = newAddressObj;
         user.address[user.address.length - 1].isSelected = true;
       }
     }

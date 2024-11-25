@@ -11,6 +11,9 @@ const brandSchema = new mongoose.Schema({
   logo: {
     type: String,
   },
+  banner: {
+    type: String,
+  },
 });
 
 const Brand = mongoose.model("Brand", brandSchema);

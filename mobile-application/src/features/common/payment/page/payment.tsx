@@ -82,6 +82,10 @@ const Payment = () => {
     }
   };
   const handlePayment = async () => {
+    if (!userInfo?.addressSelected?.detail) {
+      Alert.alert("Vui lòng cập nhật địa chỉ giao hàng");
+      return;
+    }
     if (!deliveryMethodSelected) {
       Alert.alert("Vui lòng chọn phương thức thanh toán ");
       return;

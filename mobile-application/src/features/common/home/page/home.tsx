@@ -57,8 +57,9 @@ export default function Home() {
   const { data: productsByCategory } = useGetProductGrouped(
     categorySelected?.id || ""
   );
+  console.log(subCategories)
   const { data: productsBySubCategoryChild } =
-    useGetProductGroupedByChildSubCategory(subCategoryChildSelected?._id);
+    useGetProductGroupedByChildSubCategory(subCategoryChildSelected?._id) 
 
   const transformedCategories = useMemo(
     () =>
@@ -73,7 +74,7 @@ export default function Home() {
 
   const transformedBrands = useMemo(
     () =>
-      products?.map((brandItem) => ({
+      products?.data?.map((brandItem) => ({
         _id: brandItem._id,
         brand: brandItem.brand,
       })) || [],
@@ -99,8 +100,8 @@ export default function Home() {
       categorySelected?.type === "accessories" ||
       categorySelected?.type === "components"
     ) {
+      openSubCategories();
       const fetchSubCategory = async () => {
-        openSubCategories();
         const res = await submitSubCategory();
         setSubCategories(res?.data);
       };
@@ -114,9 +115,9 @@ export default function Home() {
       categorySelected?.type === "accessories" ||
       categorySelected?.type === "components"
     ) {
-      setProducts(productsBySubCategoryChild);
+      setProducts({ data: productsBySubCategoryChild, type: "subCategory" });
     } else {
-      setProducts(productsByCategory);
+      setProducts({ data: productsByCategory, type: "category" });
     }
   }, [productsByCategory, productsBySubCategoryChild, categorySelected]);
 
@@ -125,14 +126,23 @@ export default function Home() {
     await addRecentProduct(id);
   };
 
-  const handleNavigateToDetailBrand = (id: string, brandName: string) => {
+  const handleNavigateToDetailBrand = ({
+    id,
+    brandName,
+    brandType,
+  }: {
+    id: string;
+    brandName: string;
+    brandType: "subCategory" | "subCategory";
+  }) => {
     navigation.navigate(ROUTES.DetailBrand as keyof ParamListBase, {
       id,
       brandName,
       categoryId: categorySelected?.id,
+      brandType: brandType,
+      subCategoryId: subCategoryChildSelected?._id,
     });
   };
-
   if (isLoading) return <Text>Loading...</Text>;
   if (error) return <Text>Error: {error.message}</Text>;
   if (!categories || categories.length === 0)

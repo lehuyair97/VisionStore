@@ -3,7 +3,7 @@ import ProductItem from "@features/common/components/product-item";
 import useGetSubCategoryByType from "@hooks/common/use-get-sub-category-by-type";
 import { Helper } from "@utils/helper";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList } from "react-native";
 import SelectProduct, { RBSheetRef } from "./select-production";
 import Text from "@components/text";
 import { navigate } from "@navigation/config/navigation-service";
@@ -58,7 +58,10 @@ export default function BuildManual() {
   };
   const handleBuyNow = () => {
     const selectProduct = getProductsWithQuantity(subCategories);
-
+    if(selectProduct.length === 0){
+      Alert.alert('Vui lòng chọn tối thiểu 1 sản phẩm!')
+      return
+    }
     setTimeout(() => {
       navigate("Payment", {
         selectedProducts: selectProduct,

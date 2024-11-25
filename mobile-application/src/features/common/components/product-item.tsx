@@ -9,10 +9,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 const ProductItem = ({
   item,
   isRecent,
+  isComment,
   onItemPress,
 }: {
   item: any;
   isRecent?: boolean;
+  isComment?: boolean;
   onItemPress?: (item: any) => void;
 }) => {
   const product = isRecent ? item?.item : item;
@@ -56,7 +58,7 @@ const ProductItem = ({
               Vui lòng chọn linh kiện
             </Text>
           )}
-          {!isRecent && product?.price && (
+          {(!isRecent && !isComment) && product?.price && (
             <Row center gap={"_10"}>
               <TouchableOpacity>
                 <Image
@@ -76,7 +78,7 @@ const ProductItem = ({
             </Row>
           )}
         </Block>
-        {isRecent ? (
+        {isRecent || isComment ? (
           <TouchableOpacity
             onPress={() =>
               navigate(ROUTES.DetailProduct, { productId: product?._id })

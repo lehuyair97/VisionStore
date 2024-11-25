@@ -33,6 +33,7 @@ export const REQUEST_URL = {
   CHANGE_PASSWORD: (id) => `/change_pw/${id}`,
   UPDATE_FAVORITE: (id) => `/favorites/${id}`,
   UPDATE_INFO: (id) => `/updateInfo/${id}`,
+  UPDATE_AVATAR: (id) => `/users/update-avatar/${id}`,
   UPDATE_ADDRESS: (id) => `/users/update-address/${id}`,
   DELETE_USER: (id) => `/users/${id}`,
   DELETE_ADDRESS: (id) => `/users/remove-address/${id}`,
@@ -51,8 +52,13 @@ export const REQUEST_URL = {
   DELETE_SUBCATEGORY: (id) => `/subcategory/${id}`,
   GET_ALL_PRODUCTS: "/products",
   GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
-  GET_PRODUCT_BY_BRAND_ID: ({ categoryID, brandID }) =>
-    `/products-brands?categoryId=${categoryID}&brandId=${brandID}`,
+  GET_PRODUCT_BY_BRAND_ID: ({
+    categoryID,
+    brandID,
+    brandType,
+    subCategoryId,
+  }) =>
+    `/products-brands?brandType=${brandType}&categoryId=${categoryID}&subCategoryId=${subCategoryId}&brandId=${brandID}`,
   GET_PRODUCT_GROUPED: (categoryId: string) =>
     `/productsgrouped?categoryId=${categoryId}`,
   GET_PRODUCT_GROUPED_BY_CHILD_SUBCATEGORY: (subCategory_child_ID: String) =>
@@ -79,6 +85,7 @@ export const REQUEST_URL = {
   USE_VOUCHER: (code, userID) => `/use-voucher?code=${code}&userID=${userID}`,
   ADD_COMMENT: `/comment`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
+  GET_COMMENT_BY_USER_ID: (userID) => `/comment-by-user/${userID}`,
   CREATE_NOTIFICATION: () => `/notifications`,
   GET_ALL_NOTIFICATIONS: (limit = 20, page = 1) =>
     `/notifications?limit=${limit}&page=${page}`,

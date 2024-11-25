@@ -10,7 +10,7 @@ const productAPI = require("./APIContainer/Product");
 const cartAPI = require("./APIContainer/cart");
 const orderAPI = require("./APIContainer/Order");
 const brandAPI = require("./APIContainer/Brand");
-const bannerAPI = require("./APIContainer/Banner")
+const bannerAPI = require("./APIContainer/Banner");
 const subCategoryAPI = require("./APIContainer/SubCategory");
 const authMiddleware = require("../middleware/authMiddleware");
 const FCMAPI = require("./APIContainer/firebase_noti");
@@ -37,7 +37,7 @@ const getStorage = (type) => {
 };
 
 // Đường dẫn để lấy ảnh Users
-router.get("/uploads/brands/:filename", (req, res) => {
+router.get("/uploads/users/:filename", (req, res) => {
   const filename = req.params.filename;
   const imagePath = path.join(__dirname, "../uploads/users", filename);
   fs.access(imagePath, fs.constants.F_OK, (err) => {
@@ -97,7 +97,11 @@ router.post("/login", userAPI.login);
 router.post("/sign-in-google", userAPI.signinWithGoogle);
 router.put("/users/update-address/:id", userAPI.updateAddress);
 router.put("/users/remove-address/:id", userAPI.deleteAddress);
-
+router.put(
+  "/users/update-avatar/:id",
+  multer({ storage: getStorage("users") }).single("avatar"),
+  userAPI.updateAvatar
+);
 // // Category routes
 router.get("/category", categoryAPI.getAllCategories);
 router.get("/category/:id", categoryAPI.getCategoryById);
@@ -106,12 +110,11 @@ router.put("/category/:id", categoryAPI.updateCategoryById);
 router.delete("/category/:id", categoryAPI.deleteCategoryById);
 
 // Banner routes
-router.get("/banner", bannerAPI.getAllBanners);         
-router.get("/banner/:id", bannerAPI.getBannerById);       
-router.post("/banner", bannerAPI.createBanner);          
-router.put("/banner/:id", bannerAPI.updateBannerById);    
-router.delete("/banner/:id", bannerAPI.deleteBannerById); 
-
+router.get("/banner", bannerAPI.getAllBanners);
+router.get("/banner/:id", bannerAPI.getBannerById);
+router.post("/banner", bannerAPI.createBanner);
+router.put("/banner/:id", bannerAPI.updateBannerById);
+router.delete("/banner/:id", bannerAPI.deleteBannerById);
 
 // // SubCategory routes
 router.get("/subcategory", subCategoryAPI.getAllSubCategories);
@@ -210,6 +213,7 @@ router.post(
 
 router.get("/comment/:id", commentAPI.getCommentById);
 router.get("/comment-by-product/:productID", commentAPI.getCommentsByProductID);
+router.get("/comment-by-user/:userID", commentAPI.getCommentsByUserID);
 
 // // message routes
 router.post("/message", messageAPI.sendMessage);
@@ -260,79 +264,5 @@ router.get("/vnpay_return", VnPay.vnpayReturn);
 router.get("/vnpay_ipn", VnPay.vnpayIpn);
 router.post("/querydr", VnPay.querydr);
 router.post("/refund", VnPay.refund);
-function calculateComponentPriceRange(
-  totalBudget,
-  percentageMin,
-  percentageMax
-) {
-  const minPrice = (totalBudget * percentageMin) / 100;
-  const maxPrice = (totalBudget * percentageMax) / 100;
-  return { minPrice, maxPrice };
-}
-
-function calculatePcBuildRanges(totalBudget, configType) {
-  let config = {};
-
-  const configs = {
-    developer: {
-      CPU: [30, 35],
-      GPU: [5, 10],
-      RAM: [15, 20],
-      Mainboard: [10, 15],
-      Storage: [15, 20],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-    graphicDesign: {
-      CPU: [20, 25],
-      GPU: [30, 35],
-      RAM: [15, 20],
-      Mainboard: [10, 15],
-      Storage: [10, 15],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-    office: {
-      CPU: [25, 30],
-      GPU: [5, 10],
-      RAM: [10, 15],
-      Mainboard: [10, 15],
-      Storage: [15, 20],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-    gaming: {
-      CPU: [20, 25],
-      GPU: [30, 35],
-      RAM: [10, 20],
-      Mainboard: [10, 15],
-      Storage: [10, 15],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-  };
-
-  const selectedConfig = configs[configType];
-
-  for (let component in selectedConfig) {
-    const [percentageMin, percentageMax] = selectedConfig[component];
-    config[component] = calculateComponentPriceRange(
-      totalBudget,
-      percentageMin,
-      percentageMax
-    );
-  }
-
-  return config;
-}
-
-const totalBudget = 10000000;
-const configType = "gaming";
-
-const pcBuild = calculatePcBuildRanges(totalBudget, configType);
 
 module.exports = router;

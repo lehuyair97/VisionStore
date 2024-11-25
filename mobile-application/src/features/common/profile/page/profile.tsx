@@ -25,7 +25,7 @@ export default function Profile() {
     }
     refRBSheet.current.close();
   };
-
+  console.log(userInfo?.avatar)
   return (
     <MainContainer
       edges={EDGES.LEFT_RIGHT}
@@ -40,9 +40,6 @@ export default function Profile() {
         />
         <Block mt={"_12"} />
         <OrderManagement data={shipingStatus} />
-        <Block mt={"_12"} />
-        <Trademark data={brands} />
-        <Block mt={"_12"} />
         <FeaturesProfile />
       </ScrollView>
       <ProfileActions

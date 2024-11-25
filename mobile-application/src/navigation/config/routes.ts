@@ -19,6 +19,7 @@ import OrderShipping from "@features/common/profile/component/order-managerment/
 import OrderPending from "@features/common/profile/component/order-managerment/order-progress";
 import OrderManagerment from "@features/common/profile/component/order-managerment";
 import ProductReview from "@features/common/profile/component/product-review";
+import UserReviewProduct from "@features/common/profile/component/user-review-product";
 
 export const notLoggedInScreens = {
   Signin: Signin,
@@ -44,7 +45,8 @@ export const loggedInScreens = {
   OrderShipping: OrderShipping,
   OrderDelivered: OrderDelivered,
   OrderManagerment: OrderManagerment,
-  ProductReview:ProductReview
+  ProductReview: ProductReview,
+  UserReviewProduct: UserReviewProduct,
 };
 
 export const ROUTES = createEnum({
@@ -71,5 +73,6 @@ export const ROUTES = createEnum({
   OrderShipping: "OrderShipping",
   OrderDelivered: "OrderDelivered",
   OrderManagerment: "OrderManagerment",
-  ProductReview:"ProductReview"
+  ProductReview: "ProductReview",
+  UserReviewProduct: "UserReviewProduct",
 });

@@ -1,5 +1,6 @@
 const SubCategory = require("../../models/sub_categoryModel");
 const Product = require("./../../models/productModel");
+const Brand = require("./../../models/brandModel");
 const mongoose = require("mongoose");
 
 exports.getAllProducts = async (req, res) => {
@@ -121,18 +122,23 @@ exports.getProductBySubCategoryID = async (req, res) => {
 };
 
 exports.getProductsByBrandId = async (req, res) => {
-  const { categoryId, brandId } = req.query;
+  const { brandType, categoryId, brandId, subCategoryId } = req.query;
   const filter = {};
-
-  if (categoryId) filter.category_id = categoryId;
   if (brandId) filter.brand = brandId;
+  if (brandType === "subCategory") {
+    if (subCategoryId) filter.sub_category_id = subCategoryId;
+  } else {
+    if (categoryId) filter.category_id = categoryId;
+  }
   try {
     const products = await Product.find(filter);
-
-    if (!products) {
-      return res.status(404).json({ message: "Brand not found" });
+    const brand = await Brand.findById(brandId);
+    if (!products || !brand) {
+      return res.status(404).json({ message: "No products or brands found" });
     }
-    res.status(200).json(products);
+    res
+      .status(200)
+      .json({ isSuccess: true, data: { brand: brand, products: products } });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -219,3 +225,152 @@ exports.searchProductsOfComponents = async (req, res) => {
     res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
+// async function getProd() {
+//   const res = await Product.find({
+//     sub_category_id: "6728734ca6595b31391c62ea",
+//   });
+//   const arr1 = res.map((prod) => {
+//     const { _id, name } = prod;
+//     return { _id, name };
+//   });
+//   console.log(arr1);
+// }
+
+// async function updateCompatible() {
+//   const res = await Product.findById("6739d83498863f5042e255e7");
+//   res.compatible_with.memory = [
+//     "67385a8f398460b90c243259",
+//     "67385a8f398460b90c24325b",
+//     "67385c7f398460b90c24327d",
+//     "67385c7f398460b90c24327a",
+//     "67385c7f398460b90c24327e",
+//     "673861ba398460b90c2432c8",
+//     "673861ba398460b90c2432ca",
+//     "673861ba398460b90c2432c7"
+//   ]
+
+//   res.save();
+//   console.log('success')
+// }
+// updateCompatible()
+// // getProd();
+function calculateComponentPriceRange(
+  totalBudget,
+  percentageMin,
+  percentageMax
+) {
+  const minPrice = (totalBudget * percentageMin) / 100;
+  const maxPrice = (totalBudget * percentageMax) / 100;
+  return { minPrice, maxPrice };
+}
+
+function calculatePcBuildRanges(totalBudget, configType) {
+  let config = {};
+
+  const configs = {
+    developer: {
+      CPU: [25, 35],
+      GPU: [0, 10],
+      RAM: [10, 20],
+      Mainboard: [5, 15],
+      Storage: [15, 20],
+      PSU: [0, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
+    graphicDesign: {
+      CPU: [15, 25],
+      GPU: [25, 40],
+      RAM: [10, 20],
+      Mainboard: [5, 15],
+      Storage: [0, 15],
+      PSU: [0, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
+    office: {
+      CPU: [25, 35],
+      GPU: [0, 10],
+      RAM: [5, 15],
+      Mainboard: [5, 15],
+      Storage: [5, 20],
+      PSU: [0, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
+    gaming: {
+      CPU: [15, 25],
+      GPU: [20, 35],
+      RAM: [5, 20],
+      Mainboard: [0, 15],
+      Storage: [5, 15],
+      PSU: [0, 10],
+      Case: [0, 5],
+      Cooling: [0, 5],
+    },
+  };
+
+  const selectedConfig = configs[configType];
+
+  for (let component in selectedConfig) {
+    const [percentageMin, percentageMax] = selectedConfig[component];
+    config[component] = calculateComponentPriceRange(
+      totalBudget,
+      percentageMin,
+      percentageMax
+    );
+  }
+  return config;
+}
+
+const totalBudget = 10000000;
+const configType = "gaming";
+
+const pcBuild = calculatePcBuildRanges(totalBudget, configType);
+
+// exports.buildPCAutomatic = async (req,res) =>{
+//   const totalBudget = 10000000;
+//   const configType = "gaming";
+
+// const pcBuild = calculatePcBuildRanges(totalBudget, configType);
+// const CPU = await Product.find
+// }
+// async function build() {
+//   const totalBudget = 20000000;
+//   const configType = "gaming";
+
+//   const pcBuild = calculatePcBuildRanges(totalBudget, configType);
+//   console.log("?", pcBuild);
+//   const option = []
+//   const CPU = await Product.aggregate([
+//     {
+//       $match: {
+//         price: { $lte: pcBuild.CPU.maxPrice, $gte: pcBuild.CPU.minPrice },
+//         sub_category_id: "6728734ca6595b31391c62e9",
+//       },
+//     },
+//   ]);
+//   const motherboardIds = CPU.flatMap(cpu => cpu.compatible_with.motherboard);
+//   const mainboards = await Product.aggregate([
+//     {
+//       $match: {
+//         _id: { $in: motherboardIds },
+//         sub_category_id: '6728734ca6595b31391c62ea', 
+//         price: { $lte: pcBuild.Mainboard.maxPrice, $gte: pcBuild.Mainboard.minPrice },
+
+//       },
+//     },
+//   ]);
+//   const graphics  = await Product.aggregate([
+//     {
+//       $match: {
+//         _id: { $in: mainboards[0].compatible_with.graphics },
+//         sub_category_id: '6728734ca6595b31391c62eb', 
+//         price: { $lte: pcBuild.GPU.maxPrice, $gte: pcBuild.GPU.minPrice },
+
+//       },
+//     },
+//   ]);
+//   console.log(graphics);
+// }
+// build()

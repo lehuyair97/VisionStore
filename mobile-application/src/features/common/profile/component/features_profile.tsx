@@ -16,7 +16,11 @@ const FeaturesProfile = () => {
       title: "Xem gần đây",
       onPress: () => navigate(ROUTES.RecentProducts),
     },
-    { icon: "star", title: "Đánh giá", onPress: () => {} },
+    {
+      icon: "star",
+      title: "Đánh giá",
+      onPress: () => navigate(ROUTES.UserReviewProduct),
+    },
   ];
   const profiles = [
     {

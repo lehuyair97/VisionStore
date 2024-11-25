@@ -27,6 +27,33 @@ exports.getCommentsByProductID = async (req, res) => {
   }
 };
 
+async function getCommentsDataByUser(userID) {
+  const comments = await Comment.find({ userID }).populate(
+    "productID",
+    "name price image"
+  );
+
+  const count = comments.length;
+  const totalRating = comments.reduce(
+    (sum, comment) => sum + comment.rating,
+    0
+  );
+  const averageRating = count > 0 ? totalRating / count : 0;
+
+  return { comments, count, averageRating };
+}
+
+exports.getCommentsByUserID = async (req, res) => {
+  const { userID } = req.params;
+  try {
+    const commentsData = await getCommentsDataByUser(userID);
+    res.status(200).json(commentsData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 exports.addComment = async (req, res) => {
   const { productID, userID, text, rating } = req.body;
   try {
