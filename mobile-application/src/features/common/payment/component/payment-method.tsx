@@ -2,7 +2,8 @@ import { Block, Icon, Row, Text } from "@components";
 import BottomSheet from "@features/common/components/bottom-sheet";
 import PaymentItem from "@features/common/components/payment-item";
 import { Helper } from "@utils/helper";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 
 interface PaymentItemProps {
@@ -18,10 +19,10 @@ export default function PaymentMethod({
   setPaymentMethod,
   paymentMethods,
 }: PaymentItemProps) {
-  const [selectedMethod, setSelectedMethod] = useState<any>(null);
+  const [selectedMethod, setSelectedMethod] = useState<any>(paymentMethods[0]);
 
   const handleSelectMethod = (method: any) => {
-    setSelectedMethod(method); 
+    setSelectedMethod(method);
     setPaymentMethod(method);
   };
 
@@ -39,12 +40,13 @@ export default function PaymentMethod({
             data={paymentMethods}
             keyExtractor={Helper.getKeyExtractor}
             scrollEnabled={true}
-            renderItem={({ item }: any) => (
+            renderItem={({ item, index }: any) => (
               <PaymentItem
+                image={item?.image}
                 icon={item?.icon}
                 methodName={item?.method}
                 onPress={() => handleSelectMethod(item)}
-                isSelected={selectedMethod?.method === item.method} 
+                isSelected={selectedMethod?.method === item.method}
               />
             )}
           />

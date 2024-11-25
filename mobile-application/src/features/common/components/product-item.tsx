@@ -1,51 +1,107 @@
 import { localImages } from "@assets/icons/images";
-import { Block, Text, Row, Button } from "@components";
+import { Block, Text, Row, Button, Icon } from "@components";
+import { navigate } from "@navigation/config/navigation-service";
+import { ROUTES } from "@navigation/config/routes";
 import { Image } from "react-native";
-import { StyleSheet
-   } from "react-native";
+import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const ProductItem = ({ item }: { item: any }) => {
+const ProductItem = ({
+  item,
+  isRecent,
+  isComment,
+  onItemPress,
+}: {
+  item: any;
+  isRecent?: boolean;
+  isComment?: boolean;
+  onItemPress?: (item: any) => void;
+}) => {
+  const product = isRecent ? item?.item : item;
+
   return (
-    <Block paddingVertical={"_10"} m={"_10"} style={styles.productContainer}>
-      <Text color={"black"} fontWeight={"bold"} fontSize={16}>
-        {item.subcategory_name}
+    <Block
+      paddingVertical={"m"}
+      m={"_10"}
+      style={[styles.productContainer, {}]}
+    >
+      <Text color={"black"} fontWeight={"bold"} fontSize={14}>
+        {product?.name}
       </Text>
       <Row center between>
-        <Image source={{ uri: item?.image }} style={styles.productImage} />
-        <Block flex={1} mx={"_10"} gap={'s'}>
-          <Text numberOfLines={2} color={"black"} fontWeight={"600"}>
-            {item.name}
-          </Text>
-          <Text color={"black"} fontWeight={"600"}>
-            {item.price}{" "}
-            <Text color={"gray136"} textDecorationLine={"line-through"}>
-              {item?.original_price}
-            </Text>
-          </Text>
-          <Row center gap={"_10"}>
-            <TouchableOpacity>
-              <Image
-                source={localImages().ic_minus}
-                style={styles.actionImage}
-              />
-            </TouchableOpacity>
-            <Text color={"black"} fontWeight={"600"}>
-              {item?.quantity}
-            </Text>
-            <TouchableOpacity>
-              <Image
-                source={localImages().ic_plus}
-                style={styles.actionImage}
-              />
-            </TouchableOpacity>
-          </Row>
-        </Block>
-        <Button
-          label="Chọn"
-          buttonStyle={{ paddingVertical: 5, borderRadius: 20 }}
-          textStyle={{ color: "white" }}
+        <Image
+          source={
+            product?.image && {
+              uri: product?.product?.image
+                ? product?.product?.image
+                : product?.image,
+            }
+          }
+          style={styles.productImage}
         />
+        <Block flex={1} mx={"_10"} gap={"s"}>
+          {product?.product?.price ?? product?.price ? (
+            <Block>
+              <Text numberOfLines={2} color={"black"} fontWeight={"600"}>
+                {product?.product?.name ?? product?.name}
+              </Text>
+              <Text color={"black"} fontWeight={"600"}>
+                {product?.product?.price?.toLocaleString() ??
+                  product?.price?.toLocaleString()}{" "}
+                <Text color={"gray136"} textDecorationLine={"line-through"}>
+                  {product?.original_price}
+                </Text>
+              </Text>
+            </Block>
+          ) : (
+            <Text ml={"_20"} color={"black"}>
+              Vui lòng chọn linh kiện
+            </Text>
+          )}
+          {(!isRecent && !isComment) && product?.price && (
+            <Row center gap={"_10"}>
+              <TouchableOpacity>
+                <Image
+                  source={localImages().ic_minus}
+                  style={styles.actionImage}
+                />
+              </TouchableOpacity>
+              <Text color={"black"} fontWeight={"600"}>
+                {1}
+              </Text>
+              <TouchableOpacity>
+                <Image
+                  source={localImages().ic_plus}
+                  style={styles.actionImage}
+                />
+              </TouchableOpacity>
+            </Row>
+          )}
+        </Block>
+        {isRecent || isComment ? (
+          <TouchableOpacity
+            onPress={() =>
+              navigate(ROUTES.DetailProduct, { productId: product?._id })
+            }
+          >
+            <Row center gap={"_10"}>
+              <Text color={"primary"}>Chi Tiết</Text>
+              <Icon
+                type={"antDesign"}
+                name="arrowright"
+                size={18}
+                color={"#DF5454"}
+              />
+            </Row>
+          </TouchableOpacity>
+        ) : (
+          <Button
+            onPress={() => onItemPress(item)}
+            label="Chọn"
+            buttonStyle={{ paddingVertical: 5, borderRadius: 20 }}
+            textStyle={{ color: "white" }}
+          />
+        )}
       </Row>
     </Block>
   );
@@ -53,7 +109,7 @@ const ProductItem = ({ item }: { item: any }) => {
 
 const styles = StyleSheet.create({
   productContainer: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
     padding: 10,
@@ -68,9 +124,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   productImage: {
-    width: 70,
-    height: 70,
-    resizeMode: "contain",
+    width: 60,
+    height: 60,
+    resizeMode: "cover",
+    margin: 5,
   },
   actionImage: {
     width: 18,

@@ -2,7 +2,7 @@ import { Block, Icon, Row, Text } from "@components";
 import React, { useState } from "react";
 import useGetActiveVoucher from "@hooks/common/use-get-voucher-active";
 import BottomSheet from "@features/common/components/bottom-sheet";
-import SearchView from "@features/common/build-pc/components/search-view";
+import SearchView from "@features/common/build-pc/components/search-app-bar";
 import { ActivityIndicator, FlatList } from "react-native";
 import { Helper } from "@utils/helper";
 import Voucher from "@features/common/components/voucher-item";

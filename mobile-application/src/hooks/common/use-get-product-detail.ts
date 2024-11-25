@@ -26,6 +26,7 @@ export interface ProductDetail {
     stock: number;
     warrantyPeriod: string;
     description: string;
+    quantity: number,
     brand: string;
     products_child: any[]; // Có thể định nghĩa chi tiết hơn nếu cần
     __v: number;

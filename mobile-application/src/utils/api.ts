@@ -16,13 +16,16 @@ export const REQUEST_URL = {
   SIGN_IN_WITH_GOOGLE: "/sign-in-google",
   CREATE_USER: "/users",
   CATEGORY: "/category",
-
+  CREATE_PAYMENT_ORDER: "/create_payment_url",
+  RETURN_PAYMENT_ORDER: "/vnpay_return",
+  CANCLE_PAYMENT_ORDER: "/vnpay_ipn",
   GET_BRANDS: "/brands",
+  GET_BANNER: "/banner",
   GET_CART: "/cart",
   CHANGE_QUANTITY_CART: "/cart/quantity",
   GET_CART_BY_USERID: (customerId: string) => `cart/users/${customerId}`,
   SEARCH: "/products/search",
-
+  SEARCH_PRODUCT_OF_COMPONENT: (id) => `/products/components/search/${id}`,
   CREATE_USER_WITH_IMAGE: "/users/upload",
   GET_ALL_USERS: "/users",
 
@@ -30,7 +33,10 @@ export const REQUEST_URL = {
   CHANGE_PASSWORD: (id) => `/change_pw/${id}`,
   UPDATE_FAVORITE: (id) => `/favorites/${id}`,
   UPDATE_INFO: (id) => `/updateInfo/${id}`,
+  UPDATE_AVATAR: (id) => `/users/update-avatar/${id}`,
+  UPDATE_ADDRESS: (id) => `/users/update-address/${id}`,
   DELETE_USER: (id) => `/users/${id}`,
+  DELETE_ADDRESS: (id) => `/users/remove-address/${id}`,
   GET_ALL_CATEGORIES: "/category",
   GET_CATEGORY_BY_ID: (id) => `/category/${id}`,
   CREATE_CATEGORY: "/category",
@@ -46,8 +52,13 @@ export const REQUEST_URL = {
   DELETE_SUBCATEGORY: (id) => `/subcategory/${id}`,
   GET_ALL_PRODUCTS: "/products",
   GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
-  GET_PRODUCT_BY_BRAND_ID: ({ categoryID, brandID }) =>
-    `/products-brands?categoryId=${categoryID}&brandId=${brandID}`,
+  GET_PRODUCT_BY_BRAND_ID: ({
+    categoryID,
+    brandID,
+    brandType,
+    subCategoryId,
+  }) =>
+    `/products-brands?brandType=${brandType}&categoryId=${categoryID}&subCategoryId=${subCategoryId}&brandId=${brandID}`,
   GET_PRODUCT_GROUPED: (categoryId: string) =>
     `/productsgrouped?categoryId=${categoryId}`,
   GET_PRODUCT_GROUPED_BY_CHILD_SUBCATEGORY: (subCategory_child_ID: String) =>
@@ -64,23 +75,30 @@ export const REQUEST_URL = {
   GET_ALL_ORDERS: "/orders",
   GET_ORDER_BY_ID: (id) => `/orders/${id}`,
   CREATE_ORDER: "/orders",
+  GET_ORDERS_BY_USER_ID: ({ id, status }) =>
+    `/orders/users/${id}?status=${status}`,
   UPDATE_ORDER_STATUS: (id) => `/orders/status/${id}`,
   GET_ORDERS_BY_STATUS: "/orders/status",
   DELETE_ORDER: (id) => `/orders/${id}`,
   GET_ACTIVE_VOUCHERS: "/active-voucher",
   GET_VOUCHERS: "/voucher",
   USE_VOUCHER: (code, userID) => `/use-voucher?code=${code}&userID=${userID}`,
-  ADD_COMMENT: (productID) => `/comment?productID=${productID}`,
+  ADD_COMMENT: `/comment`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
+  GET_COMMENT_BY_USER_ID: (userID) => `/comment-by-user/${userID}`,
   CREATE_NOTIFICATION: () => `/notifications`,
-  GET_ALL_NOTIFICATIONS: (limit = 20, page = 1) => `/notifications?limit=${limit}&page=${page}`,
-  GET_NOTIFICATIONS_BY_USER_ID: (userId, limit = 20, page = 1) => `/notifications/user/${userId}?limit=${limit}&page=${page}`,
+  GET_ALL_NOTIFICATIONS: (limit = 20, page = 1) =>
+    `/notifications?limit=${limit}&page=${page}`,
+  GET_NOTIFICATIONS_BY_USER_ID: (userId, limit = 20, page = 1) =>
+    `/notifications/user/${userId}?limit=${limit}&page=${page}`,
   MARK_AS_READ: (id) => `/notifications/${id}/read`,
+  MARK_AS_COMMENTED: (id) => `/orders/${id}/commented`,
   DELETE_NOTIFICATION_BY_ID: (id) => `/notifications/${id}`,
+  RECENT_PRODUCTS: (id) => `/users/recentproducts/${id}`,
 };
 
-const BASE_URL = "http://192.168.210.213:3000/api";
-// process.env.EXPO_PUBLIC_API_URL ?? 
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL ?? "http:/192.168.1.97:3000/api";
 export type AxiosParams = {
   url: string;
   method: Method;

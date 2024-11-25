@@ -18,7 +18,9 @@ const useChangePassword = (customerId: string) => {
       }
     },
     onSuccess: (data) => {
-      toast.success(`Đổi mật khẩu thành công!`);
+      if (data?.isSuccess) {
+        toast.success(`Đổi mật khẩu thành công!`);
+      }
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);

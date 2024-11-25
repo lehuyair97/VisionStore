@@ -7,9 +7,9 @@ import useCommon from "@hooks/common/use-common";
 import { navigate } from "@navigation/config/navigation-service";
 import { ROUTES } from "@navigation/config/routes";
 interface HeaderProfileProps {
-  avatar: string;
-  displayName: string;
-  email: string;
+  avatar?: string;
+  displayName?: string;
+  email?: string;
   onPressSetting: () => void;
 }
 

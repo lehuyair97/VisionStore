@@ -1,4 +1,4 @@
-import { Button, Input, MainContainer } from "@components";
+import { Button, Icon, Input, MainContainer } from "@components";
 import Block from "@components/block";
 import {
   Image,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   Keyboard,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import AppBar from "./components/appbar";
 import { localImages } from "@assets/icons/images";
@@ -16,16 +17,49 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { validateEditProfile } from "@utils/validate";
 import { useAuth } from "@hooks/auth";
 import useEditProfile from "@hooks/common/use-edit-profile";
+import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
+import { useState } from "react";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import useUpdateAvatar from "@hooks/common/use-update-avatar";
 export default function EditProfile() {
   const { userInfo } = useAuth();
   const { editProfile, isPending } = useEditProfile(userInfo?._id);
+  const { updateAvatar } = useUpdateAvatar(userInfo?._id);
   const hasAvatar = userInfo?.avatar && userInfo?.avatar;
-  
+  const [imageUrl, setImageUrl] = useState<string>();
+  const [imageFile, setImageFile] = useState<File>();
   interface EditProfile {
     display_name: string;
     email: string;
     phone_number: string;
   }
+
+  const handleSelectImage = async () => {
+    try {
+      const result = (await launchImageLibraryAsync({
+        mediaTypes: MediaTypeOptions.Images,
+        allowsEditing: false,
+        quality: 1,
+      })) as any;
+      if (result.cancelled) {
+        return;
+      }
+      if (result.assets && result.assets.length > 0) {
+        const uri = result?.assets[0]?.uri;
+        const file = result?.assets[0];
+        setImageUrl(uri);
+        setImageFile(file);
+        const updateSuccess = await updateAvatar(file);
+        if (!updateSuccess) {
+        }
+      } else {
+        Alert.alert("Không thể chọn ảnh. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Error selecting image:", error);
+      Alert.alert("Đã xảy ra lỗi khi chọn ảnh. Vui lòng thử lại.");
+    }
+  };
 
   const {
     control,
@@ -37,7 +71,7 @@ export default function EditProfile() {
     defaultValues: {
       email: userInfo?.email,
       display_name: userInfo?.display_name,
-      phone_number:'0'+ userInfo?.phoneNumber.toString(),
+      phone_number: "0" + userInfo?.phoneNumber.toString(),
     },
   });
 
@@ -46,8 +80,7 @@ export default function EditProfile() {
       display_name: data.display_name,
       phoneNumber: data.phone_number,
     }).then((data) => {
-      if(data?.isSuccess){
-        
+      if (data?.isSuccess) {
       }
     });
   };
@@ -64,19 +97,37 @@ export default function EditProfile() {
               <AppBar title="Chỉnh sửa trang cá nhân" />
             </Block>
             <Block mx={"l"}>
-              <Image
-                style={{
-                  marginTop: -80,
-                  resizeMode: "contain",
-                  width: 160,
-                  height: 160,
-                  alignSelf: "center",
-                  borderRadius: 160,
-                }}
-                source={
-                  hasAvatar ? { uri: hasAvatar } : localImages().default_avatar
-                }
-              />
+              <TouchableOpacity onPress={handleSelectImage}>
+                <Image
+                  style={{
+                    marginTop: -80,
+                    resizeMode: "stretch",
+                    width: 160,
+                    height: 160,
+                    alignSelf: "center",
+                    borderRadius: 160,
+                    borderWidth: 1,
+                    borderColor: "gray",
+                  }}
+                  source={
+                    imageUrl
+                      ? { uri: imageUrl }
+                      : hasAvatar
+                      ? { uri: hasAvatar }
+                      : localImages().default_avatar
+                  }
+                />
+                <Block
+                  position={"absolute"}
+                  bottom={0}
+                  right={110}
+                  zIndex={"full"}
+                  backgroundColor={"white255"}
+                  borderRadius={"_28"}
+                >
+                  <Icon type="feather" name="edit" size={28} color={"black"} />
+                </Block>
+              </TouchableOpacity>
               <Input
                 containerStyle={{ marginVertical: 20 }}
                 name="display_name"

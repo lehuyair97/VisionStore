@@ -5,7 +5,7 @@ import { EDGES } from "@utils/helper";
 import { ScrollView, StyleSheet } from "react-native";
 import FeaturesProfile from "../component/features_profile";
 import HeaderProfile from "../component/header_profile";
-import OrderManagement from "../component/order_management";
+import OrderManagement from "../component/order_management_bar";
 import Trademark from "../component/trademark";
 import { useAuth } from "@hooks/auth";
 import useGetBrand from "@hooks/common/use-get-brand";
@@ -25,7 +25,7 @@ export default function Profile() {
     }
     refRBSheet.current.close();
   };
-
+  console.log(userInfo?.avatar)
   return (
     <MainContainer
       edges={EDGES.LEFT_RIGHT}
@@ -40,9 +40,6 @@ export default function Profile() {
         />
         <Block mt={"_12"} />
         <OrderManagement data={shipingStatus} />
-        <Block mt={"_12"} />
-        <Trademark data={brands} />
-        <Block mt={"_12"} />
         <FeaturesProfile />
       </ScrollView>
       <ProfileActions

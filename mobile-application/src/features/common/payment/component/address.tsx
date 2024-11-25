@@ -3,7 +3,10 @@ import Block from "@components/block";
 import Text from "@components/text";
 import { User } from "@hooks/auth/use-sign-in";
 import { Cart } from "@hooks/common/use-get-cart";
+import { navigate } from "@navigation/config/navigation-service";
+import { ROUTES } from "@navigation/config/routes";
 import Colors from "@theme/colors";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface AddressProps {
   address: Cart;
@@ -38,12 +41,14 @@ const UserInfo = ({ userInfo }: { userInfo: User }) => {
             </Block>
           </Block>
         </Row>
-        <Icon
-          type="fontAwesome"
-          name="arrow-right"
-          size={24}
-          color={Colors.primary}
-        />
+        <TouchableOpacity onPress={() => navigate(ROUTES.DeliveryManagerment)}>
+          <Icon
+            type="fontAwesome"
+            name="arrow-right"
+            size={24}
+            color={Colors.primary}
+          />
+        </TouchableOpacity>
       </Row>
     </Block>
   );

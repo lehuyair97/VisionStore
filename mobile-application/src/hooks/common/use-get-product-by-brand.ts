@@ -4,6 +4,8 @@ import api, { REQUEST_URL } from "@utils/api";
 export type getProductByBrandType = {
   categoryID: string;
   brandID: string;
+  brandType: string;
+  subCategoryId: string;
 };
 
 export interface ProductResponse {
@@ -44,7 +46,7 @@ const useGetProductByBrandID = (variables: getProductByBrandType) => {
       return (await api({
         url: REQUEST_URL.GET_PRODUCT_BY_BRAND_ID(variables),
         method: "GET",
-      })) as ProductResponse[];
+      }))
     },
   });
 };

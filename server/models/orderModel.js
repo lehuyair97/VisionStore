@@ -19,7 +19,7 @@ const orderModel = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  option:{},
+  option: {},
   items: [
     {
       productId: {
@@ -40,18 +40,16 @@ const orderModel = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: [
-      "pending",
-      "processing",
-      "shipping",
-      "delivered",
-      "canceled",
-    ],
+    enum: ["pending", "shipping", "delivered", "canceled"],
     default: "pending",
   },
   voucher: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Voucher",
+  },
+  hasCommented: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -3,7 +3,6 @@ import { Block, Button, Input, MainContainer, Row, Text } from "@components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth, useSignIn } from "@hooks/auth";
 import useSignInGoogle from "@hooks/auth/use-signin-google";
-import usePushNotification from "@hooks/root/use-push-notification";
 import { ROUTES } from "@navigation/config/routes";
 import { signInForm } from "@navigation/config/types";
 import messaging from "@react-native-firebase/messaging";
@@ -19,7 +18,6 @@ function Signin({ navigation }) {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
   const { submit: signInByGoogle } = useSignInGoogle();
-  const { submit: submitPushNotification } = usePushNotification();
   const {
     control,
     getValues,
@@ -51,15 +49,6 @@ function Signin({ navigation }) {
       });
     }
   };
-
-  // const handleSendNotification = async () => {
-  //   const token = await messaging().getToken();
-  //   await submitPushNotification({
-  //     title: "Just One",
-  //     body: "Working now",
-  //     token,
-  //   });
-  // };
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
@@ -94,38 +83,15 @@ function Signin({ navigation }) {
           onPress={() => handleSignIn("normal")}
           isLoadding={submitting}
         />
-        <Row center alignSelf="center" gap={"_20"} my={"_30"}>
-          <Button noneStyle>
-            <Image
-              style={{
-                width: 55,
-                height: 55,
-                resizeMode: "stretch",
-                borderRadius: 55,
-              }}
-              source={localImages().ic_google}
-            />
-          </Button>
-          <Button noneStyle>
-            <Image
-              style={{
-                width: 55,
-                height: 55,
-                borderRadius: 55,
-                resizeMode: "stretch",
-              }}
-              source={localImages().ic_facebook}
-            />
-          </Button>
-        </Row>
-        <Row justifyContent="center">
+
+        <Row justifyContent="center" marginVertical={'_20'}>
           <Text
             fontWeight="bold"
             textAlign="center"
             color="black"
             fontSize={14}
           >
-            Bạn đã có tài khoản?
+            Bạn chưa có tài khoản?
           </Text>
           <Button
             onPress={() => navigation.navigate(ROUTES.SignUp)}
@@ -135,6 +101,7 @@ function Signin({ navigation }) {
           />
         </Row>
         <GoogleSigninButton
+          style={{ width: "100%" }}
           size={GoogleSigninButton.Size.Standard}
           color={GoogleSigninButton.Color.Dark}
           onPress={() => handleSignIn("google")}

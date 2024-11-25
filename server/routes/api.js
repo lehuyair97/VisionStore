@@ -10,6 +10,7 @@ const productAPI = require("./APIContainer/Product");
 const cartAPI = require("./APIContainer/cart");
 const orderAPI = require("./APIContainer/Order");
 const brandAPI = require("./APIContainer/Brand");
+const bannerAPI = require("./APIContainer/Banner");
 const subCategoryAPI = require("./APIContainer/SubCategory");
 const authMiddleware = require("../middleware/authMiddleware");
 const FCMAPI = require("./APIContainer/firebase_noti");
@@ -17,7 +18,8 @@ const notificationAPI = require("./APIContainer/Notification");
 const voucherAPI = require("./APIContainer/Voucher");
 const commentAPI = require("./APIContainer/Comment");
 const messageAPI = require("./APIContainer/Message");
-
+const paypalAPI = require("./APIContainer/Paypal");
+const VnPay = require("./APIContainer/VnPay");
 // Sử dụng body-parser để phân tích dữ liệu từ form
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -35,7 +37,7 @@ const getStorage = (type) => {
 };
 
 // Đường dẫn để lấy ảnh Users
-router.get("/images/brands/:filename", (req, res) => {
+router.get("/uploads/users/:filename", (req, res) => {
   const filename = req.params.filename;
   const imagePath = path.join(__dirname, "../uploads/users", filename);
   fs.access(imagePath, fs.constants.F_OK, (err) => {
@@ -47,9 +49,21 @@ router.get("/images/brands/:filename", (req, res) => {
 });
 
 // Đường dẫn để lấy ảnh Brand
-router.get("/images/brands/:filename", (req, res) => {
+router.get("/uploads/brands/:filename", (req, res) => {
   const filename = req.params.filename;
   const imagePath = path.join(__dirname, "../uploads/brands", filename);
+
+  fs.access(imagePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).json({ message: "Image not found" });
+    }
+    res.sendFile(imagePath);
+  });
+});
+
+router.get("/uploads/reviews/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const imagePath = path.join(__dirname, "../uploads/reviews", filename);
 
   fs.access(imagePath, fs.constants.F_OK, (err) => {
     if (err) {
@@ -72,19 +86,35 @@ router.post(
 router.post("/users", userAPI.createUser);
 router.get("/users", userAPI.getAllUsers);
 router.get("/users/:id", userAPI.getUserById);
+router.post("/users/recentproducts/:id", userAPI.addRecentProducts);
+router.get("/users/recentproducts/:id", userAPI.getRecentProducts);
 router.post("/change_pw/:id", userAPI.changePassword);
 router.put("/favorites/:id", userAPI.updateFavorite);
+router.put("/users/replaceupdate/:id", userAPI.updateAndReplaceInfo);
 router.patch("/updateInfo/:id", userAPI.updateInfo);
 router.delete("/users/:id", userAPI.deleteUser);
 router.post("/login", userAPI.login);
 router.post("/sign-in-google", userAPI.signinWithGoogle);
-
+router.put("/users/update-address/:id", userAPI.updateAddress);
+router.put("/users/remove-address/:id", userAPI.deleteAddress);
+router.put(
+  "/users/update-avatar/:id",
+  multer({ storage: getStorage("users") }).single("avatar"),
+  userAPI.updateAvatar
+);
 // // Category routes
 router.get("/category", categoryAPI.getAllCategories);
 router.get("/category/:id", categoryAPI.getCategoryById);
 router.post("/category", categoryAPI.createCategory);
 router.put("/category/:id", categoryAPI.updateCategoryById);
 router.delete("/category/:id", categoryAPI.deleteCategoryById);
+
+// Banner routes
+router.get("/banner", bannerAPI.getAllBanners);
+router.get("/banner/:id", bannerAPI.getBannerById);
+router.post("/banner", bannerAPI.createBanner);
+router.put("/banner/:id", bannerAPI.updateBannerById);
+router.delete("/banner/:id", bannerAPI.deleteBannerById);
 
 // // SubCategory routes
 router.get("/subcategory", subCategoryAPI.getAllSubCategories);
@@ -118,6 +148,11 @@ router.post("/products", productAPI.createProduct);
 router.put("/products/:id", productAPI.updateProductById);
 router.delete("/products/:id", productAPI.deleteProductById);
 router.post("/products/search", productAPI.searchProducts);
+router.post(
+  "/products/components/search/:id",
+  productAPI.searchProductsOfComponents
+);
+
 router.get("/products/subcategory/:id", productAPI.getProductBySubCategoryID);
 
 // // carts
@@ -140,9 +175,11 @@ router.delete("/notifications/:id", notificationAPI.deleteNotificationById);
 router.get("/orders", orderAPI.getAllOrders);
 router.get("/orders/:id", orderAPI.getOrderById);
 router.post("/orders", orderAPI.createOrder);
-router.put("/orders/status:id", orderAPI.updateOrderStatus);
+router.put("/orders/status/:id", orderAPI.updateOrderStatus);
+router.put("/orders/:id/commented", orderAPI.markAsCommented);
 router.get("/orders/status", orderAPI.getOrdersByStatus);
 router.delete("/orders/:id", orderAPI.deleteOrder);
+router.get("/orders/users/:id", orderAPI.getOrdersByUserId);
 
 // // Brand routes
 router.get("/brands", brandAPI.getAllBrands);
@@ -168,9 +205,15 @@ router.get("/voucher", voucherAPI.getAllVouchers);
 router.post("/use-voucher", voucherAPI.useVoucher);
 
 // // comment routes
-router.post("/comment", commentAPI.addComment);
+router.post(
+  "/comment",
+  multer({ storage: getStorage("reviews") }).array("images", 3),
+  commentAPI.addComment
+);
+
 router.get("/comment/:id", commentAPI.getCommentById);
 router.get("/comment-by-product/:productID", commentAPI.getCommentsByProductID);
+router.get("/comment-by-user/:userID", commentAPI.getCommentsByUserID);
 
 // // message routes
 router.post("/message", messageAPI.sendMessage);
@@ -179,79 +222,47 @@ router.delete("/message/:id", messageAPI.deleteMessage);
 router.put("/message/:id", messageAPI.updateMessage);
 router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
 
-function calculateComponentPriceRange(
-  totalBudget,
-  percentageMin,
-  percentageMax
-) {
-  const minPrice = (totalBudget * percentageMin) / 100;
-  const maxPrice = (totalBudget * percentageMax) / 100;
-  return { minPrice, maxPrice };
-}
+// // paypal
+router.post("/paypal/create", paypalAPI.createPayment);
+router.post("/paypal/execute", paypalAPI.executePayment);
+router.get("/paypal/cancel", paypalAPI.cancelPayment);
 
-function calculatePcBuildRanges(totalBudget, configType) {
-  let config = {};
+// // vnpay
+router.get("/", (req, res) => {
+  res.render("orderlist", { title: "Danh sách đơn hàng" });
+});
 
-  const configs = {
-    developer: {
-      CPU: [30, 35],
-      GPU: [5, 10],
-      RAM: [15, 20],
-      Mainboard: [10, 15],
-      Storage: [15, 20],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-    graphicDesign: {
-      CPU: [20, 25],
-      GPU: [30, 35],
-      RAM: [15, 20],
-      Mainboard: [10, 15],
-      Storage: [10, 15],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-    office: {
-      CPU: [25, 30],
-      GPU: [5, 10],
-      RAM: [10, 15],
-      Mainboard: [10, 15],
-      Storage: [15, 20],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-    gaming: {
-      CPU: [20, 25],
-      GPU: [30, 35],
-      RAM: [10, 20],
-      Mainboard: [10, 15],
-      Storage: [10, 15],
-      PSU: [5, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
-    },
-  };
+router.get("/create_payment_url", (req, res) => {
+  res.render("order", { title: "Tạo mới đơn hàng", amount: 10000 });
+});
 
-  const selectedConfig = configs[configType];
+router.get("/vnpay_return", (req, res) => {
+  res.render("vnpay_return", {
+    title: "Thông tin return",
+    vnp_ResponseCode: req.query.vnp_ResponseCode,
+    vnp_TransactionStatus: req.query.vnp_TransactionStatus,
+    vnp_Message: req.query.vnp_Message,
+    vnp_Amount: req.query.vnp_Amount,
+    vnp_OrderInfo: req.query.vnp_OrderInfo,
+    vnp_PayDate: req.query.vnp_PayDate,
+  });
+});
 
-  for (let component in selectedConfig) {
-    const [percentageMin, percentageMax] = selectedConfig[component];
-    config[component] = calculateComponentPriceRange(
-      totalBudget,
-      percentageMin,
-      percentageMax
-    );
-  }
+router.get("/querydr", (req, res) => {
+  res.render("querydr", { title: "Truy vấn kết quả thanh toán" });
+});
 
-  return config;
-}
+router.get("/refund", (req, res) => {
+  res.render("refund", { title: "Hoàn tiền giao dịch thanh toán" });
+});
+router.get("/success", (req, res) => {
+  res.render("success", { title: "Thanh Toán thành công" });
+});
 
-const totalBudget = 10000000;
-const configType = "gaming";
-
-const pcBuild = calculatePcBuildRanges(totalBudget, configType);
+router.post("/create_payment_url", VnPay.createPaymentUrl);
+router.get("/vnpay_return", VnPay.vnpayReturn);
+router.get("/vnpay_ipn", VnPay.vnpayIpn);
+router.post("/querydr", VnPay.querydr);
+router.post("/refund", VnPay.refund);
 
 module.exports = router;

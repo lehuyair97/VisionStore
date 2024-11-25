@@ -69,7 +69,7 @@ const CartItem = ({ item, isSelected, onSelect }: CartItemProps) => {
             color="black2A"
             style={styles.price}
           >
-            {item?.price} đ
+            {item?.price?.toLocaleString()} đ
           </Text>
           <CustomControllerNums
             fontSize={14}

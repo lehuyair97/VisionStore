@@ -23,12 +23,9 @@ const useSearch = () => {
       }
     },
     onSuccess: (data) => {
-      toast.success("Products found successfully!");
-      console.log("Found products:", data);
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
-      console.error('Mutation error:', error);
     },
     networkMode: "always",
   });

@@ -5,18 +5,34 @@ import { EDGES } from "@utils/helper";
 import Block from "@components/block";
 import EachFeature from "./each_feature";
 import { useAuth } from "@hooks/auth";
-
-
+import { ROUTES } from "@navigation/config/routes";
+import { navigate } from "@navigation/config/navigation-service";
 
 const FeaturesProfile = () => {
   const { logout } = useAuth();
   const featuresData = [
-    { icon: "clock-o", title: "Xem gần đây", onPress: () => {} },
-    { icon: "star", title: "Đánh giá", onPress: () => {} },
+    {
+      icon: "clock-o",
+      title: "Xem gần đây",
+      onPress: () => navigate(ROUTES.RecentProducts),
+    },
+    {
+      icon: "star",
+      title: "Đánh giá",
+      onPress: () => navigate(ROUTES.UserReviewProduct),
+    },
   ];
   const profiles = [
-    { icon: "location-arrow", title: "Địa chỉ giao hàng", onPress: () => {} },
-    { icon: "credit-card", title: "Quản lý Thanh Toán", onPress: () => {} },
+    {
+      icon: "location-arrow",
+      title: "Địa chỉ giao hàng",
+      onPress: () => navigate(ROUTES.DeliveryManagerment),
+    },
+    {
+      icon: "credit-card",
+      title: "Quản lý Thanh Toán",
+      onPress: () => navigate(ROUTES.PaymentManagerment),
+    },
     {
       icon: "sign-out",
       title: "Đăng xuất",

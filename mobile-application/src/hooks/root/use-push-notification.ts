@@ -121,7 +121,6 @@ const usePushNotification = () => {
     isPending,
   } = useMutation({
     mutationFn: async (variables: Variables) => {
-      console.log("value ", variables);
       return api({
         url: REQUEST_URL.PUSH_NOTIFICATION,
         method: "POST",

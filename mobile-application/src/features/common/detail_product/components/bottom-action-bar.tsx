@@ -8,7 +8,10 @@ interface ActionBottomBarProps {
   onBuyNow: () => void;
 }
 
-const ActionBottomBar: React.FC<ActionBottomBarProps> = ({ onAddToCart, onBuyNow }) => {
+const ActionBottomBar: React.FC<ActionBottomBarProps> = ({
+  onAddToCart,
+  onBuyNow,
+}) => {
   return (
     <Row
       center
@@ -19,10 +22,6 @@ const ActionBottomBar: React.FC<ActionBottomBarProps> = ({ onAddToCart, onBuyNow
       width={SCREEN_WIDTH}
       backgroundColor={"container"}
     >
-      <TouchableOpacity style={{ alignItems: "center", width: 100 }}>
-        <Icon type="antDesign" name="hearto" size={34} color={"red"} />
-      </TouchableOpacity>
-
       <Button
         noneStyle
         buttonStyle={{

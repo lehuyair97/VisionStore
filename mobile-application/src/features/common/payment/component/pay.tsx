@@ -26,7 +26,7 @@ const Pay = ({
           </Text>
           <Block m={"_3"} />
           <Text fontSize={14} color={"primary"} fontWeight={"normal"}>
-            {finalTotal} VNĐ
+            {finalTotal.toLocaleString()} VNĐ
           </Text>
         </Block>
         <Button

@@ -1,16 +1,22 @@
+import { Block, Row, Text } from "@components";
 import React from "react";
-import { View, FlatList, StyleSheet } from "react-native";
-import { Row, Text, Block } from "@components";
-import Colors from "@theme/colors";
-import { Helper } from "@utils/helper";
-import ProductItem from "./product-item";
+import { FlatList, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import ProductItem from "./product-item";
 
 interface ProductBrandProps {
   data: any;
   brandSelected?: string;
   handleNavigateToDetailProduct: (id: string) => void;
-  handleNavigateToDetailBrand: (id: string, brandName: string) => void;
+  handleNavigateToDetailBrand: ({
+    id,
+    brandName,
+    brandType,
+  }: {
+    id: string;
+    brandName: string;
+    brandType: "subCategory" | "subCategory";
+  }) => void;
 }
 
 const ProductBrand: React.FC<ProductBrandProps> = ({
@@ -21,9 +27,9 @@ const ProductBrand: React.FC<ProductBrandProps> = ({
 }) => {
   const allBrands = brandSelected === "";
   const filteredData = allBrands
-    ? data
-    : data?.filter((brand) => brand?._id === brandSelected);
-
+    ? data?.data
+    : data?.data?.filter((brand) => brand?._id === brandSelected);
+  console.log(data?.type);
   const renderProductGroup = ({ item }) => (
     <Block my={"_20"}>
       <Row between style={{ paddingHorizontal: 4 }}>
@@ -31,7 +37,14 @@ const ProductBrand: React.FC<ProductBrandProps> = ({
           {item.brand}
         </Text>
         <TouchableOpacity
-          onPress={() => handleNavigateToDetailBrand(item._id, item.brand)}
+          onPress={() =>
+            handleNavigateToDetailBrand({
+              id: item._id,
+              brandName: item.brand,
+              brandType: data?.type,
+  
+            })
+          }
         >
           <Text color={"primary"}>xem thêm</Text>
         </TouchableOpacity>
@@ -44,8 +57,7 @@ const ProductBrand: React.FC<ProductBrandProps> = ({
           <ProductItem product={item} onPress={handleNavigateToDetailProduct} />
         )}
         keyExtractor={(item) => item._id}
-        ItemSeparatorComponent={() => <View style={{ width: 20 }} />} 
-
+        ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
       />
     </Block>
   );
@@ -55,8 +67,6 @@ const ProductBrand: React.FC<ProductBrandProps> = ({
       data={filteredData}
       renderItem={renderProductGroup}
       keyExtractor={(item) => item._id}
-      
-
     />
   );
 };

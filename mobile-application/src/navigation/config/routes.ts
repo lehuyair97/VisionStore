@@ -9,6 +9,18 @@ import OrderSuccessfully from "@features/common/order-sucessfully";
 import NotificationScreen from "@features/common/notification-screen";
 import EditProfile from "@features/common/edit-profile";
 import ChangePassword from "@features/common/change_password/page/change_password";
+import RecentProducts from "@features/common/profile/component/recent-products";
+import PaymentManagerment from "@features/common/profile/component/payment-managerment";
+import DeliveryManagerment from "@features/common/profile/component/delivery-managerment";
+import PaymentScreen from "@features/common/payment/component/vnpay-checkout";
+import OrderCancle from "@features/common/profile/component/order-managerment/order-cancle";
+import OrderDelivered from "@features/common/profile/component/order-managerment/order-delivered";
+import OrderShipping from "@features/common/profile/component/order-managerment/order-shipping";
+import OrderPending from "@features/common/profile/component/order-managerment/order-progress";
+import OrderManagerment from "@features/common/profile/component/order-managerment";
+import ProductReview from "@features/common/profile/component/product-review";
+import UserReviewProduct from "@features/common/profile/component/user-review-product";
+
 export const notLoggedInScreens = {
   Signin: Signin,
   SignUp: Signup,
@@ -24,6 +36,17 @@ export const loggedInScreens = {
   NotificationScreen: NotificationScreen,
   EditProfile: EditProfile,
   ChangePassword: ChangePassword,
+  RecentProducts: RecentProducts,
+  PaymentManagerment: PaymentManagerment,
+  DeliveryManagerment: DeliveryManagerment,
+  PaymentScreen: PaymentScreen,
+  OrderCancle: OrderCancle,
+  OrderPending: OrderPending,
+  OrderShipping: OrderShipping,
+  OrderDelivered: OrderDelivered,
+  OrderManagerment: OrderManagerment,
+  ProductReview: ProductReview,
+  UserReviewProduct: UserReviewProduct,
 };
 
 export const ROUTES = createEnum({
@@ -42,4 +65,14 @@ export const ROUTES = createEnum({
   NotificationScreen: "NotificationScreen",
   EditProfile: "EditProfile",
   ChangePassword: "ChangePassword",
+  RecentProducts: "RecentProducts",
+  PaymentManagerment: "PaymentManagerment",
+  DeliveryManagerment: "DeliveryManagerment",
+  OrderCancle: "OrderCancle",
+  OrderPending: "OrderPending",
+  OrderShipping: "OrderShipping",
+  OrderDelivered: "OrderDelivered",
+  OrderManagerment: "OrderManagerment",
+  ProductReview: "ProductReview",
+  UserReviewProduct: "UserReviewProduct",
 });

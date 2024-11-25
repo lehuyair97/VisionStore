@@ -1,3 +1,5 @@
+import { localImages } from "@assets/icons/images";
+import { ROUTES } from "@navigation/config/routes";
 import dayjs from "dayjs";
 
 export const comentsData = [
@@ -102,11 +104,15 @@ export const iconMap: { [key: string]: string } = {
 };
 
 export const shipingStatus = [
-  { id: "1", name: "Chờ thanh toán", icon: "credit-card" },
-  { id: "2", name: "Đang Xử lý", icon: "user" },
-  { id: "3", name: "Đang vận chuyển", icon: "truck" },
-  { id: "4", name: "Đã giao", icon: "clipboard" },
-  { id: "5", name: "Đổi trả", icon: "rotate-left" },
+  { id: "2", name: "Đang Xử lý", icon: "user", route: 'OrderPending' },
+  {
+    id: "3",
+    name: "Đang vận chuyển",
+    icon: "truck",
+    route: 'OrderShipping',
+  },
+  { id: "4", name: "Đã giao", icon: "clipboard", route: 'OrderDelivered' },
+  { id: "5", name: "Đã hủy", icon: "trash-o", route: 'OrderCancle' },
 ];
 
 export const deliveryMethods = [
@@ -124,19 +130,56 @@ export const deliveryMethods = [
   },
 ];
 export const paymentMethods = [
+  { id: "002", method: "Thanh Toán tại nhà", image: localImages().ic_home_red },
+  { id: "001", method: "VN-Pay", image: localImages().ic_vnpay },
+];
+export const paymentManagerment = [
+  { id: "001", method: "VN-Pay", image: localImages().ic_vnpay },
+
   {
-    method: "Thanh Toán tại nhà",
+    id: "002",
+    method: "Amazone",
     icon: {
       type: "antDesign",
-      name: "home",
+      name: "amazon",
     },
   },
+
   {
-    method: "Paypal",
+    id: "003",
+    method: "Apple Pay",
     icon: {
-      type: "materialIcons",
-      name: "paypal",
+      type: "fontAwesome5",
+      name: "apple-pay",
     },
+  },
+];
+
+export const deliveryMethodActions = [
+  {
+    method: "Đặt làm mặc định",
+    icon: {
+      type: "entypo",
+      name: "check",
+    },
+    action: "setDefault",
+  },
+  {
+    method: "Sửa",
+    icon: {
+      type: "antDesign",
+      name: "edit",
+    },
+    action: "edit",
+  },
+
+  {
+    method: "Xóa",
+    icon: {
+      type: "antDesign",
+      name: "delete",
+    },
+    action: "delete",
   },
 ];
 export const profileActions = [
