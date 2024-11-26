@@ -137,6 +137,7 @@ router.get(
 );
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
+router.post("/products/build",productAPI.buildPcAutomatic)
 router.get("/productsgrouped", productAPI.getAllProductsGroupedByBrand);
 router.get(
   "/productsgroupedbySubCategory",
@@ -217,10 +218,10 @@ router.get("/comment-by-user/:userID", commentAPI.getCommentsByUserID);
 
 // // message routes
 router.post("/message", messageAPI.sendMessage);
-router.get("/messages/:userId", messageAPI.getMessagesByUserId);
-router.delete("/message/:id", messageAPI.deleteMessage);
-router.put("/message/:id", messageAPI.updateMessage);
-router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
+// router.get("/messages/:userId", messageAPI.getMessagesByUserId);
+// router.delete("/message/:id", messageAPI.deleteMessage);
+// router.put("/message/:id", messageAPI.updateMessage);
+// router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
 
 // // paypal
 router.post("/paypal/create", paypalAPI.createPayment);

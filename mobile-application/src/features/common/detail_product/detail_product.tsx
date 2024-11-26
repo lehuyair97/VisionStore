@@ -70,15 +70,16 @@ const DetailProduct = () => {
 
   const handleAddCart = () => {
     const orderData: any = {
-      customerId: userInfo?._id,
       productId,
       quantity,
     };
-    addCart(orderData, {});
+    addCart({ customerId: userInfo?._id, products: [orderData] });
   };
+
   const handleBuyNow = () => {
-    const selectProduct = productDetail
-    selectProduct.quantity = 1
+    const selectProduct = productDetail as any;
+    selectProduct.quantity = 1;
+    selectProduct.productId = productDetail._id;
     navigate("Payment", {
       selectedProducts: [selectProduct],
       totalPrice: productDetail.price,

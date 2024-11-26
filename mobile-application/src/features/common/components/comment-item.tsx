@@ -40,7 +40,6 @@ const CommentItem: React.FC<Props> = ({
   isUserReview
 }) => {
   const styles = useStyle();
-  console.log(images);
   return (
     <Block borderBottomColor={"gray_200"} borderBottomWidth={1}>
       <Row alignItems={"center"} justifyContent={"space-between"}>

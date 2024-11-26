@@ -25,7 +25,6 @@ export default function Profile() {
     }
     refRBSheet.current.close();
   };
-  console.log(userInfo?.avatar)
   return (
     <MainContainer
       edges={EDGES.LEFT_RIGHT}

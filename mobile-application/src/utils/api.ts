@@ -52,6 +52,7 @@ export const REQUEST_URL = {
   DELETE_SUBCATEGORY: (id) => `/subcategory/${id}`,
   GET_ALL_PRODUCTS: "/products",
   GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
+  BUILD_AUTOMATIC: '/products/build',
   GET_PRODUCT_BY_BRAND_ID: ({
     categoryID,
     brandID,

@@ -57,7 +57,6 @@ export default function Home() {
   const { data: productsByCategory } = useGetProductGrouped(
     categorySelected?.id || ""
   );
-  console.log(subCategories)
   const { data: productsBySubCategoryChild } =
     useGetProductGroupedByChildSubCategory(subCategoryChildSelected?._id) 
 

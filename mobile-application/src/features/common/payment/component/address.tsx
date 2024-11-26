@@ -28,7 +28,7 @@ const UserInfo = ({ userInfo }: { userInfo: User }) => {
             <Text color={"black"}>Địa chỉ nhận hàng</Text>
             <Block width={"85%"}>
               <Text color={"black"}>
-                {userInfo?.userName ?? "----------"} |+
+                {userInfo?.userName ?? userInfo.email} | 0
                 {userInfo?.phoneNumber ?? "----------"}
               </Text>
             </Block>

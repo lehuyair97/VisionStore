@@ -52,13 +52,14 @@ exports.getNotificationsByUserId = async (req, res) => {
 exports.markAsRead = async (req, res) => {
   try {
     const { id } = req.params;
+    const {customerId} = req.body
     const notification = await Notification.findById(id);
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
     }
     notification.isRead = true;
     await notification.save();
-    const notifications = await Notification.find({}).sort({ createdAt: -1 });
+    const notifications = await Notification.find({customerId: customerId}).sort({ createdAt: -1 });
     handleEvent("notification", notifications);
 
     res.status(200).json(notification);

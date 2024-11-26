@@ -11,6 +11,7 @@ import {
   validateToken,
 } from "../utils/token";
 import { User } from "../hooks/auth/use-sign-in";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export type AuthenticationStatus =
   | "REFRESHING"
@@ -118,6 +119,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       await setUserInfoStorage(null);
       setUserInfo(null);
       setAuthenticationStatus("UNAUTHENTICATED");
+      await GoogleSignin.signOut();
     } catch (error) {
       console.error("Logout failed:", error);
     }

@@ -225,35 +225,7 @@ exports.searchProductsOfComponents = async (req, res) => {
     res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
-// async function getProd() {
-//   const res = await Product.find({
-//     sub_category_id: "6728734ca6595b31391c62ea",
-//   });
-//   const arr1 = res.map((prod) => {
-//     const { _id, name } = prod;
-//     return { _id, name };
-//   });
-//   console.log(arr1);
-// }
 
-// async function updateCompatible() {
-//   const res = await Product.findById("6739d83498863f5042e255e7");
-//   res.compatible_with.memory = [
-//     "67385a8f398460b90c243259",
-//     "67385a8f398460b90c24325b",
-//     "67385c7f398460b90c24327d",
-//     "67385c7f398460b90c24327a",
-//     "67385c7f398460b90c24327e",
-//     "673861ba398460b90c2432c8",
-//     "673861ba398460b90c2432ca",
-//     "673861ba398460b90c2432c7"
-//   ]
-
-//   res.save();
-//   console.log('success')
-// }
-// updateCompatible()
-// // getProd();
 function calculateComponentPriceRange(
   totalBudget,
   percentageMin,
@@ -269,41 +241,41 @@ function calculatePcBuildRanges(totalBudget, configType) {
 
   const configs = {
     developer: {
-      CPU: [25, 35],
-      GPU: [0, 10],
-      RAM: [10, 20],
-      Mainboard: [5, 15],
-      Storage: [15, 20],
-      PSU: [0, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
+      CPU: [10, 25],
+      GPU: [0, 15],
+      RAM: [5, 15],
+      Mainboard: [5, 20],
+      Storage: [5, 20],
+      PSU: [0, 15],
+      Case: [0, 10],
+      Cooling: [0, 10],
     },
     graphicDesign: {
-      CPU: [15, 25],
-      GPU: [25, 40],
-      RAM: [10, 20],
-      Mainboard: [5, 15],
+      CPU: [10, 20],
+      GPU: [10, 25],
+      RAM: [5, 17],
+      Mainboard: [5, 17],
       Storage: [0, 15],
-      PSU: [0, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
+      PSU: [0, 12],
+      Case: [0, 8],
+      Cooling: [0, 8],
     },
     office: {
-      CPU: [25, 35],
-      GPU: [0, 10],
-      RAM: [5, 15],
-      Mainboard: [5, 15],
-      Storage: [5, 20],
-      PSU: [0, 10],
-      Case: [0, 5],
-      Cooling: [0, 5],
+      CPU: [10, 25],
+      GPU: [0, 15],
+      RAM: [5, 20],
+      Mainboard: [5, 20],
+      Storage: [5, 25],
+      PSU: [0, 15],
+      Case: [0, 8],
+      Cooling: [0, 8],
     },
     gaming: {
-      CPU: [15, 25],
-      GPU: [20, 35],
-      RAM: [5, 20],
-      Mainboard: [0, 15],
-      Storage: [5, 15],
+      CPU: [10, 23],
+      GPU: [15, 23],
+      RAM: [5, 17],
+      Mainboard: [0, 20],
+      Storage: [5, 20],
       PSU: [0, 10],
       Case: [0, 5],
       Cooling: [0, 5],
@@ -328,49 +300,102 @@ const configType = "gaming";
 
 const pcBuild = calculatePcBuildRanges(totalBudget, configType);
 
-// exports.buildPCAutomatic = async (req,res) =>{
-//   const totalBudget = 10000000;
-//   const configType = "gaming";
+async function build(totalBudget, configType) {
+  const pcBuild = calculatePcBuildRanges(totalBudget, configType);
+  const components = [
+    {
+      key: "CPUs",
+      subCategoryId: "6728734ca6595b31391c62e9",
+      matchField: "CPU",
+    },
+    {
+      key: "Mainboards",
+      subCategoryId: "6728734ca6595b31391c62ea",
+      matchField: "Mainboard",
+    },
+    {
+      key: "GPUs",
+      subCategoryId: "6728734ca6595b31391c62eb",
+      matchField: "GPU",
+    },
+    {
+      key: "RAMs",
+      subCategoryId: "6728734ca6595b31391c62e8",
+      matchField: "RAM",
+    },
+    {
+      key: "Storages",
+      subCategoryId: "6728734ca6595b31391c62ee",
+      matchField: "Storage",
+    },
+    {
+      key: "PSUs",
+      subCategoryId: "6728734ca6595b31391c62ec",
+      matchField: "PSU",
+    },
+    {
+      key: "Cases",
+      subCategoryId: "6728734ca6595b31391c62ef",
+      matchField: "Case",
+    },
+    {
+      key: "Coolings",
+      subCategoryId: "6728734ca6595b31391c62ed",
+      matchField: "Cooling",
+    },
+  ];
 
-// const pcBuild = calculatePcBuildRanges(totalBudget, configType);
-// const CPU = await Product.find
-// }
-// async function build() {
-//   const totalBudget = 20000000;
-//   const configType = "gaming";
+  const options = {};
 
-//   const pcBuild = calculatePcBuildRanges(totalBudget, configType);
-//   console.log("?", pcBuild);
-//   const option = []
-//   const CPU = await Product.aggregate([
-//     {
-//       $match: {
-//         price: { $lte: pcBuild.CPU.maxPrice, $gte: pcBuild.CPU.minPrice },
-//         sub_category_id: "6728734ca6595b31391c62e9",
-//       },
-//     },
-//   ]);
-//   const motherboardIds = CPU.flatMap(cpu => cpu.compatible_with.motherboard);
-//   const mainboards = await Product.aggregate([
-//     {
-//       $match: {
-//         _id: { $in: motherboardIds },
-//         sub_category_id: '6728734ca6595b31391c62ea', 
-//         price: { $lte: pcBuild.Mainboard.maxPrice, $gte: pcBuild.Mainboard.minPrice },
+  try {
+    for (const component of components) {
+      const { key, subCategoryId, matchField } = component;
+      const range = pcBuild[matchField];
+      options[key] = await Product.aggregate([
+        {
+          $match: {
+            price: { $lte: range.maxPrice, $gte: range.minPrice },
+            sub_category_id: subCategoryId,
+          },
+        },
+      ]).sort({ price: -1 });
+    }
 
-//       },
-//     },
-//   ]);
-//   const graphics  = await Product.aggregate([
-//     {
-//       $match: {
-//         _id: { $in: mainboards[0].compatible_with.graphics },
-//         sub_category_id: '6728734ca6595b31391c62eb', 
-//         price: { $lte: pcBuild.GPU.maxPrice, $gte: pcBuild.GPU.minPrice },
+    const configurations = [];
+    for (let i = 0; i < 3; i++) {
+      const configuration = {};
+      for (const { key } of components) {
+        const items = options[key];
+        if (items.length > 0) {
+          configuration[key.slice(0, -1)] = items[i % items.length];
+        }
+      }
+      configurations.push(configuration);
+    }
 
-//       },
-//     },
-//   ]);
-//   console.log(graphics);
-// }
-// build()
+    return { option: options, suggest: configurations };
+  } catch (error) {
+    console.error("Error building PC options:", error);
+    throw new Error("Unable to build PC configurations.");
+  }
+}
+
+exports.buildPcAutomatic = async (req, res) => {
+  const { totalBudget, configType } = req.body;
+
+  if (!totalBudget || !configType) {
+    return res.status(400).json({
+      message: "totalBudget and configType are required.",
+    });
+  }
+
+  try {
+    const result = await build(totalBudget, configType);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error in buildPcAutomatic:", error.message);
+    res
+      .status(500)
+      .json({ message: "An error occurred while building the PC." });
+  }
+};

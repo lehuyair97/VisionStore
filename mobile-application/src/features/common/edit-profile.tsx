@@ -71,7 +71,9 @@ export default function EditProfile() {
     defaultValues: {
       email: userInfo?.email,
       display_name: userInfo?.display_name,
-      phone_number: "0" + userInfo?.phoneNumber.toString(),
+      phone_number: userInfo?.phoneNumber
+        ? "0" + userInfo?.phoneNumber?.toString()
+        : "",
     },
   });
 

@@ -34,8 +34,6 @@ const DetailBrand = () => {
     brandType: brandType,
     subCategoryId: subCategoryId,
   });
-  console.log(productsBrand?.data?.brand);
-
   const handleNavigateToDetailProduct = (id: string) => {
     navigate(ROUTES.DetailProduct as keyof ParamListBase, {
       productId: id,

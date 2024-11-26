@@ -2,7 +2,8 @@ const { GoogleAuth } = require("google-auth-library");
 const axios = require("axios");
 const cron = require("node-cron");
 const { User } = require("../../models/userModel");
-const keyFilePath = process.env.GOOGLE_SERVICE_ACCOUNT_KEY || "./serviceAccountKey.json"; // Use environment variable
+const keyFilePath =
+  process.env.GOOGLE_SERVICE_ACCOUNT_KEY || "./serviceAccountKey.json"; // Use environment variable
 
 // Get Firebase Access Token
 async function getAccessToken() {
@@ -39,12 +40,15 @@ async function sendNotification(title, body, token) {
     console.log(`[${new Date().toISOString()}] Notification sent to ${token}`);
     return response.data;
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Error sending notification to ${token}:`, {
-      message: error.response?.data?.error?.message,
-      code: error.response?.data?.error?.code,
-      details: error.response?.data?.error?.details,
-      originalMessage: error.message,
-    });
+    console.error(
+      `[${new Date().toISOString()}] Error sending notification to ${token}:`,
+      {
+        message: error.response?.data?.error?.message,
+        code: error.response?.data?.error?.code,
+        details: error.response?.data?.error?.details,
+        originalMessage: error.message,
+      }
+    );
     throw error;
   }
 }
@@ -55,7 +59,7 @@ exports.pushNotification = async (req, res) => {
   if (!token) {
     return res.status(400).send("Device token is required.");
   }
-  
+
   try {
     await sendNotification(title, body, token);
     res.status(200).send("Notification sent successfully!");
@@ -66,16 +70,19 @@ exports.pushNotification = async (req, res) => {
 
 // Function to send notification to all users
 const sendNotificationToAllUsers = async () => {
-  const title = "Thông báo tự động";
-  const body = "Thảo Béo Sừng dài 1 mét";
+  const title = "Săn sale ngay";
+  const body = "Rất nhiều sản phẩm đang giảm giá, đừng bỏ lỡ nhé!";
 
   const users = await User.find({ device_token: { $ne: null } });
-  const tokens = users.map(user => user.device_token).filter(Boolean);
+  const tokens = users.map((user) => user.device_token).filter(Boolean);
 
   if (tokens.length > 0) {
-    const promises = tokens.map(token => sendNotification(title, body, token));
-    await Promise.all(promises)
-      .catch(error => console.error("Error during batch notification:", error.message));
+    const promises = tokens.map((token) =>
+      sendNotification(title, body, token)
+    );
+    await Promise.all(promises).catch((error) =>
+      console.error("Error during batch notification:", error.message)
+    );
 
     console.log("Đã gửi thông báo cho tất cả thiết bị đã đăng nhập!");
   } else {
@@ -91,6 +98,8 @@ const sendNotificationToAllUsers = async () => {
 
 // Scheduled notification at 5 PM every day
 cron.schedule("0 17 * * *", () => {
-  console.log(`[${new Date().toISOString()}] Đang gửi thông báo vào lúc 5 giờ chiều`);
+  console.log(
+    `[${new Date().toISOString()}] Đang gửi thông báo vào lúc 5 giờ chiều`
+  );
   sendNotificationToAllUsers();
 });

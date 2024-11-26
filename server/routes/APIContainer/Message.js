@@ -1,40 +1,67 @@
+const Conversation = require("../../models/conversationModel")
 const Message = require("../../models/messageModel");
-const { broadcast, sendMessageToClient } = require("../../config/websocket");
 
-// Gửi tin nhắn
 exports.sendMessage = async (req, res) => {
-  const { senderId, receiverId, content, isAdmin } = req.body;
+  const { idClient, content } = req.body;
+
   try {
-    const newMessage = new Message({ senderId, receiverId, content, isAdmin });
-    await newMessage.save();
-
-    // Nếu là admin, gửi tin nhắn đến tất cả client
-    if (isAdmin) {
-      broadcast("message", { type: "NEW_MESSAGE", message: newMessage });
+    const conversation = await Conversation.findOne({
+      participants: { $all: [idClient] },
+      status: "active", 
+    });
+    let newMessage;
+    if (conversation) {
+      newMessage = new Message({
+        idClient,
+        content,
+        conversationId: conversation._id,
+        status: "active", 
+      });
     } else {
-      // Gửi tin nhắn tới client cụ thể (receiverId)
-      sendMessageToClient(receiverId, { type: "NEW_MESSAGE", message: newMessage });
+      newMessage = new Message({
+        idClient,
+        content,
+        status: "pending", 
+      });
     }
-
-    // Xóa tin nhắn cũ hơn 7 ngày
-    await cleanupOldMessages();
-
+    await newMessage.save();
     res.status(201).json(newMessage);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Lấy tin nhắn theo người dùng
-exports.getMessagesByUserId = async (req, res) => {
-  const { userId } = req.params;
+exports.acceptMessage = async (req, res) => {
+  const { messageId, adminId } = req.body;
   try {
-    const messages = await Message.find({
-      $or: [
-        { senderId: userId },
-        { receiverId: userId }
-      ]
-    }).sort({ createdAt: 1 }); // Sắp xếp theo thời gian tạo
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    const conversation = new Conversation({
+      participants: [message.idClient, adminId],
+      status: "active", 
+    });
+
+    await conversation.save();
+    message.status = "active";
+    message.conversationId = conversation._id;
+    await message.save();
+
+    res.status(200).json({ message: "Message accepted, conversation started", conversation });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getMessagesByConversation = async (req, res) => {
+  const { conversationId } = req.params;
+
+  try {
+    const messages = await Message.find({ conversationId })
+      .sort({ createdAt: 1 }) 
+      .populate("idClient", "username email");
 
     res.status(200).json(messages);
   } catch (error) {
@@ -42,73 +69,21 @@ exports.getMessagesByUserId = async (req, res) => {
   }
 };
 
-// Xóa tin nhắn theo ID
-exports.deleteMessage = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const deletedMessage = await Message.findByIdAndDelete(id);
-    if (!deletedMessage) {
-      return res.status(404).json({ message: "Message not found" });
-    }
-    res.status(200).json({ message: "Message deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+exports.getAllActiveConversations = async (req, res) => {
+  const adminId = req.user.id; 
 
-// Cập nhật nội dung tin nhắn
-exports.updateMessage = async (req, res) => {
-  const { id } = req.params;
-  const { content } = req.body;
   try {
-    const updatedMessage = await Message.findByIdAndUpdate(
-      id,
-      { content },
-      { new: true } // Trả về tin nhắn đã được cập nhật
-    );
-    if (!updatedMessage) {
-      return res.status(404).json({ message: "Message not found" });
-    }
-    res.status(200).json(updatedMessage);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    const conversations = await Conversation.find({
+      participants: adminId,
+      status: "active",
+    }).populate("participants", "username email");
 
-exports.getAllConversations = async (req, res) => {
-  try {
-    const conversations = await Message.aggregate([
-      {
-        $group: {
-          _id: {
-            clientId: "$receiverId", // hoặc "$senderId" nếu bạn muốn nhóm theo người gửi
-          },
-          messages: {
-            $push: {
-              _id: "$_id",
-              senderId: "$senderId",
-              receiverId: "$receiverId",
-              content: "$content",
-              createdAt: "$createdAt",
-              isAdmin: "$isAdmin",
-            },
-          },
-        },
-      },
-      {
-        $sort: { "messages.createdAt": 1 } // Sắp xếp theo thời gian tạo của tin nhắn
-      }
-    ]);
+    if (!conversations || conversations.length === 0) {
+      return res.status(404).json({ message: "No active conversations found" });
+    }
 
     res.status(200).json(conversations);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-// Xóa tin nhắn cũ hơn 7 ngày
-const cleanupOldMessages = async () => {
-  const MESSAGE_LIFETIME = 7 * 24 * 60 * 60 * 1000; // 7 ngày
-  const cutoffDate = new Date(Date.now() - MESSAGE_LIFETIME);
-  await Message.deleteMany({ createdAt: { $lt: cutoffDate } });
 };

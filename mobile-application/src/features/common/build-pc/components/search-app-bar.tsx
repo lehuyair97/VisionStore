@@ -7,17 +7,20 @@ type SearchAppBarProps = {
   onValueChange: (value: string) => void;
   buttonTitle: string;
   textPlaceHolder: string;
+  onPress: () => void
 };
 export default function SearchAppBar({
   textValue,
   onValueChange,
   buttonTitle,
   textPlaceHolder,
+  onPress
 }: SearchAppBarProps) {
   const style = useStyle();
   return (
     <Row center mx={"m"} gap={"_10"}>
       <TextInput
+      keyboardType="number-pad"
         value={textValue}
         style={style.textInput}
         containerStyle={{
@@ -32,7 +35,7 @@ export default function SearchAppBar({
         placeholder={textPlaceHolder}
         onChangeText={onValueChange}
       />
-      <Button label={buttonTitle} />
+      <Button onPress={onPress} label={buttonTitle} />
     </Row>
   );
 }
