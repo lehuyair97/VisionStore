@@ -8,7 +8,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import Colors from "@theme/colors";
 import { EDGES } from "@utils/helper";
 import { useState } from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 import ActionBottomBar from "./components/bottom-action-bar";
 import Comment from "./components/comment";
@@ -17,6 +17,7 @@ import CustomItem from "./custom_item";
 import ImgDetail from "./img_detail";
 import { useAuth } from "@hooks/auth";
 import { navigate } from "@navigation/config/navigation-service";
+import useCommon from "@hooks/common/use-common";
 type Item = {
   id: number;
   image: string;
@@ -42,13 +43,15 @@ type DetailProductParams = {
 const DetailProduct = () => {
   const route = useRoute<RouteProp<DetailProductParams, "DetailProduct">>();
   const { productId } = route.params;
-  const { userInfo } = useAuth();
+  const { userInfo, authenticationStatus } = useAuth();
   const {
     data: productDetail,
     isPending,
     error,
     isLoading,
   } = useProductDetail(productId);
+  const { checkValidate } = useCommon();
+
   const { addCart } = useAddCart();
   const { quantity, increaseQuantity, decreaseQuantity } = useQuantity({
     initialQuantity: 1,
@@ -95,7 +98,7 @@ const DetailProduct = () => {
       edges={EDGES.LEFT_RIGHT}
     >
       <AppBar
-        iconLeft={true}
+        iconLeft
         iconRight={true}
         iconRightName="share"
         colorIconLeft={Colors.black}
@@ -166,7 +169,10 @@ const DetailProduct = () => {
         </Row>
         <Comment productID={productId} />
       </ScrollView>
-      <ActionBottomBar onAddToCart={handleAddCart} onBuyNow={handleBuyNow} />
+      <ActionBottomBar
+        onAddToCart={() => checkValidate(handleAddCart)}
+        onBuyNow={() => checkValidate(handleBuyNow)}
+      />
     </MainContainer>
   );
 };

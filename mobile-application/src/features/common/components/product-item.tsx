@@ -2,9 +2,8 @@ import { localImages } from "@assets/icons/images";
 import { Block, Text, Row, Button, Icon } from "@components";
 import { navigate } from "@navigation/config/navigation-service";
 import { ROUTES } from "@navigation/config/routes";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ProductItem = ({
   item,

@@ -1,23 +1,16 @@
 import { MainContainer } from "@components";
 import Block from "@components/block";
+import Text from "@components/text";
 import AppBar from "@features/common/common/appbar";
 import ProductItem from "@features/common/home/component/product-item";
-import Banner from "@features/common/home/component/banner";
 import useGetProductByBrandID from "@hooks/common/use-get-product-by-brand";
 import { navigate } from "@navigation/config/navigation-service";
-import {
-  NavigationProp,
-  ParamListBase,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { ROUTES } from "@navigation/config/routes";
+import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native";
 import Colors from "@theme/colors";
 import { EDGES, Helper } from "@utils/helper";
-import { ActivityIndicator, FlatList, Image } from "react-native";
-import { ROUTES } from "@navigation/config/routes";
-import Text from "@components/text";
 import { useState } from "react";
+import { ActivityIndicator, FlatList, Image } from "react-native";
 
 type RootStackParamList = {
   DetailProduct: { id: string; brandName: string; categoryId: string };
@@ -51,15 +44,15 @@ const DetailBrand = () => {
         >
           {bannerLoadding && <ActivityIndicator />}
           <Image
-              source={{ uri: productsBrand?.data?.brand?.banner }}
-              style={{
-                width: "100%",
-                height: '100%',
-              }}
-              onLoadStart={() => setBannerLoadding(true)}
-              onLoadEnd={() => setBannerLoadding(false)}
-              resizeMode="cover"
-            />
+            source={{ uri: productsBrand?.data?.brand?.banner }}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+            onLoadStart={() => setBannerLoadding(true)}
+            onLoadEnd={() => setBannerLoadding(false)}
+            resizeMode="cover"
+          />
         </Block>
 
         <Text

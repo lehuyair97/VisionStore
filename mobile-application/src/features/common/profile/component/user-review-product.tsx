@@ -47,4 +47,3 @@ export default function UserReviewProduct() {
   );
 }
 
-const styles = StyleSheet.create({});

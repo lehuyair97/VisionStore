@@ -16,6 +16,29 @@ async function getCommentsData(productID) {
 
   return { comments, count, averageRating };
 }
+exports.likeComment = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(403).json({ message: "commentID is required" });
+  }
+  try {
+    const comment = await Comment.findById(id);
+    if (!comment) {
+      return res.status(404).json({ message: "comment is not found" });
+    }
+    comment.likes += 1;
+    await comment.save();
+    res.status(201).json({ isSuccess: true, data: comment });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        isSuccess: false,
+        message: "Internal Server Error",
+        error: error.message,
+      });
+  }
+};
 
 exports.getCommentsByProductID = async (req, res) => {
   const { productID } = req.params;
@@ -52,7 +75,6 @@ exports.getCommentsByUserID = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 exports.addComment = async (req, res) => {
   const { productID, userID, text, rating } = req.body;

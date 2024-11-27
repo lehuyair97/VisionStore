@@ -38,6 +38,7 @@ const FeaturesProfile = () => {
       title: "Đăng xuất",
       onPress: () => {
         logout();
+        navigate(ROUTES.Signin)
       },
     },
   ];

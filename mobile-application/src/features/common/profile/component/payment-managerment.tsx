@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Button, MainContainer } from "@components";
 import Block from "@components/block";
@@ -36,6 +36,11 @@ export default function PaymentManagerment() {
             )}
           />
           <Button
+            onPress={() =>
+              Alert.alert(
+                "Bạn đã chọn VN-Pay là phương thức thanh toán mặc dịnh!"
+              )
+            }
             buttonStyle={{
               position: "absolute",
               bottom: 20,

@@ -7,7 +7,10 @@ import { Alert, FlatList } from "react-native";
 import SelectProduct, { RBSheetRef } from "./select-production";
 import Text from "@components/text";
 import { navigate } from "@navigation/config/navigation-service";
+import useCommon from "@hooks/common/use-common";
 export default function BuildManual() {
+  const { checkValidate } = useCommon();
+
   const { data: subCategoryData } = useGetSubCategoryByType("components", true);
   const [isOpenSearch, setIsOpenSearch] = useState(false);
   const [subCategoryId, setSubCategoryId] = useState();
@@ -95,7 +98,7 @@ export default function BuildManual() {
           </Text>
         </Row>
         <Button
-          onPress={handleBuyNow}
+          onPress={()=>checkValidate(handleBuyNow)}
           noneStyle
           label="Mua ngay"
           buttonStyle={{

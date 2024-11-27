@@ -3,7 +3,8 @@ import Block from "@components/block";
 import Text from "@components/text";
 import { goBack } from "@navigation/config/navigation-service";
 import Colors from "@theme/colors";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native";
+
 interface AppBarProps {
   title?: string;
   iconLeft?: boolean;

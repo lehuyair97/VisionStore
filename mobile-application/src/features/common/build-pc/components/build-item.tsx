@@ -8,6 +8,8 @@ import React from "react";
 import { View, FlatList, Image, StyleSheet } from "react-native";
 import { useAuth } from "@hooks/auth";
 import useAddCart from "@hooks/common/use-add-cart";
+import useCommon from "@hooks/common/use-common";
+import { check } from "react-native-permissions";
 type ProductData = {
   image: string;
   name: string;
@@ -26,6 +28,7 @@ const ProductItem = ({
   product: ProductData;
   index: number;
 }) => {
+  const { checkValidate } = useCommon();
   const { userInfo } = useAuth();
   const { addCart } = useAddCart();
   const components = Object.keys(product);
@@ -78,7 +81,7 @@ const ProductItem = ({
               paddingHorizontal: 10,
               borderColor: "white",
             }}
-            onPress={handleAddCart}
+            onPress={() => checkValidate(handleAddCart)}
           >
             <Icon
               type="fontAwesome"
@@ -90,7 +93,7 @@ const ProductItem = ({
           <Button
             noneStyle
             label="Mua ngay"
-            onPress={handleBuyNow}
+            onPress={() => checkValidate(handleBuyNow)}
             textStyle={{
               color: "white",
               fontWeight: "bold",
