@@ -137,7 +137,9 @@ router.get(
 );
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
+router.get("/products/pagination", productAPI.getAllProductsWithPagination);
 router.post("/products/build", productAPI.buildPcAutomatic);
+
 router.get("/productsgrouped", productAPI.getAllProductsGroupedByBrand);
 router.get(
   "/productsgroupedbySubCategory",

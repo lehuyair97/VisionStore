@@ -11,6 +11,39 @@ exports.getAllProducts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getAllProductsWithPagination = async (req, res) => {
+  try {
+    // Lấy tham số truy vấn từ yêu cầu
+    const page = parseInt(req.query.page) || 1; // Trang hiện tại, mặc định là 1
+    const limit = parseInt(req.query.limit) || 10; // Số sản phẩm trên mỗi trang, mặc định là 10
+
+    // Tính toán số sản phẩm cần bỏ qua
+    const skip = (page - 1) * limit;
+
+    // Lấy sản phẩm với phân trang
+    const products = await Product.find()
+      .skip(skip) // Bỏ qua số sản phẩm đã chỉ định
+      .limit(limit); // Giới hạn số sản phẩm trả về
+
+    // Lấy tổng số sản phẩm để tính toán tổng số trang
+    const totalProducts = await Product.countDocuments();
+
+    // Tính toán tổng số trang
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // Trả về sản phẩm và thông tin phân trang
+    res.status(200).json({
+      totalProducts,
+      totalPages,
+      currentPage: page,
+      products,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getAllProductsGroupedByBrand = async (req, res) => {
   const { categoryId } = req.query;
   try {
