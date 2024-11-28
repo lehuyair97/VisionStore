@@ -10,11 +10,13 @@ class LoginController extends GetxController {
   DioApi dioApi = DioApi();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final isLoading = false.obs;
 
   Future<void> login() async {
     final email = emailController.text;
     final password = passwordController.text;
     try {
+      isLoading.value = true;
       if (email.isEmpty || password.isEmpty) {
         Get.snackbar('Thông báo', 'Vui lòng nhập đẩy đủ thông tin');
         return;
@@ -37,6 +39,8 @@ class LoginController extends GetxController {
     } catch (e) {
       print("Lỗi: $e");
       Get.snackbar('Thông báo', 'Đăng nhập thất bại');
+    } finally {
+      isLoading.value = false;
     }
   }
 }

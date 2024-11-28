@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
+import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/feature/auth/model/user.dart';
 import 'package:flutter_web/feature/user/widget/user_gridRow.dart';
 import 'package:get/get.dart';
@@ -24,12 +25,14 @@ class UserController extends GetxController {
       final response = await dio.get(
         ApiEndpoints.users,
       );
-      if (response.statusCode == 200) {
-        userList.value = (response.data as List)
-            .map((userJson) => User.fromJson(userJson))
-            .toList();
-        userDataSource.value = [UserGridDataSource(users: userList.value)];
+      if (response.statusCode != HttpStatusCodes.STATUS_CODE_OK) {
+        print("Lỗi khi lấy dữ liệu người dùng");
+        return;
       }
+      userList.value = (response.data as List)
+          .map((userJson) => User.fromJson(userJson))
+          .toList();
+      userDataSource.value = [UserGridDataSource(users: userList.value)];
     } catch (e) {
       print(e);
     } finally {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
-import 'package:flutter_web/feature/products/widget/search_field.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
 import 'package:flutter_web/feature/voucher/widget/voucher_gridRow.dart';
 import 'package:get/get.dart';

@@ -15,62 +15,72 @@ class LoginPage extends StatelessWidget {
     final loginController = Get.find<LoginController>();
     return ResponsiveBuilder(
       builder: (context, sizingInformation) {
-        bool isMobile = sizingInformation.deviceScreenType == DeviceScreenType.mobile;
-        return Scaffold(
-          body: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  isMobile
-                      ? Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const ImgLogin(),
-                              const SizedBox(height: 20),
-                              LoginFrom(
-                                loginController: loginController,
-                                borderRadius: 20,
+        bool isMobile =
+            sizingInformation.deviceScreenType == DeviceScreenType.mobile;
+        return Stack(
+          children: [
+            Scaffold(
+              body: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      isMobile
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.w),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const ImgLogin(),
+                                  const SizedBox(height: 20),
+                                  LoginFrom(
+                                    loginController: loginController,
+                                    borderRadius: 20,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 80.w),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20.r),
-                                        bottomLeft: Radius.circular(20.r),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 80.w),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primary,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20.r),
+                                            bottomLeft: Radius.circular(20.r),
+                                          ),
+                                        ),
+                                        height: Get.height * 0.8,
+                                        child: const ImgLogin(),
                                       ),
                                     ),
-                                    height: Get.height * 0.8,
-                                    child: const ImgLogin(),
-                                  ),
+                                    Expanded(
+                                      child: LoginFrom(
+                                          loginController: loginController),
+                                    ),
+                                  ],
                                 ),
-                                Expanded(
-                                  child: LoginFrom(
-                                      loginController: loginController),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                ],
+                              ),
+                            )
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
+            Obx(() => loginController.isLoading.value
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : const SizedBox.shrink()),
+          ],
         );
       },
     );

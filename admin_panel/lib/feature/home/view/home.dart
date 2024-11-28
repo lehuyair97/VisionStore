@@ -5,7 +5,7 @@ import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/home/controller/home_contrioller.dart';
 import 'package:flutter_web/feature/home/widget/LineChart/line_chart_sample%20.dart';
 import 'package:flutter_web/feature/home/widget/activity_details_card.dart';
-import 'package:flutter_web/feature/products/widget/search_field.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:flutter_web/feature/profile/profile.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -64,7 +64,7 @@ class _HomeViewState extends State<HomeView> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        TextWidget(
+                                       const TextWidget(
                                           text: 'Biểu đồ doanh thu',
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                 ])),
                       ),
-                      Expanded(
+                      const Expanded(
                           flex: 2,
                           child: Profile(
                               cardBackgroundColor: AppColors.white,

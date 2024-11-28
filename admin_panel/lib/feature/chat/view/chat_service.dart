@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web/common/widgets/text_widget.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChatService extends StatefulWidget {
   const ChatService({super.key});
@@ -17,6 +20,7 @@ class _ChatServiceState extends State<ChatService> {
         messages.add({
           'message': _controller.text,
           'time': TimeOfDay.now().format(context),
+          'sender': 'user',
         });
         _controller.clear();
       });
@@ -27,7 +31,32 @@ class _ChatServiceState extends State<ChatService> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat Service'),
+        title: Row(
+          children: [
+            Image.network(
+              'https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj',
+              width: 30,
+              height: 30,
+            ),
+            SizedBox(width: 10.w),
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextWidget(
+                  text: 'Khách hàng Thảo',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                SizedBox(height: 4),
+                TextWidget(
+                  text: '11:00 AM',
+                  fontSize: 10,
+                  fontWeight: FontWeight.normal,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -36,9 +65,33 @@ class _ChatServiceState extends State<ChatService> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
-                return ListTile(
-                  title: Text(message['message']!),
-                  subtitle: Text(message['time']!),
+                final isUser = message['sender'] == 'user';
+                return Row(
+                  mainAxisAlignment:
+                      isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.5),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4.0, horizontal: 8.0),
+                      child: Card(
+                        color: isUser ? Colors.blue[50] : Colors.green[50],
+                        child: ListTile(
+                          title: TextWidget(
+                            text: message['message']!,
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                          subtitle: TextWidget(
+                            text: message['time']!,
+                            fontSize: 12,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
@@ -48,17 +101,19 @@ class _ChatServiceState extends State<ChatService> {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
+                  child: SearchField(
                     controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: 'Nhập tin nhắn...',
-                      border: OutlineInputBorder(),
-                    ),
+                    onChanged: (value) {},
+                    isSearch: false,
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendMessage,
+                SizedBox(width: 20.w),
+                CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: IconButton(
+                    icon: Icon(Icons.send, color: Colors.white),
+                    onPressed: _sendMessage,
+                  ),
                 ),
               ],
             ),

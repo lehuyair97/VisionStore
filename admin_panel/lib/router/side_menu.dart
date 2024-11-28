@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter_web/common/img/img.dart';
+import 'package:flutter_web/common/utils/custom_dialog.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_web/router/app_router.dart';
+import 'package:get/get.dart';
 
 class SideMenuWidget extends StatelessWidget {
   final bool isMobile;
@@ -71,7 +74,16 @@ class SideMenuWidget extends StatelessWidget {
         title: 'Thoát',
         icon: Icon(Icons.logout),
         onTap: (int index, _) {
-          controller.changePage(index);
+          CustomDialog().showConfirmationDialog(
+            'Thoát',
+            'Bạn có chắc chắn muốn thoát không?',
+            height: 0.3,
+        )
+            .then((value) {
+          if (value ?? false) {
+            Get.offAllNamed(AppRouter.login);
+          }
+        });
         },
       ),
     ];

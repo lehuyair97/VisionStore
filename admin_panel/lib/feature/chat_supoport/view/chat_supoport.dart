@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/router/app_router.dart';
 import 'package:get/get.dart';
-import 'package:flutter_web/feature/products/widget/search_field.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
 
 class ChatSupport extends StatelessWidget {
   const ChatSupport({super.key});

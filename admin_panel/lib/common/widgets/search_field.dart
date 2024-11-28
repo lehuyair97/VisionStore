@@ -6,12 +6,15 @@ class SearchField extends StatefulWidget {
   final TextEditingController controller;
   final Function(String) onChanged; // Thêm hàm callback
   final Function(String)? onSearch;
+  final bool isSearch;
+  
 
   const SearchField(
       {Key? key,
       required this.controller,
       required this.onChanged,
-      this.onSearch})
+      this.onSearch,
+      this.isSearch = true})
       : super(key: key);
 
   @override
@@ -37,15 +40,17 @@ class _SearchFieldState extends State<SearchField> {
           ),
           hintText: 'Nhập từ khóa tìm kiếm',
           hintStyle: TextStyle(color: Colors.grey),
-          suffixIcon: IconButton(
-            onPressed: () {
-              widget.onSearch?.call(widget.controller.text);
+          suffixIcon: widget.isSearch
+              ? IconButton(
+                  onPressed: () {
+                    widget.onSearch?.call(widget.controller.text);
             },
             icon: Icon(
               Icons.search,
               color: AppColors.primary,
-            ),
-          ),
+                ),
+              )
+            : null,
           // suffixIcon: widget.controller.text.isNotEmpty
           //     ? IconButton(
           //         icon: Icon(Icons.close, color: AppColors.colorIcon),

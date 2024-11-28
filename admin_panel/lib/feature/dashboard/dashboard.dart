@@ -50,15 +50,12 @@ class _DashboardState extends State<Dashboard> {
       Get.put(BrandCreateController());
   final VoucherController voucherController = Get.put(VoucherController());
 
-  bool isMenuOpen = true; // Quản lý trạng thái menu
-  String avatar =
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC4bDyDcxoLbYIk1pt0xwPOcn6Z7LVdik9jg&s';
+  bool isMenuOpen = true; 
 
   @override
   void initState() {
     super.initState();
 
-    // Gọi các phương thức khởi tạo dữ liệu
     createProductController.getBrand();
     createProductController.getCategory();
     createProductController.getSubCategory();
@@ -94,7 +91,7 @@ class _DashboardState extends State<Dashboard> {
           body: Row(
             children: [
               if (isMenuOpen || !isMobile)
-                Container(
+                SizedBox(
                   child: SideMenuWidget(
                     controller: sideMenuController,
                     isMobile: isMobile,

@@ -16,25 +16,23 @@ class VoucherController extends GetxController {
     fetchVouchers();
   }
 
-Future<void> fetchVouchers() async {
-  try {
-    isLoading.value = true;
-    final response = await dio.get(ApiEndpoints.voucher);
+  Future<void> fetchVouchers() async {
+    try {
+      isLoading.value = true;
+      final response = await dio.get(ApiEndpoints.voucher);
 
-    // Kiểm tra nếu response.data là một danh sách
-    if (response.data is List) {
-      vouchers.value = (response.data as List)
-          .map((e) => Voucher.fromJson(e as Map<String, dynamic>))
-          .toList();
-    } else {
-      // Xử lý trường hợp response.data không phải là danh sách
-      print("Unexpected data format: ${response.data}");
+      if (response.data is List) {
+        vouchers.value = (response.data as List)
+            .map((e) => Voucher.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } else {
+        print("Unexpected data format: ${response.data}");
+      }
+
+      isLoading.value = false;
+    } catch (e) {
+      isLoading.value = false;
+      print(e);
     }
-
-    isLoading.value = false;
-  } catch (e) {
-    isLoading.value = false;
-    print(e);
   }
-}
 }

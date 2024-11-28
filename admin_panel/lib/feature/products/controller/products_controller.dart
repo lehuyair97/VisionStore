@@ -26,7 +26,7 @@ class ProductsController extends GetxController {
 
   int totalItems = 0;
   int totalPages = 1;
-  int itemsPerPage = 99;
+  int itemsPerPage = 999;
   @override
   void onInit() {
     super.onInit();
@@ -50,20 +50,22 @@ class ProductsController extends GetxController {
         return;
       }
 
-      if (response.statusCode == HttpStatusCodes.STATUS_CODE_OK) {
-        productGridRows.clear();
-        final productData = Product.fromJson(response.data);
-        if (productData.products != null) {
-          productGridRows.value = productData.products!;
-          totalItems = productData.totalProducts ?? 0;
-          totalPages = (totalItems / itemsPerPage).ceil();
-          productGridDataSource =
-              ProductGridDataSource(products: productGridRows);
-          productGridDataSource.notifyListeners();
-        } else {
-          print("Dữ liệu sản phẩm là null");
-        }
+      if (response.statusCode != HttpStatusCodes.STATUS_CODE_OK) {
+        print("Lỗi khi lấy dữ liệu sản phẩm");
+        return;
       }
+      productGridRows.clear();
+      final productData = Product.fromJson(response.data);
+      if (productData.products == null) {
+        print("Dữ liệu sản phẩm là null");
+        return;
+      }
+
+      productGridRows.value = productData.products!;
+      totalItems = productData.totalProducts ?? 0;
+      totalPages = (totalItems / itemsPerPage).ceil();
+      productGridDataSource = ProductGridDataSource(products: productGridRows);
+      productGridDataSource.notifyListeners();
     } catch (e) {
       print("Error fetching products: $e");
     } finally {
@@ -103,23 +105,20 @@ class ProductsController extends GetxController {
       final response = await dio.post(ApiEndpoints.searchProduct, data: {
         'name': searchText,
       });
-      print("response.data.length: ${response.data}");
       productGridRows.clear();
-      // Giả sử response.data là một danh sách JSON
+
       List<dynamic> productListJson = response.data;
 
-      // Chuyển đổi từng phần tử trong danh sách thành ProductItem
       List<ProductItem> products =
           productListJson.map((item) => ProductItem.fromJson(item)).toList();
 
-      if (products.isNotEmpty) {
-        productGridRows.value = products;
-        productGridDataSource =
-            ProductGridDataSource(products: productGridRows);
-        productGridDataSource.notifyListeners();
-      } else {
+      if (products.isEmpty) {
         print("Dữ liệu sản phẩm là null");
+        return;
       }
+      productGridRows.value = products;
+      productGridDataSource = ProductGridDataSource(products: productGridRows);
+      productGridDataSource.notifyListeners();
     } catch (e) {
       print("Error searching products: $e");
     } finally {

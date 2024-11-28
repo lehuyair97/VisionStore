@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/auth/model/user.dart';
+import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand_update/view/brand_update.dart';
 import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/create_product/model/brand_model.dart';
@@ -32,10 +33,8 @@ class BrandGridDataSource extends DataGridSource {
             columnName: BrandGridCell.name, value: e.name ?? ''),
         DataGridCell<String>(
             columnName: BrandGridCell.description, value: e.description ?? ''),
-        DataGridCell<String>(
-            columnName: BrandGridCell.edit, value: ''),
-        DataGridCell<String>(
-            columnName: BrandGridCell.delete, value: ''),
+        DataGridCell<String>(columnName: BrandGridCell.edit, value: ''),
+        DataGridCell<String>(columnName: BrandGridCell.delete, value: ''),
       ]);
     }).toList();
   }
@@ -108,7 +107,11 @@ class BrandGridDataSource extends DataGridSource {
             return Center(
               child: IconButton(
                 onPressed: () {
-                  final brandId = row.getCells().firstWhere((element) => element.columnName == BrandGridCell.id).value;
+                  final brandId = row
+                      .getCells()
+                      .firstWhere(
+                          (element) => element.columnName == BrandGridCell.id)
+                      .value;
                   Get.dialog(BrandUpdate(brandId: brandId));
                 },
                 icon: Icon(Icons.edit),
@@ -117,7 +120,14 @@ class BrandGridDataSource extends DataGridSource {
           case BrandGridCell.delete:
             return Center(
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  final brandId = row
+                      .getCells()
+                      .firstWhere(
+                          (element) => element.columnName == BrandGridCell.id)
+                      .value;
+                  Get.put(BrandController()).deleteBrand(brandId);
+                },
                 icon: Icon(
                   Icons.delete,
                   color: AppColors.primary,

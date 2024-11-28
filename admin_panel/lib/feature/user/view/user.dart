@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web/common/widgets/custom_button.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
-import 'package:flutter_web/feature/products/widget/search_field.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:flutter_web/feature/user/controller/user_controller.dart';
 import 'package:flutter_web/feature/user/widget/user_gridRow.dart';
 import 'package:get/get.dart';
@@ -28,7 +27,7 @@ class UserView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                TextWidget(
+               const TextWidget(
                   text: "Danh sách người dùng",
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

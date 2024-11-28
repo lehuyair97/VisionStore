@@ -8,7 +8,7 @@ import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/create_product/view/create_product.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
-import 'package:flutter_web/feature/products/widget/search_field.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
 
 class Products extends StatelessWidget {
   const Products({super.key});

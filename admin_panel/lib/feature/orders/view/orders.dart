@@ -3,7 +3,7 @@ import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/orders/controller/oder_controller.dart';
 import 'package:flutter_web/feature/orders/widget/orders_gridRow.dart';
-import 'package:flutter_web/feature/products/widget/search_field.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

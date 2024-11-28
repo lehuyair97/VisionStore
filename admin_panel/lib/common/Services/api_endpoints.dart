@@ -3,9 +3,16 @@ import 'package:flutter_web/common/Services/config.dart';
 
 class ApiEndpoints {
   static const String login = "${Config.baseUrl}/login";
+
+  // brand
   static const String getBrand = "${Config.baseUrl}/brands";
   static String getBrandId(String brandId) =>
       "${Config.baseUrl}/brands/$brandId";
+
+  static String deleteBrand(String brandId) =>
+      "${Config.baseUrl}/brands/$brandId";
+
+  // category
   static const String getCategory = "${Config.baseUrl}/category";
   static const String subcategory =
       "${Config.baseUrl}/subcategory/type/components";

@@ -5,7 +5,7 @@ import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand/widget/brand_gridRow.dart';
 import 'package:flutter_web/feature/brand_create/view/brand_create.dart';
-import 'package:flutter_web/feature/products/widget/search_field.dart';
+import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -29,7 +29,7 @@ class BrandView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                TextWidget(
+                const TextWidget(
                   text: "Danh sách thương hiệu",
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
