@@ -82,7 +82,6 @@ const PayPalCheckout = () => {
           domStorageEnabled={true}
           source={{ uri: paypalUrl || 'https://google.com'}}
           onNavigationStateChange={(state) => {
-            console.log(state)
             if (state.url.includes("returnUrl")) {
               Alert.alert("Thông báo", "Thanh toán thành công!");
               setPaypalUrl(null);

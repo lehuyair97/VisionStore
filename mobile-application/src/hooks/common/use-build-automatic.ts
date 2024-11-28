@@ -1,16 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
+export type configType = "developer" | "graphicDesign" | "office" | "gaming";
 
-const useMarkAsReadNotification = (customerId: string) => {
+type requestType = {
+  totalBudget: number;
+  configType: configType | any;
+};
+const useBuildAutomatic = () => {
   const queryClient = useQueryClient();
   const { data, error, mutateAsync, isPending } = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (data: requestType) => {
       try {
         const res = await api({
-          url: REQUEST_URL.MARK_AS_READ(id),
-          method: "PUT",
-          data: { customerId },
+          url: REQUEST_URL.BUILD_AUTOMATIC,
+          method: "POST",
+          data: data,
         });
         return res.data || res;
       } catch (err) {
@@ -18,14 +23,16 @@ const useMarkAsReadNotification = (customerId: string) => {
         throw err;
       }
     },
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      toast.success(`Cập nhật thông tin thành công!`);
+    },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
     },
     onSettled(data, error) {
       if (data) {
         queryClient.invalidateQueries({
-          queryKey: ["notifications", customerId],
+          queryKey: ["BuildPC"],
         });
       }
     },
@@ -35,8 +42,8 @@ const useMarkAsReadNotification = (customerId: string) => {
     data,
     error,
     isPending,
-    markAsRead: mutateAsync,
+    build: mutateAsync,
   };
 };
 
-export default useMarkAsReadNotification;
+export default useBuildAutomatic;

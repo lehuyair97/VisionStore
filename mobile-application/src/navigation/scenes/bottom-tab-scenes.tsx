@@ -15,6 +15,7 @@ import {
 import { localImages } from "@assets/icons/images";
 import { navigate } from "@navigation/config/navigation-service";
 import { useEffect } from "react";
+import useCommon from "@hooks/common/use-common";
 
 const Tab = createBottomTabNavigator<BottomTabRoutes>();
 
@@ -25,6 +26,7 @@ export const bottomTabScreensRoute = [
   { component: Profile, name: "ProfileStack" },
 ];
 const BottomTabScenes = () => {
+  const { checkValidate } = useCommon();
   useEffect(() => {
     changeNavigationBarColor("#DF5454", true);
   });
@@ -128,6 +130,10 @@ const BottomTabScenes = () => {
                 <TouchableOpacity
                   {...props}
                   onPress={() => {
+                    if (name === "CartStack" || name === "ProfileStack") {
+                      checkValidate(() => navigate(name));
+                      return;
+                    }
                     navigate(name);
                   }}
                 />

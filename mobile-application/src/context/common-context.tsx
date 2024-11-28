@@ -6,13 +6,22 @@ import useWebSocket from "@hooks/common/use-web-socket-custom";
 export const CommonContext = createContext<any>(undefined);
 
 export const CommonProvider = ({ children }) => {
-  const { userInfo } = useAuth();
+  const { userInfo, authenticationStatus } = useAuth();
   const { data: notifcationsData } = useGetNotificationsByUserId(userInfo?._id);
   const [notifications, setNotifications] = useState([]);
   const { notifications: notiSocket } = useWebSocket();
-
+  const [isOpenValidate, setIsOpenValidate] = useState<boolean>(false);
   const [categoryIDSelected, setCategoryIDSelected] = useState("");
+  const openValidateModal = () => setIsOpenValidate(true);
+  const closeValidateModal = () => setIsOpenValidate(false);
 
+  const checkValidate = (action: () => void) => {
+    if (authenticationStatus !== "AUTHENTICATED") {
+      openValidateModal();
+      return;
+    }
+    action();
+  };
   const messageUnread = useMemo(() => {
     return notifications
       ? notifications.reduce((temp, current) => {
@@ -42,8 +51,20 @@ export const CommonProvider = ({ children }) => {
       setCategoryIDSelected,
       messageUnread,
       notifications,
+      openValidateModal,
+      closeValidateModal,
+      isOpenValidate,
+      checkValidate
     }),
-    [categoryIDSelected, messageUnread, notifications]
+    [
+      categoryIDSelected,
+      messageUnread,
+      notifications,
+      openValidateModal,
+      closeValidateModal,
+      isOpenValidate,
+      checkValidate
+    ]
   );
 
   return (

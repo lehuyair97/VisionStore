@@ -24,7 +24,8 @@ type Props = {
   timestamp: string;
   rating?: number;
   product?: any;
-  isUserReview?: boolean
+  isUserReview?: boolean;
+  onLike: () => void;
 };
 
 const CommentItem: React.FC<Props> = ({
@@ -37,10 +38,10 @@ const CommentItem: React.FC<Props> = ({
   timestamp,
   rating,
   product,
-  isUserReview
+  isUserReview,
+  onLike,
 }) => {
   const styles = useStyle();
-  console.log(images);
   return (
     <Block borderBottomColor={"gray_200"} borderBottomWidth={1}>
       <Row alignItems={"center"} justifyContent={"space-between"}>
@@ -54,14 +55,12 @@ const CommentItem: React.FC<Props> = ({
           {name}
         </Text>
         {!isUserReview && (
-          <TouchableOpacity style={styles.likeButton}>
+          <TouchableOpacity onPress={onLike} style={styles.likeButton}>
             <Row center gap={"s"}>
               <Text mt={"s"} color={"gray136"}>
-                Hữu ích {likes}{" "}
+                Hữu ích {likes}
               </Text>
-              <TouchableOpacity>
-                <Icon type="antDesign" name="like2" size={24} color="blue" />
-              </TouchableOpacity>
+              <Icon type="antDesign" name="like2" size={24} color="blue" />
             </Row>
           </TouchableOpacity>
         )}

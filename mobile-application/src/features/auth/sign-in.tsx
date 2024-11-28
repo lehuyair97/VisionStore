@@ -3,6 +3,7 @@ import { Block, Button, Input, MainContainer, Row, Text } from "@components";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth, useSignIn } from "@hooks/auth";
 import useSignInGoogle from "@hooks/auth/use-signin-google";
+import { navigate } from "@navigation/config/navigation-service";
 import { ROUTES } from "@navigation/config/routes";
 import { signInForm } from "@navigation/config/types";
 import messaging from "@react-native-firebase/messaging";
@@ -17,7 +18,8 @@ import { Image } from "react-native";
 function Signin({ navigation }) {
   const { handleLoginSuccess } = useAuth();
   const { submit, submitting } = useSignIn();
-  const { submit: signInByGoogle } = useSignInGoogle();
+  const { submit: signInByGoogle, submitting: googleSubmitting } =
+    useSignInGoogle();
   const {
     control,
     getValues,
@@ -42,6 +44,7 @@ function Signin({ navigation }) {
     const { accessToken, isSuccess, refreshToken, user } =
       type === "normal" ? await submit(userForm) : await signInByGoogle(token);
     if (isSuccess) {
+      navigate(ROUTES.Home);
       handleLoginSuccess({
         accessToken: accessToken,
         refreshToken: refreshToken,
@@ -77,14 +80,44 @@ function Signin({ navigation }) {
           secureTextEntry={true}
         />
         <Button
-          buttonStyle={{ marginTop: 30 }}
+          onPress={() => navigation.navigate(ROUTES.Home)}
+          label="Trải nghiệm ngay mà không cần đăng ký"
+          noneStyle
+          buttonStyle={{ alignSelf: "center", marginTop: 20 }}
+          textStyle={{
+            color: theme.colors.primary,
+            fontWeight: "bold",
+            textAlign: "center",
+            fontStyle:'italic',
+          }}
+        />
+        <Button
+          buttonStyle={{ marginTop: 20 }}
           label="Đăng nhập"
           textStyle={{ color: "white" }}
           onPress={() => handleSignIn("normal")}
           isLoadding={submitting}
         />
 
-        <Row justifyContent="center" marginVertical={'_20'}>
+        <Button
+          leadingImage={localImages().ic_google}
+          noneStyle
+          buttonStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 10,
+            borderWidth: 1,
+            height: 48,
+            borderColor: theme.colors.grayB8,
+            marginTop: 10,
+          }}
+          label="Đăng nhập bằng Google"
+          onPress={() => handleSignIn("google")}
+          isLoadding={googleSubmitting}
+          textStyle={{ color: "black" }}
+        />
+
+        <Row justifyContent="center" marginVertical={"_20"}>
           <Text
             fontWeight="bold"
             textAlign="center"
@@ -100,12 +133,6 @@ function Signin({ navigation }) {
             textStyle={{ color: theme.colors.primary, fontWeight: "bold" }}
           />
         </Row>
-        <GoogleSigninButton
-          style={{ width: "100%" }}
-          size={GoogleSigninButton.Size.Standard}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={() => handleSignIn("google")}
-        />
       </Block>
     </MainContainer>
   );

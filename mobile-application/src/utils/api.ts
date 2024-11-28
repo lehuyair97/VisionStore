@@ -52,6 +52,7 @@ export const REQUEST_URL = {
   DELETE_SUBCATEGORY: (id) => `/subcategory/${id}`,
   GET_ALL_PRODUCTS: "/products",
   GET_PRODUCT_BY_ID: (id) => `/products/${id}`,
+  BUILD_AUTOMATIC: '/products/build',
   GET_PRODUCT_BY_BRAND_ID: ({
     categoryID,
     brandID,
@@ -84,6 +85,7 @@ export const REQUEST_URL = {
   GET_VOUCHERS: "/voucher",
   USE_VOUCHER: (code, userID) => `/use-voucher?code=${code}&userID=${userID}`,
   ADD_COMMENT: `/comment`,
+  LIKE_COMMENT:(id)=>  `/comment/${id}/like`,
   GET_COMMENT: (productID) => `/comment-by-product/${productID}`,
   GET_COMMENT_BY_USER_ID: (userID) => `/comment-by-user/${userID}`,
   CREATE_NOTIFICATION: () => `/notifications`,

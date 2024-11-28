@@ -34,7 +34,7 @@ const SubCategoryBottomSheet = lazy(
 );
 
 export default function Home() {
-  const { userInfo } = useAuth();
+  const { userInfo, authenticationStatus } = useAuth();
   const { data: banners } = useGetBanner();
   const { addRecentProduct } = useAddRecentProduct(userInfo?._id);
   const { messageUnread } = useCommon();
@@ -57,10 +57,9 @@ export default function Home() {
   const { data: productsByCategory } = useGetProductGrouped(
     categorySelected?.id || ""
   );
-  console.log(subCategories)
   const { data: productsBySubCategoryChild } =
-    useGetProductGroupedByChildSubCategory(subCategoryChildSelected?._id) 
-
+    useGetProductGroupedByChildSubCategory(subCategoryChildSelected?._id);
+  const { checkValidate } = useCommon();
   const transformedCategories = useMemo(
     () =>
       categories?.map((item) => ({
@@ -123,7 +122,9 @@ export default function Home() {
 
   const handleNavigateToDetailProduct = async (id: string) => {
     navigate(ROUTES.DetailProduct as keyof ParamListBase, { productId: id });
-    await addRecentProduct(id);
+    if (authenticationStatus === "AUTHENTICATED") {
+      await addRecentProduct(id);
+    }
   };
 
   const handleNavigateToDetailBrand = ({
@@ -167,11 +168,7 @@ export default function Home() {
             titleStyle={{ fontWeight: "bold", color: Colors.primary }}
             childrenRight={
               <Row>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate(ROUTES.Search as keyof ParamListBase)
-                  }
-                >
+                <TouchableOpacity onPress={() => navigate(ROUTES.Search)}>
                   <Icon
                     type="fontAwesome"
                     name="search"
@@ -181,7 +178,9 @@ export default function Home() {
                 </TouchableOpacity>
                 <Block width={20} />
                 <TouchableOpacity
-                  onPress={() => navigate(ROUTES.NotificationScreen)}
+                  onPress={() =>
+                    checkValidate(() => navigate(ROUTES.NotificationScreen))
+                  }
                 >
                   <Icon
                     type="fontAwesome"
@@ -189,21 +188,23 @@ export default function Home() {
                     size={20}
                     color={Colors.black2A}
                   />
-                  <Block
-                    position="absolute"
-                    top={-5}
-                    right={-4}
-                    width={14}
-                    height={14}
-                    borderRadius="full"
-                    backgroundColor="red_500"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Text textAlign="center" fontSize={8}>
-                      {messageUnread ?? messageUnread}
-                    </Text>
-                  </Block>
+                  {messageUnread !== 0 && (
+                    <Block
+                      position="absolute"
+                      top={-5}
+                      right={-4}
+                      width={14}
+                      height={14}
+                      borderRadius="full"
+                      backgroundColor="red_500"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Text textAlign="center" fontSize={8}>
+                        {messageUnread}
+                      </Text>
+                    </Block>
+                  )}
                 </TouchableOpacity>
               </Row>
             }

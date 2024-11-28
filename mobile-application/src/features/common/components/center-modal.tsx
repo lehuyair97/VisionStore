@@ -48,13 +48,25 @@ const ModalCustom = (props: modalYesNoProp) => {
             />
           )}
           <Block alignItems="center" gap={"_12"}>
-            <Text fontSize={18} fontWeight={"bold"} color={"black"}>
-              {props.title}
-            </Text>
+            <Block
+              width={SCREEN_WIDTH * 0.86}
+              paddingVertical={"_10"}
+              borderBottomWidth={2}
+              borderColor={"container"}
+            >
+              <Text
+                fontSize={18}
+                fontWeight={"bold"}
+                color={"black"}
+                textAlign={"center"}
+              >
+                {props.title}
+              </Text>
+            </Block>
             <Text
-              fontSize={14}
+              fontSize={15}
               color={"gray136"}
-              textAlign={"justify"}
+              textAlign={"center"}
               paddingHorizontal={"_32"}
             >
               {props.description}
@@ -87,7 +99,7 @@ const ModalCustom = (props: modalYesNoProp) => {
             </Block>
             <Button
               buttonStyle={{
-                width: props.isCheckError ? 120 : 110,
+                width: props.isCheckError ? 140 : 130,
                 borderColor: props.isCheckError
                   ? theme.colors.blue_400
                   : theme.colors.primary,

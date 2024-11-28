@@ -6,6 +6,7 @@ import { commonStyles } from "../styles/styles";
 import useCommon from "@hooks/common/use-common";
 import { navigate } from "@navigation/config/navigation-service";
 import { ROUTES } from "@navigation/config/routes";
+import { localImages } from "@assets/icons/images";
 interface HeaderProfileProps {
   avatar?: string;
   displayName?: string;
@@ -29,7 +30,7 @@ const HeaderProfile = ({
         <Row between>
           <Row center>
             <Image
-              source={{ uri: avatar }}
+              source={avatar ? { uri: avatar }: localImages().default_avatar}
               style={{ width: 60, height: 60, borderRadius: 100 }}
             />
             <Block ml={"_15"}>

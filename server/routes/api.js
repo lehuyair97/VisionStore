@@ -138,6 +138,8 @@ router.get(
 // // Product routes
 router.get("/products", productAPI.getAllProducts);
 router.get("/products/pagination", productAPI.getAllProductsWithPagination);
+router.post("/products/build", productAPI.buildPcAutomatic);
+
 router.get("/productsgrouped", productAPI.getAllProductsGroupedByBrand);
 router.get(
   "/productsgroupedbySubCategory",
@@ -211,17 +213,17 @@ router.post(
   multer({ storage: getStorage("reviews") }).array("images", 3),
   commentAPI.addComment
 );
-
+router.post("/comment/:id/like", commentAPI.likeComment);
 router.get("/comment/:id", commentAPI.getCommentById);
 router.get("/comment-by-product/:productID", commentAPI.getCommentsByProductID);
 router.get("/comment-by-user/:userID", commentAPI.getCommentsByUserID);
 
 // // message routes
 router.post("/message", messageAPI.sendMessage);
-router.get("/messages/:userId", messageAPI.getMessagesByUserId);
-router.delete("/message/:id", messageAPI.deleteMessage);
-router.put("/message/:id", messageAPI.updateMessage);
-router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
+// router.get("/messages/:userId", messageAPI.getMessagesByUserId);
+// router.delete("/message/:id", messageAPI.deleteMessage);
+// router.put("/message/:id", messageAPI.updateMessage);
+// router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
 
 // // paypal
 router.post("/paypal/create", paypalAPI.createPayment);

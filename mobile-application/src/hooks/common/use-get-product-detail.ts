@@ -14,7 +14,7 @@ export interface ProductDetail {
     image: string;
     optionsColor: {
       color: string;
-      name: string;
+      name: string;a
     }[];
     optionsMemory: {
       name: string;

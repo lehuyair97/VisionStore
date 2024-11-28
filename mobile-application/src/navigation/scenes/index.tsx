@@ -4,11 +4,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import theme, { navigationTheme, ThemeProvider } from "@theme";
 import { queryClient } from "@utils/helper";
 import RootScenes from "./root-scenes";
-
-import { navigationRef } from "@navigation/config/navigation-service";
 import { CommonProvider } from "@context/common-context";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import WebSocketProvider from "@context/web-socket-context";
+import CheckValidateModal from "@features/common/components/check-validate-modal";
+import { navigationRef } from "@navigation/config/navigation-service";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 export default function MainNavigation() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -22,6 +22,7 @@ export default function MainNavigation() {
                   ref={navigationRef}
                 >
                   <RootScenes />
+                  <CheckValidateModal />
                 </NavigationContainer>
               </ThemeProvider>
             </GestureHandlerRootView>
