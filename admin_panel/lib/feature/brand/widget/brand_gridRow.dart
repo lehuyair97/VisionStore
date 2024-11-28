@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/auth/model/user.dart';
+import 'package:flutter_web/feature/brand_update/view/brand_update.dart';
 import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/create_product/model/brand_model.dart';
 import 'package:flutter_web/feature/products/model/product_model.dart';
@@ -106,7 +107,10 @@ class BrandGridDataSource extends DataGridSource {
           case BrandGridCell.edit:
             return Center(
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  final brandId = row.getCells().firstWhere((element) => element.columnName == BrandGridCell.id).value;
+                  Get.dialog(BrandUpdate(brandId: brandId));
+                },
                 icon: Icon(Icons.edit),
               ),
             );

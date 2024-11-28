@@ -5,9 +5,13 @@ import 'package:flutter_web/core/configs/theme/app_colors.dart';
 class SearchField extends StatefulWidget {
   final TextEditingController controller;
   final Function(String) onChanged; // Thêm hàm callback
+  final Function(String)? onSearch;
 
   const SearchField(
-      {Key? key, required this.controller, required this.onChanged})
+      {Key? key,
+      required this.controller,
+      required this.onChanged,
+      this.onSearch})
       : super(key: key);
 
   @override
@@ -34,7 +38,9 @@ class _SearchFieldState extends State<SearchField> {
           hintText: 'Nhập từ khóa tìm kiếm',
           hintStyle: TextStyle(color: Colors.grey),
           suffixIcon: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              widget.onSearch?.call(widget.controller.text);
+            },
             icon: Icon(
               Icons.search,
               color: AppColors.primary,

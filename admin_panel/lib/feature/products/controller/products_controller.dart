@@ -8,9 +8,7 @@ import 'package:flutter_web/common/repositoty/dio_api.dart';
 import 'package:flutter_web/common/utils/custom_dialog.dart';
 import 'package:flutter_web/feature/products/model/product_model.dart';
 import 'package:flutter_web/feature/products/widget/product_gridRow.dart';
-import 'package:flutter_web/feature/update_product/view/update_product.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProductsController extends GetxController {
   DioApi dioApi = DioApi();
@@ -28,7 +26,7 @@ class ProductsController extends GetxController {
 
   int totalItems = 0;
   int totalPages = 1;
-  int itemsPerPage = 10;
+  int itemsPerPage = 99;
   @override
   void onInit() {
     super.onInit();
@@ -78,43 +76,54 @@ class ProductsController extends GetxController {
     fetchProducts();
   }
 
-  void onCellTap(DataGridCellTapDetails details) {
-    try {
-      final index = details.rowColumnIndex.rowIndex - 1;
-
-      if (index < 0 || index >= productGridDataSource.rows.length) {
-        return;
-      }
-      while (currentTabIndex.value >= selectedRowIndices.length) {
-        selectedRowIndices.add(-1);
-      }
-
-      selectedRowIndices[currentTabIndex.value] = index;
-
-      final employeeId = (productGridDataSource.rows[index]
-          .getCells()
-          .firstWhere((cell) => cell.columnName == ProductGridCell.id)
-          .value);
-
-      print("Selected employeeId: $employeeId");
-
-      if (details.column.columnName == ProductGridCell.edit) {
-        Get.dialog(UpdateProduct(productId: employeeId));
-      } else if (details.column.columnName == ProductGridCell.delete) {
-        CustomDialog()
-            .showConfirmationDialog(
-          'Xóa sản phẩm',
-          'Bạn có chắc chắn muốn xóa sản phẩm này không?',
-          height: 0.3,
-        )
-            .then((value) {
-          if (value ?? false) {
-            deleteProduct(employeeId);
-          }
+  Future<void> deleteProductById(String productId) async {
+    CustomDialog()
+        .showConfirmationDialog(
+      'Xóa sản phẩm',
+      'Bạn có chắc chắn muốn xóa sản phẩm này không?',
+      height: 0.3,
+    )
+        .then((value) {
+      if (value ?? false) {
+        dio.delete(ApiEndpoints.deleteProduct(productId)).then((value) {
+          fetchProducts();
         });
       }
+    });
+  }
+
+  Future<void> searchProduct(String searchText) async {
+    if (isLoading.value) return;
+    if (searchText.isEmpty) {
+      fetchProducts();
+      return;
+    }
+    try {
+      isLoading.value = true;
+      final response = await dio.post(ApiEndpoints.searchProduct, data: {
+        'name': searchText,
+      });
+      print("response.data.length: ${response.data}");
+      productGridRows.clear();
+      // Giả sử response.data là một danh sách JSON
+      List<dynamic> productListJson = response.data;
+
+      // Chuyển đổi từng phần tử trong danh sách thành ProductItem
+      List<ProductItem> products =
+          productListJson.map((item) => ProductItem.fromJson(item)).toList();
+
+      if (products.isNotEmpty) {
+        productGridRows.value = products;
+        productGridDataSource =
+            ProductGridDataSource(products: productGridRows);
+        productGridDataSource.notifyListeners();
+      } else {
+        print("Dữ liệu sản phẩm là null");
+      }
     } catch (e) {
-      print("Error: $e");
+      print("Error searching products: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 

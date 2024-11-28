@@ -5,7 +5,9 @@ import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/create_product/model/brand_model.dart';
 import 'package:flutter_web/feature/create_product/model/categoty_model.dart';
+import 'package:flutter_web/feature/products/controller/products_controller.dart';
 import 'package:flutter_web/feature/products/model/product_model.dart';
+import 'package:flutter_web/feature/update_product/view/update_product.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,6 +68,10 @@ class ProductGridDataSource extends DataGridSource {
     print("Number of products: ${products.length}");
   }
 
+  void updatePageSize(int newSize) {
+    notifyListeners();
+  }
+
   List<DataGridRow> _employees = [];
 
   @override
@@ -79,6 +85,8 @@ class ProductGridDataSource extends DataGridSource {
     return DataGridRowAdapter(
       color: isEvenRow ? AppColors.grey.withOpacity(0.2) : AppColors.white,
       cells: row.getCells().map<Widget>((dataGridCell) {
+        final controllerProducts = Get.put(ProductsController());
+
         switch (dataGridCell.columnName) {
           case ProductGridCell.image:
             print("dataGridCell.value: ${dataGridCell.value}");
@@ -117,10 +125,28 @@ class ProductGridDataSource extends DataGridSource {
               ),
             );
           case ProductGridCell.edit:
-            return Icon(Icons.edit);
+            return IconButton(
+              onPressed: () {
+                String productId = row
+                    .getCells()
+                    .firstWhere((cell) => cell.columnName == ProductGridCell.id)
+                    .value
+                    .toString();
+                Get.dialog(UpdateProduct(productId: productId));
+              },
+              icon: Icon(Icons.edit),
+            );
           case ProductGridCell.delete:
-            return Icon(
-              Icons.delete,
+            return IconButton(
+              onPressed: () {
+                String productId = row
+                    .getCells()
+                    .firstWhere((cell) => cell.columnName == ProductGridCell.id)
+                    .value
+                    .toString();
+                controllerProducts.deleteProductById(productId);
+              },
+              icon: Icon(Icons.delete),
               color: AppColors.colorRed,
             );
           default:

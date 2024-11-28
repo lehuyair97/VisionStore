@@ -5,6 +5,7 @@ class Brand {
   final String? logo;
   final String? brandType;
   final int? version;
+  final String? banner;
 
   Brand({
     this.id,
@@ -12,6 +13,7 @@ class Brand {
     this.description,
     this.logo,
     this.brandType,
+    this.banner,
     this.version,
   });
 
@@ -22,6 +24,7 @@ class Brand {
       description: json['description'],
       logo: json['logo'],
       brandType: json['brandType'],
+      banner: json['banner'],
       version: json['__v'],
     );
   }
@@ -33,6 +36,7 @@ class Brand {
       'description': description,
       'logo': logo,
       'brandType': brandType,
+      'banner': banner,
       '__v': version,
     };
   }

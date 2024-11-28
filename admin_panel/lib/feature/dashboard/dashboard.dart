@@ -5,6 +5,9 @@ import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand/view/brand.dart';
+import 'package:flutter_web/feature/brand_create/controller/brand_create_controller.dart';
+import 'package:flutter_web/feature/brand_update/controller/brand_update_controller.dart';
+import 'package:flutter_web/feature/chat_supoport/view/chat_supoport.dart';
 import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/home/controller/home_contrioller.dart';
 import 'package:flutter_web/feature/home/view/home.dart';
@@ -17,6 +20,8 @@ import 'package:flutter_web/feature/purchase_history/view/purchase_history.dart'
 import 'package:flutter_web/feature/user/controller/user_controller.dart';
 import 'package:flutter_web/feature/user/model/user_model.dart';
 import 'package:flutter_web/feature/user/view/user.dart';
+import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
+import 'package:flutter_web/feature/voucher/view/voucher.dart';
 import 'package:flutter_web/router/side_menu.dart';
 import 'package:flutter_web/feature/products/view/products.dart';
 import 'package:get/get.dart';
@@ -39,6 +44,11 @@ class _DashboardState extends State<Dashboard> {
   final UserController userController = Get.put(UserController());
   final BrandController brandController = Get.put(BrandController());
   final OrderController orderController = Get.put(OrderController());
+  final BrandUpdateController brandUpdateController =
+      Get.put(BrandUpdateController());
+  final BrandCreateController brandCreateController =
+      Get.put(BrandCreateController());
+  final VoucherController voucherController = Get.put(VoucherController());
 
   bool isMenuOpen = true; // Quản lý trạng thái menu
   String avatar =
@@ -99,6 +109,8 @@ class _DashboardState extends State<Dashboard> {
                     OrdersView(),
                     UserView(),
                     BrandView(),
+                    VoucherView(),
+                    ChatSupport(),
                   ],
                 ),
               ),

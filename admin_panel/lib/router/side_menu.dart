@@ -54,6 +54,20 @@ class SideMenuWidget extends StatelessWidget {
         },
       ),
       SideMenuItem(
+        title: 'Voucher',
+        icon: Icon(Icons.discount),
+        onTap: (int index, _) {
+          controller.changePage(index);
+        },
+      ),
+      SideMenuItem(
+        title: 'Chat hỗ trợ',
+        icon: Icon(Icons.chat),
+        onTap: (int index, _) {
+          controller.changePage(index);
+        },
+      ),
+      SideMenuItem(
         title: 'Thoát',
         icon: Icon(Icons.logout),
         onTap: (int index, _) {

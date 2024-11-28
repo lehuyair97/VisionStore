@@ -44,7 +44,8 @@ class Products extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -56,6 +57,9 @@ class Products extends StatelessWidget {
                               child: SearchField(
                                 controller: controller.searchController,
                                 onChanged: (value) {},
+                                onSearch: (value) {
+                                  controller.searchProduct(value);
+                                },
                               ),
                             ),
                             const Spacer(),
@@ -205,14 +209,14 @@ class Products extends StatelessWidget {
                                       ),
                                     ),
                                   ],
-                                  onCellTap: controller.onCellTap,
                                 ),
                               ),
                               Expanded(
                                 flex: 1,
                                 child: SfDataPager(
-                                  pageCount: 1,
-                                  visibleItemsCount: 10,
+                                  pageCount:
+                                      controller.productGridRows.length / 7,
+                                  visibleItemsCount: 7,
                                   delegate: controller.productGridDataSource,
                                   onPageNavigationEnd: (pageIndex) {
                                     controller.onPageChanged(pageIndex);

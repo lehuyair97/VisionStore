@@ -92,7 +92,6 @@ class UpdateProductController extends GetxController {
         ApiEndpoints.updateProduct(productId),
         data: _buildProductData(),
       );
-
       if (response.statusCode != HttpStatusCodes.STATUS_CODE_OK) {
         Get.snackbar("Thông báo", "Cập nhật sản phẩm thất bại");
       }

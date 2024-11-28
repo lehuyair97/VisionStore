@@ -14,6 +14,8 @@ var app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const hbs = require('hbs');
+
 // Register Handlebars partials and helpers
 hbs.registerPartials(path.join(__dirname, 'views/partials'));
 

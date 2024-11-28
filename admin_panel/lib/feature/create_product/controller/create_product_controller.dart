@@ -18,10 +18,6 @@ class CreateProductController extends GetxController {
   final List<SubCategory> subCategoryList = [];
   Map<String, dynamic> option = {};
 
-  // // Khởi tạo ProductsController bằng lazyPut
-  // CreateProductController() {
-  //   Get.lazyPut<ProductsController>(() => ProductsController());
-  // }
   // // TextEditingControllers
   final TextEditingController name = TextEditingController();
   final TextEditingController price = TextEditingController();
