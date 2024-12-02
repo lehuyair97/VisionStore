@@ -50,6 +50,8 @@ const SignUp = () => {
       );
 
       if (isSuccess) {
+        navigate(ROUTES.Home);
+
         handleLoginSuccess({
           accessToken,
           refreshToken,
