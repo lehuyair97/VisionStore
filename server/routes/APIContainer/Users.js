@@ -292,6 +292,7 @@ exports.updateInfo = async (req, res) => {
       "addressSelected",
       "favorites",
       "device_token",
+      "role"
     ];
     const updates = _.pick(req.body, allowedFields);
 
@@ -337,6 +338,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    console.log(req.body)
     const { email, password, device_token } = req.body;
 
     if (!email || !password) {

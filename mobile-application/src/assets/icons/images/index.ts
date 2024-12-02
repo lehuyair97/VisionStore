@@ -25,5 +25,6 @@ export function localImages() {
     ic_ram: require("../images/ic_ram.png"),
     ic_home_red: require("../images/ic_home_red.png"),
     ic_vnpay: require("../images/ic_vnpay.webp"),
+    ic_offline: require("../images/ic_offline.png"),
   };
 }
