@@ -54,7 +54,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w400,
-              color: AppColors.black),
+              color: AppColors.white),
           textAlignVertical: TextAlignVertical.center,
           onTap: widget.onTap,
           obscureText: _obscureText,
@@ -65,7 +65,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 vertical: widget.isMobile ? 12 : 12),
             hintText: widget.hintText,
             errorBorder: InputBorder.none,
-            
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12), // Đặt độ bo tròn
               borderSide:

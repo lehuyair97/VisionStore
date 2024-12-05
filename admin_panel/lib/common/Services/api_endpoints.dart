@@ -17,10 +17,19 @@ class ApiEndpoints {
   static const String subcategory =
       "${Config.baseUrl}/subcategory/type/components";
 
+  static const String accessories =   "${Config.baseUrl}/subcategory/type/accessories";
+
   // products
   static const String products = "${Config.baseUrl}/products";
+
+  static const String productsGroupedByBrand = "${Config.baseUrl}/productsgrouped";
+
+
+  static String accessoriesSub(String supId) => "${Config.baseUrl}/products/accessories/$supId";
+
+  static String productSub(String supId) => "${Config.baseUrl}/products/subcategory/$supId";
   static const String productPagination =
-      "${Config.baseUrl}/products/pagination";
+"${Config.baseUrl}/products/pagination";
   static String getProductById(String productId) =>
       "${Config.baseUrl}/products/$productId";
   static String updateProduct(String productId) =>
@@ -30,6 +39,10 @@ class ApiEndpoints {
 
   // user
   static const String users = "${Config.baseUrl}/users";
+  static String getUserId(String userId) => "${Config.baseUrl}/users/$userId";
+  static String updateUser(String userId) => "${Config.baseUrl}/favorites/$userId";
+
+  static String changePassword(String userId) => "${Config.baseUrl}/change_pw/$userId";
 
   // orders
   static const String orders = "${Config.baseUrl}/orders";
@@ -37,4 +50,7 @@ class ApiEndpoints {
 
   // voucher
   static const String voucher = "${Config.baseUrl}/voucher";
+
+
+  
 }

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
 import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/common/repositoty/dio_api.dart';
-import 'package:flutter_web/feature/create_product/model/brand_model.dart';
-import 'package:flutter_web/feature/create_product/model/categoty_model.dart';
-import 'package:flutter_web/feature/create_product/model/sub_category_model.dart';
+import 'package:flutter_web/feature/product_create/model/brand_model.dart';
+import 'package:flutter_web/feature/product_create/model/categoty_model.dart';
+import 'package:flutter_web/feature/accessory/model/sub_category_model.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
 import 'package:get/get.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -122,7 +122,7 @@ class CreateProductController extends GetxController {
 
         if (response.statusCode == HttpStatusCodes.STATUS_CODE_CREATED ||
             response.statusCode == HttpStatusCodes.STATUS_CODE_OK) {
-          productsController.fetchProducts();
+          productsController.fetchProductsGroupedByBrand(categoryId.text);
           Get.back();
           Get.snackbar("Thông báo", "Tạo sản phẩm thành công");
         }

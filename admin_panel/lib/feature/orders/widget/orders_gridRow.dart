@@ -19,12 +19,21 @@ class OrdersGridDataSource extends DataGridSource {
     _employees = orders.map<DataGridRow>((e) {
       return DataGridRow(cells: [
         DataGridCell<String>(columnName: OrdersGridCell.id, value: e.id ?? ''),
-        DataGridCell<String>(columnName: OrdersGridCell.user, value: e.customerName ?? ''),
-        DataGridCell<String>(columnName: OrdersGridCell.email, value: e.customerEmail ?? ''),
-        DataGridCell<String>(columnName: OrdersGridCell.phone, value: e.customerPhoneNumber.toString()),
-        DataGridCell<String>(columnName: OrdersGridCell.address, value: e.customerAddress ?? ''),
-        DataGridCell<String>(columnName: OrdersGridCell.paymentMethod, value: e.paymentMethod ?? ''),
-        DataGridCell<String>(columnName: OrdersGridCell.deliveryMethod, value: e.deliveryMethod?.method ?? ''),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.user, value: e.customerName ?? ''),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.email, value: e.customerEmail ?? ''),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.phone,
+            value: e.customerPhoneNumber.toString()),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.address, value: e.customerAddress ?? ''),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.paymentMethod,
+            value: e.paymentMethod ?? ''),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.deliveryMethod,
+            value: e.deliveryMethod?.method ?? ''),
       ]);
     }).toList();
   }
@@ -40,7 +49,9 @@ class OrdersGridDataSource extends DataGridSource {
     bool isEvenRow = rowIndex % 2 == 0;
 
     return DataGridRowAdapter(
-      color: isEvenRow ? AppColors.grey.withOpacity(0.2) : AppColors.white,
+      color: isEvenRow
+          ? AppColors.grey.withOpacity(0.2)
+          : AppColors.backgroundCard,
       cells: row.getCells().map<Widget>((dataGridCell) {
         switch (dataGridCell.columnName) {
           case OrdersGridCell.id:
@@ -83,6 +94,8 @@ class OrdersGridDataSource extends DataGridSource {
           case OrdersGridCell.user:
           case OrdersGridCell.email:
           case OrdersGridCell.phone:
+          case OrdersGridCell.paymentMethod:
+          case OrdersGridCell.deliveryMethod:
             return Center(
               child: TextWidget(
                 text: dataGridCell.value.toString(),

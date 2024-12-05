@@ -3,27 +3,31 @@ import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter_web/common/img/img.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
+import 'package:flutter_web/feature/accessory/controller/accessory_controller.dart';
+import 'package:flutter_web/feature/accessory/view/accessory.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand/view/brand.dart';
 import 'package:flutter_web/feature/brand_create/controller/brand_create_controller.dart';
 import 'package:flutter_web/feature/brand_update/controller/brand_update_controller.dart';
 import 'package:flutter_web/feature/chat_supoport/view/chat_supoport.dart';
-import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
+import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
+import 'package:flutter_web/feature/computer_accessories/view/computer_accessories.dart';
+import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/home/controller/home_contrioller.dart';
 import 'package:flutter_web/feature/home/view/home.dart';
 import 'package:flutter_web/feature/orders/controller/oder_controller.dart';
 import 'package:flutter_web/feature/orders/view/orders.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
-import 'package:flutter_web/feature/profile/profile.dart';
 import 'package:flutter_web/feature/purchase_history/controller/purchase_history_controller.dart';
-import 'package:flutter_web/feature/purchase_history/view/purchase_history.dart';
 import 'package:flutter_web/feature/user/controller/user_controller.dart';
-import 'package:flutter_web/feature/user/model/user_model.dart';
 import 'package:flutter_web/feature/user/view/user.dart';
+import 'package:flutter_web/feature/user_changepass/controller/changepass_controller.dart';
+import 'package:flutter_web/feature/user_update/controller/user_update_controller.dart';
 import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
 import 'package:flutter_web/feature/voucher/view/voucher.dart';
-import 'package:flutter_web/router/side_menu.dart';
+import 'package:flutter_web/feature/dashboard/widget/side_menu.dart';
 import 'package:flutter_web/feature/products/view/products.dart';
+import 'package:flutter_web/feature/voucher_create/controller/voucher_create_controller.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -49,8 +53,21 @@ class _DashboardState extends State<Dashboard> {
   final BrandCreateController brandCreateController =
       Get.put(BrandCreateController());
   final VoucherController voucherController = Get.put(VoucherController());
+  final AccessoryController accessoryController =
+      Get.put(AccessoryController());
 
-  bool isMenuOpen = true; 
+  final ComputerAccessoriesController cvomputerAccessories =
+      Get.put(ComputerAccessoriesController());
+
+  final VoucherCreateController voucherCreateController =
+      Get.put(VoucherCreateController());
+
+  final UserUpdateController userUpdateController =
+      Get.put(UserUpdateController());
+  final ChangePassController changePassController =
+      Get.put(ChangePassController());
+
+  bool isMenuOpen = true;
 
   @override
   void initState() {
@@ -58,6 +75,7 @@ class _DashboardState extends State<Dashboard> {
 
     createProductController.getBrand();
     createProductController.getCategory();
+
     createProductController.getSubCategory();
 
     print("controler.brandList: ${createProductController.brandList.length}");
@@ -91,17 +109,21 @@ class _DashboardState extends State<Dashboard> {
           body: Row(
             children: [
               if (isMenuOpen || !isMobile)
-                SizedBox(
+                Expanded(
+                  flex: 1,
                   child: SideMenuWidget(
                     controller: sideMenuController,
                     isMobile: isMobile,
                   ),
                 ),
               Expanded(
+                flex: 5,
                 child: PageView(
                   controller: pageController,
                   children: [
                     HomeView(),
+                    Accessory(),
+                    ComputerAccessories(),
                     Products(),
                     OrdersView(),
                     UserView(),

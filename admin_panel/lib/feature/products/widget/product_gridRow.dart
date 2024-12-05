@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
-import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
-import 'package:flutter_web/feature/create_product/model/brand_model.dart';
-import 'package:flutter_web/feature/create_product/model/categoty_model.dart';
+import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
+import 'package:flutter_web/feature/product_create/model/brand_model.dart';
+import 'package:flutter_web/feature/product_create/model/categoty_model.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
 import 'package:flutter_web/feature/products/model/product_model.dart';
-import 'package:flutter_web/feature/update_product/view/update_product.dart';
+import 'package:flutter_web/feature/product_update/view/update_product.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,7 +83,9 @@ class ProductGridDataSource extends DataGridSource {
     bool isEvenRow = rowIndex % 2 == 0;
 
     return DataGridRowAdapter(
-      color: isEvenRow ? AppColors.grey.withOpacity(0.2) : AppColors.white,
+      color: isEvenRow
+          ? AppColors.grey.withOpacity(0.2)
+          : AppColors.backgroundCard,
       cells: row.getCells().map<Widget>((dataGridCell) {
         final controllerProducts = Get.put(ProductsController());
 
@@ -121,6 +123,7 @@ class ProductGridDataSource extends DataGridSource {
               child: TextWidget(
                 text: dataGridCell.value.toString(),
                 fontSize: 14,
+                color: AppColors.white,
                 fontWeight: FontWeight.w600,
               ),
             );
@@ -134,7 +137,10 @@ class ProductGridDataSource extends DataGridSource {
                     .toString();
                 Get.dialog(UpdateProduct(productId: productId));
               },
-              icon: Icon(Icons.edit),
+              icon: Icon(
+                Icons.edit,
+                color: AppColors.white,
+              ),
             );
           case ProductGridCell.delete:
             return IconButton(
@@ -149,12 +155,16 @@ class ProductGridDataSource extends DataGridSource {
               icon: Icon(Icons.delete),
               color: AppColors.colorRed,
             );
+
           default:
             return Container(
               height: 80.0,
               alignment: Alignment.center,
               padding: EdgeInsets.all(16.0),
-              child: Text(dataGridCell.value.toString()),
+              child: Text(
+                dataGridCell.value.toString(),
+                style: TextStyle(color: AppColors.white),
+              ),
             );
         }
       }).toList(),

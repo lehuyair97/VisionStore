@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/auth/controller/login_comtroller.dart';
 import 'package:flutter_web/feature/auth/widget/img_login.dart';
@@ -43,30 +44,55 @@ class LoginPage extends StatelessWidget {
                               ),
                             )
                           : Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 80.w),
+                              padding: EdgeInsets.symmetric(horizontal: 200.w),
                               child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: AppColors.primary,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20.r),
-                                            bottomLeft: Radius.circular(20.r),
+                                child: Card(
+                                  color: AppColors.black.withOpacity(0.3),
+                                  elevation: 0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 40.w),
+                                          height: Get.height * 0.8,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              TextWidget(
+                                                text: 'VisonStore',
+                                                fontSize: 44.sp,
+                                                color: AppColors.primary,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              SizedBox(height: 30.h),
+                                              TextWidget(
+                                                text:
+                                                    'VisionStore là một ứng dụng bán hàng trực tuyến chuyên cung cấp các sản phẩm máy tính và phụ kiện công nghệ. Với sứ mệnh mang đến cho người dùng những sản phẩm chất lượng cùng dịch vụ tốt nhất, VisionStore là giải pháp mua sắm tiện lợi cho khách hàng có nhu cầu về thiết bị công nghệ.',
+                                                fontSize: 20.sp,
+                                                fontWeight: FontWeight.w300,
+                                                color: AppColors.primary,
+                                                textAlign: TextAlign.center,
+                                                maxLines: 8,
+                                              ),
+                                              const SizedBox(height: 40),
+                                              const ImgLogin()
+                                            ],
                                           ),
                                         ),
-                                        height: Get.height * 0.8,
-                                        child: const ImgLogin(),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: LoginFrom(
-                                          loginController: loginController),
-                                    ),
-                                  ],
+                                      Expanded(
+                                        child: LoginFrom(
+                                            loginController: loginController),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             )

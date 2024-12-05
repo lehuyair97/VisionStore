@@ -1,9 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/home/widget/LineChart/bottom_title_widgets.dart';
 import 'package:flutter_web/feature/home/widget/LineChart/left_title_widgets.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LineChartSample2 extends StatefulWidget {
   final Color color;
@@ -24,6 +26,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(35),
       width: Get.width,
       decoration: BoxDecoration(
         color: widget.color,
@@ -31,38 +34,50 @@ class _LineChartSample2State extends State<LineChartSample2> {
       ),
       child: Stack(
         children: <Widget>[
+          Positioned(
+            top: -4,
+            left: 0,
+            child: Text(
+              'Biểu đồ doanh thu Tring 6 Tháng',
+              style: TextStyle(
+                fontSize: 24.sp, // Responsive font size with ScreenUtil
+                fontWeight: FontWeight.bold,
+                color: AppColors.white,
+              ),
+            ),
+          ),
           AspectRatio(
-            aspectRatio: 2.2,
+            aspectRatio: 1.3,
             child: Padding(
               padding: const EdgeInsets.only(
                 right: 18,
                 left: 12,
-                top: 24,
-                bottom: 12,
+                top: 70,
+                bottom: 0,
               ),
               child: LineChart(
                 showAvg ? avgData() : mainData(),
               ),
             ),
           ),
-          SizedBox(
-            width: 60,
-            height: 34,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  showAvg = !showAvg;
-                });
-              },
-              child: Text(
-                'avg',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
-                ),
-              ),
-            ),
-          ),
+          // SizedBox(
+          //   width: 60,
+          //   height: 34,
+          //   child: TextButton(
+          //     onPressed: () {
+          //       setState(() {
+          //         showAvg = !showAvg;
+          //       });
+          //     },
+          //     child: Text(
+          //       'avg',
+          //       style: TextStyle(
+          //         fontSize: 12,
+          //         color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -124,23 +139,19 @@ class _LineChartSample2State extends State<LineChartSample2> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 18,
+      maxX: 12,
       minY: 0,
-      maxY: 7,
+      maxY: 18,
       lineBarsData: [
         LineChartBarData(
           spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.5, 2.5),
-            FlSpot(5, 4.5),
-            FlSpot(7, 3.2),
-            FlSpot(8.5, 4),
-            FlSpot(10, 3.5),
-            FlSpot(11.5, 5.2),
-            FlSpot(13, 2.8),
-            FlSpot(14, 4.0),
-            FlSpot(15, 3.7),
-            FlSpot(17, 4.5),
+            FlSpot(0, 1),
+            FlSpot(2.5, 3.5),
+            FlSpot(5, 13.5),
+            FlSpot(7, 10.2),
+            FlSpot(8.5, 11),
+            FlSpot(10, 11.5),
+            FlSpot(11.5, 11.2),
           ],
           isCurved: true,
           gradient: LinearGradient(

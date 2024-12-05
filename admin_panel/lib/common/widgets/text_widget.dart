@@ -15,7 +15,7 @@ class TextWidget extends StatelessWidget {
       required this.text,
       this.fontSize = 24,
       this.fontWeight = FontWeight.w600,
-      this.color = AppColors.black,
+      this.color = AppColors.white,
       this.textAlign = TextAlign.left,
       this.paddingHorizontal = 0,
       this.maxLines = 1});
@@ -29,10 +29,10 @@ class TextWidget extends StatelessWidget {
         textAlign: textAlign,
         maxLines: maxLines,
         style: TextStyle(
-        fontSize: fontSize.sp,
-        fontWeight: fontWeight,
-        color: color,
-        overflow: TextOverflow.ellipsis,
+          fontSize: fontSize.sp,
+          fontWeight: fontWeight,
+          color: color,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );

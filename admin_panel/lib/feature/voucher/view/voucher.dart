@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web/common/widgets/custom_button.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
 import 'package:flutter_web/feature/voucher/widget/voucher_gridRow.dart';
+import 'package:flutter_web/feature/voucher_create/view/voucher_create.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -14,11 +16,6 @@ class VoucherView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<VoucherController>();
-
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
       return Scaffold(
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 30.h),
@@ -27,18 +24,11 @@ class VoucherView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                TextWidget(
-                  text: "Danh sách Voucher",
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                ),
-                20.verticalSpace,
                 Container(
                   alignment: Alignment.center,
                   width: Get.width * 0.8,
                   decoration: BoxDecoration(
-                    color: AppColors.backgroundTab,
+                    color: AppColors.backgroundCard.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Padding(
@@ -47,6 +37,13 @@ class VoucherView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                                        TextWidget(
+                  text: "Danh sách Voucher",
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white  ,
+                        ),
+                        20.verticalSpace,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -57,14 +54,37 @@ class VoucherView extends StatelessWidget {
                                 onChanged: (value) {},
                               ),
                             ),
+                            const Spacer(),
+                            CustomButton(
+                              horizontalPadding: 30,
+                              verticalPadding: 15,
+                              textColor: AppColors.white,
+                              color: AppColors.primary,
+                              text: "+ Thêm voucher",
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return const VoucherCreate();
+                                  },
+                                );
+                              },
+                            ),
                           ],
                         ),
                         30.verticalSpace,
-                        Container(
-                          height: Get.height * 1,
-                          width: Get.width * 0.8,
-                          alignment: Alignment.center,
-                          child: Column(
+                        Card(
+                          elevation: 5,
+                          color: AppColors.backgroundCard.withOpacity(0.5),
+                          child: Container(
+                            height: Get.height * 1,
+                            width: Get.width * 0.8,
+                            alignment: Alignment.center,
+                            child:Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -95,7 +115,7 @@ class VoucherView extends StatelessWidget {
                                     ),
                                     GridColumn(
                                       columnName: VoucherGridCell.code,
-                                      width: Get.width * 0.08, // Adjusted width
+                                      width: Get.width * 0.1, // Adjusted width
                                       label: Container(
                                         padding: EdgeInsets.all(16.0),
                                         alignment: Alignment.center,
@@ -161,7 +181,9 @@ class VoucherView extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            ],
+                                ],
+                              );
+                            }),
                           ),
                         ),
                       ],
@@ -172,7 +194,6 @@ class VoucherView extends StatelessWidget {
             ),
           ),
         ),
-      );
-    });
+    );
   }
 }

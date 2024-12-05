@@ -11,21 +11,21 @@ class HomeController extends GetxController {
         icon: 'assets/svg/burn.svg',
         value: "1,200",
         title: "Người dùng hoạt động",
-        color: AppColors.primary.withOpacity(0.5)),
+        color: AppColors.backgroundCard),
     HealthModel(
         icon: 'assets/svg/steps.svg',
         value: "\$15,000",
         title: "Tổng doanh thu",
-        color: AppColors.black.withOpacity(0.5)),
+        color: AppColors.backgroundCard),
     HealthModel(
         icon: 'assets/svg/distance.svg',
         value: "350",
         title: "Đơn hàng mới",
-        color: AppColors.yellow.withOpacity(0.5)),
+        color: AppColors.backgroundCard),
     HealthModel(
         icon: 'assets/svg/sleep.svg',
         value: "85%",
         title: "Phản hồi tích cực",
-        color: AppColors.textDoing.withOpacity(0.5)),
+        color: AppColors.backgroundCard),
   ];
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
-import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
+import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/voucher/model/voucher_model.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_web/feature/user/model/user_model.dart';
+
 class VoucherGridCell {
   static const String id = 'id';
   static const String code = 'code';
@@ -26,7 +27,8 @@ class VoucherGridDataSource extends DataGridSource {
         DataGridCell<String>(
             columnName: VoucherGridCell.title, value: e.title ?? ''),
         DataGridCell<String>(
-            columnName: VoucherGridCell.description, value: e.description ?? ''),
+            columnName: VoucherGridCell.description,
+            value: e.description ?? ''),
         DataGridCell<String>(
             columnName: VoucherGridCell.status, value: e.status ?? ''),
         DataGridCell<String>(
@@ -46,7 +48,9 @@ class VoucherGridDataSource extends DataGridSource {
     bool isEvenRow = rowIndex % 2 == 0;
 
     return DataGridRowAdapter(
-      color: isEvenRow ? AppColors.grey.withOpacity(0.2) : AppColors.white,
+      color: isEvenRow
+          ? AppColors.grey.withOpacity(0.2)
+          : AppColors.backgroundCard,
       cells: row.getCells().map<Widget>((dataGridCell) {
         switch (dataGridCell.columnName) {
           case VoucherGridCell.title:
@@ -61,7 +65,6 @@ class VoucherGridDataSource extends DataGridSource {
           case VoucherGridCell.description:
           case VoucherGridCell.status:
           case VoucherGridCell.type:
-          
             return Center(
               child: TextWidget(
                 text: dataGridCell.value.toString(),
@@ -74,7 +77,9 @@ class VoucherGridDataSource extends DataGridSource {
               height: 80.0,
               alignment: Alignment.center,
               padding: EdgeInsets.all(16.0),
-              child: Text(dataGridCell.value.toString()),
+              child: Text(dataGridCell.value.toString(),
+                  style: TextStyle(
+                      color: AppColors.white, fontWeight: FontWeight.w600)),
             );
         }
       }).toList(),

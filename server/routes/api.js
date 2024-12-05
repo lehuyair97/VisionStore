@@ -223,7 +223,7 @@ router.post("/message", messageAPI.sendMessage);
 // router.get("/messages/:userId", messageAPI.getMessagesByUserId);
 // router.delete("/message/:id", messageAPI.deleteMessage);
 // router.put("/message/:id", messageAPI.updateMessage);
-// router.get("/conversations", messageAPI.getAllConversations); // Lấy tất cả cuộc trò chuyện với các client
+router.get("/conversations", messageAPI.getAllActiveConversations); 
 
 // // paypal
 router.post("/paypal/create", paypalAPI.createPayment);

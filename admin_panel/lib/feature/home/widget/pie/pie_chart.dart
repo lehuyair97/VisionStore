@@ -20,10 +20,9 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1.3,
-      child: Container(
-        width: Get.width * widget.width,
-        decoration: BoxDecoration(
-            color: widget.color, borderRadius: BorderRadius.circular(16)),
+      child: Card(
+        elevation: 3,
+        color: widget.color,
         child: Row(
           children: <Widget>[
             Expanded(
@@ -67,10 +66,26 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        BuildIndicator(color: AppColors.primary, text: 'First'),
-        BuildIndicator(color: AppColors.black, text: 'Second'),
-        BuildIndicator(color: AppColors.colorRed, text: 'Third'),
-        BuildIndicator(color: AppColors.colorRed, text: 'Fourth'),
+        BuildIndicator(
+          color: AppColors.primary,
+          text: 'First',
+          textColor: AppColors.white,
+        ),
+        BuildIndicator(
+          color: AppColors.black,
+          text: 'Second',
+          textColor: AppColors.white,
+        ),
+        BuildIndicator(
+          color: AppColors.colorRed,
+          text: 'Third',
+          textColor: AppColors.white,
+        ),
+        BuildIndicator(
+          color: AppColors.colorRed,
+          text: 'Fourth',
+          textColor: AppColors.white,
+        ),
       ],
     );
   }

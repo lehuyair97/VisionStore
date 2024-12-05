@@ -13,7 +13,7 @@ class SubCategory {
 
   factory SubCategory.fromJson(Map<String, dynamic> json) {
     return SubCategory(
-      id: json['_id'] ?? '',
+      id: json['_id']?.toString() ?? '',
       name: json['name'] ?? 'Chưa có tên',
       image: json['image'] ?? '',
       childType: json['child_type'] ?? '',
