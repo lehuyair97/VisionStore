@@ -16,184 +16,192 @@ class VoucherView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<VoucherController>();
-      return Scaffold(
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 30.h),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: Get.width * 0.8,
-                  decoration: BoxDecoration(
-                    color: AppColors.backgroundCard.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                                        TextWidget(
-                  text: "Danh sách Voucher",
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white  ,
-                        ),
-                        20.verticalSpace,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: Get.width * 0.3,
-                              child: SearchField(
-                                controller: controller.searchController.value,
-                                onChanged: (value) {},
-                              ),
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 30.h),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                width: Get.width * 0.8,
+                decoration: BoxDecoration(
+                  color: AppColors.backgroundCard.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextWidget(
+                        text: "Danh sách Voucher",
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                      ),
+                      20.verticalSpace,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: Get.width * 0.3,
+                            child: SearchField(
+                              controller: controller.searchController.value,
+                              onChanged: (value) {},
                             ),
-                            const Spacer(),
-                            CustomButton(
-                              horizontalPadding: 30,
-                              verticalPadding: 15,
-                              textColor: AppColors.white,
-                              color: AppColors.primary,
-                              text: "+ Thêm voucher",
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return const VoucherCreate();
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        30.verticalSpace,
-                        Card(
-                          elevation: 5,
-                          color: AppColors.backgroundCard.withOpacity(0.5),
-                          child: Container(
-                            height: Get.height * 1,
-                            width: Get.width * 0.8,
-                            alignment: Alignment.center,
-                            child:Obx(() {
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 4,
-                                child: SfDataGrid(
-                                  headerRowHeight: 80,
-                                  rowHeight: 80,
-                                  gridLinesVisibility: GridLinesVisibility.none,
-                                  headerGridLinesVisibility:
-                                      GridLinesVisibility.none,
-                                  source: VoucherGridDataSource(
-                                      vouchers: controller.vouchers),
-                                  columns: <GridColumn>[
-                                    GridColumn(
-                                      columnName: VoucherGridCell.id,
-                                      visible: false,
-                                      width: Get.width * 0.1, // Adjusted width
-                                      label: Container(
-                                        padding: EdgeInsets.all(16.0),
-                                        alignment: Alignment.center,
-                                        child: TextWidget(
-                                          text: 'ID',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    GridColumn(
-                                      columnName: VoucherGridCell.code,
-                                      width: Get.width * 0.1, // Adjusted width
-                                      label: Container(
-                                        padding: EdgeInsets.all(16.0),
-                                        alignment: Alignment.center,
-                                        child: TextWidget(
-                                          text: 'Mã voucher',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    GridColumn(
-                                      columnName: VoucherGridCell.title,
-                                      width: Get.width * 0.2, // Adjusted width
-                                      label: Container(
-                                        padding: EdgeInsets.all(16.0),
-                                        alignment: Alignment.center,
-                                        child: TextWidget(
-                                          text: 'Tên voucher',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    GridColumn(
-                                      columnName: VoucherGridCell.description,
-                                      width: Get.width * 0.25, // Adjusted width
-                                      label: Container(
-                                        padding: EdgeInsets.all(16.0),
-                                        alignment: Alignment.center,
-                                        child: TextWidget(
-                                          text: 'Mô tả',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    GridColumn(
-                                      columnName: VoucherGridCell.status,
-                                      width: Get.width * 0.1, // Adjusted width
-                                      label: Container(
-                                        padding: EdgeInsets.all(16.0),
-                                        alignment: Alignment.center,
-                                        child: TextWidget(
-                                          text: 'Trạng thái',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    GridColumn(
-                                      columnName: VoucherGridCell.type,
-                                      width: Get.width * 0.1, // Adjusted width
-                                      label: Container(
-                                        padding: EdgeInsets.all(16.0),
-                                        alignment: Alignment.center,
-                                        child: TextWidget(
-                                          text: 'Loại voucher',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                                ],
-                              );
-                            }),
                           ),
+                          const Spacer(),
+                          CustomButton(
+                            horizontalPadding: 30,
+                            verticalPadding: 15,
+                            textColor: AppColors.white,
+                            color: AppColors.primary,
+                            text: "+ Thêm voucher",
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const VoucherCreate();
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      30.verticalSpace,
+                      Card(
+                        elevation: 5,
+                        color: AppColors.backgroundCard.withOpacity(0.5),
+                        child: Container(
+                          height: Get.height * 1,
+                          width: Get.width * 0.8,
+                          alignment: Alignment.center,
+                          child: Obx(() {
+                            if (controller.isLoading.value) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: SfDataGrid(
+                                    headerRowHeight: 80,
+                                    rowHeight: 80,
+                                    gridLinesVisibility:
+                                        GridLinesVisibility.none,
+                                    headerGridLinesVisibility:
+                                        GridLinesVisibility.none,
+                                    source: VoucherGridDataSource(
+                                        vouchers: controller.vouchers),
+                                    columns: <GridColumn>[
+                                      GridColumn(
+                                        columnName: VoucherGridCell.id,
+                                        visible: false,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'ID',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
+                                        columnName: VoucherGridCell.code,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Mã voucher',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
+                                        columnName: VoucherGridCell.title,
+                                        width:
+                                            Get.width * 0.2, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Tên voucher',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
+                                        columnName: VoucherGridCell.description,
+                                        width:
+                                            Get.width * 0.25, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Mô tả',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
+                                        columnName: VoucherGridCell.status,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Trạng thái',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
+                                        columnName: VoucherGridCell.type,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Loại voucher',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 }

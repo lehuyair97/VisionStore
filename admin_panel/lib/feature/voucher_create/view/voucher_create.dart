@@ -15,10 +15,11 @@ class VoucherCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<VoucherCreateController>();
     return AlertDialog(
+      backgroundColor: AppColors.backgroundCard,
       title: const TextWidget(
         text: 'Thêm voucher',
         fontSize: 24,
-        color: AppColors.primary,
+        color: AppColors.white,
         fontWeight: FontWeight.bold,
       ),
       content: Container(
@@ -27,11 +28,13 @@ class VoucherCreate extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
+              Container(
+                width: Get.width * 0.4,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     TaskTitle(
                       label: 'Giảm giá',
@@ -40,7 +43,6 @@ class VoucherCreate extends StatelessWidget {
                       controllerNote: controller.discount,
                     ),
                     CustomSelect(
-                      
                       label1: "Loại voucher",
                       selectList: controller.type
                           .map((e) => Item(id: e, name: e))
@@ -48,14 +50,7 @@ class VoucherCreate extends StatelessWidget {
                       onProjectSelected: (value) {
                         controller.voucherType = value ?? "";
                       },
-                    )
-                  ],
-                ),
-              ),
-              20.horizontalSpace,
-              Expanded(
-                child: Column(
-                  children: [
+                    ),
                     TaskTitle(
                       label: 'title',
                       note: '',

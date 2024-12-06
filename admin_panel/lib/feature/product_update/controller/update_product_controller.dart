@@ -83,7 +83,6 @@ class UpdateProductController extends GetxController {
     categoryId.text = product.categoryId?.toString() ?? "";
     subCategoryId.text = product.subCategoryId?.toString() ??   "";
     option = product.option as Map<String, dynamic> ?? {};
-    print("categoryId: ${categoryId.text}");
   }
 
   Future<void> postUpdateProduct(String productId) async {

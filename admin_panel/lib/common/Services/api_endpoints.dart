@@ -28,8 +28,7 @@ class ApiEndpoints {
   static String accessoriesSub(String supId) => "${Config.baseUrl}/products/accessories/$supId";
 
   static String productSub(String supId) => "${Config.baseUrl}/products/subcategory/$supId";
-  static const String productPagination =
-"${Config.baseUrl}/products/pagination";
+  static  String productPagination(int page, int limit) => "${Config.baseUrl}/products/pagination?page=$page&limit=$limit";
   static String getProductById(String productId) =>
       "${Config.baseUrl}/products/$productId";
   static String updateProduct(String productId) =>

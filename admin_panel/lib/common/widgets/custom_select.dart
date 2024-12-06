@@ -58,9 +58,9 @@ class _CustomSelectState extends State<CustomSelect> {
           widget.label1 != null
               ? TextWidget(
                   text: widget.label1!,
-                  fontSize: 14, // Giảm kích thước font xuống 12
+                  fontSize: 12, // Giảm kích thước font xuống 12
                   fontWeight: FontWeight.w400, // Độ đậm của chữ
-                  color: AppColors.backgroundCard,
+                  color: AppColors.white,
                 )
               : SizedBox.shrink(), // Nếu không có label, không hiển thị gì
           8.verticalSpace,
@@ -109,7 +109,8 @@ class _CustomSelectState extends State<CustomSelect> {
                         value: item.id,
                         child: Text(
                           item.name,
-                          style: TextStyle(color: AppColors.backgroundCard),
+                          style: TextStyle(
+                              color: AppColors.backgroundCard, fontSize: 14),
                         ),
                       );
                     }).toList()
@@ -118,7 +119,8 @@ class _CustomSelectState extends State<CustomSelect> {
                         value: item,
                         child: Text(
                           item,
-                          style: TextStyle(color: AppColors.backgroundCard),
+                          style: TextStyle(
+                              color: AppColors.backgroundCard, fontSize: 14),
                         ),
                       );
                     }).toList(),

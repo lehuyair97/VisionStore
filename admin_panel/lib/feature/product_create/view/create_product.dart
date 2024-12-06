@@ -4,24 +4,32 @@ import 'package:flutter_web/common/widgets/custom_select.dart';
 import 'package:flutter_web/common/widgets/task_title.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
+import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CreateProduct extends StatelessWidget {
+class CreateProduct extends StatefulWidget {
   final ProductsController productsController;
 
   const CreateProduct({super.key, required this.productsController});
 
   @override
+  State<CreateProduct> createState() => _CreateProductState();
+}
+
+class _CreateProductState extends State<CreateProduct> {
+  final controller = Get.find<CreateProductController>();
+  final controllerComputer = Get.put(ComputerAccessoriesController());
+  @override
   Widget build(BuildContext context) {
-    final controller = Get.find<CreateProductController>();
     return AlertDialog(
+      backgroundColor: AppColors.backgroundCard,
       title: const TextWidget(
         text: 'Thêm sản phẩm',
         fontSize: 24,
-        color: AppColors.primary,
+        color: AppColors.white,
         fontWeight: FontWeight.bold,
       ),
       content: Container(
@@ -31,20 +39,45 @@ class CreateProduct extends StatelessWidget {
         child: SingleChildScrollView(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TaskTitle(
+                          sizeText: 30,
+                          isNameMain: true,
+                          label: '',
+                          note: 'Nhập tên sản phẩm',
+                          screenWidth: Get.width,
+                          controllerNote: controller.name),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20.w),
+                        child: TaskTitle(
+                            sizeText: 18,
+                            isNameMain: true,
+                            label: '',
+                            note: 'Thêm link ảnh',
+                            screenWidth: Get.width,
+                            controllerNote: controller.image.value),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TaskTitle(
-                          label: 'Tên sản phẩm',
-                          note: '',
-                          screenWidth: Get.width,
-                          controllerNote: controller.name),
                       TaskTitle(
                           label: 'Giá sản phẩm',
                           note: '',
@@ -71,32 +104,18 @@ class CreateProduct extends StatelessWidget {
                           screenWidth: Get.width,
                           isNumber: true,
                           controllerNote: controller.stock),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
                       TaskTitle(
                           label: 'Trọng lượng',
                           note: '',
                           screenWidth: Get.width,
                           isNumber: true,
                           controllerNote: controller.weight),
-                      TaskTitle(
-                          label: 'Thêm link ảnh',
-                          note: '',
-                          screenWidth: Get.width,
-                          controllerNote: controller.image),
                       CustomSelect(
                         label1: 'Thương hiệu',
+                        hint: 'Chọn thương hiệu',
                         selectList: controller.brandList
-                            .map((e) => Item(id: e.id ?? '', name: e.name ?? ''))
+                            .map(
+                                (e) => Item(id: e.id ?? '', name: e.name ?? ''))
                             .toList(),
                         onProjectSelected: (value) {
                           controller.brand.text = value ?? "";
@@ -104,25 +123,61 @@ class CreateProduct extends StatelessWidget {
                       ),
                       CustomSelect(
                         label1: 'Loại sản phẩm',
-                        name: "Tên loại sản phẩm",
-                        hint: "Chọn loại sản phẩm",
+                        hint: 'Chọn loại sản phẩm',
                         selectList: controller.categoryList
                             .map((e) => Item(id: e.id, name: e.name))
                             .toList(),
                         onProjectSelected: (value) {
-                          controller.categoryId.text = value ?? "";
+                          controller.categoryId.value.text = value ?? "";
                         },
                       ),
-                      CustomSelect(
-                        label1: 'Loại sản phẩm con',
-                        name: "back",
-                        selectList: controller.subCategoryList
-                            .map((e) => Item(id: e.id, name: e.name))
-                            .toList(),
-                        onProjectSelected: (value) {
-                          controller.subCategoryId.text = value ?? "";
-                        },
-                      ),
+                      Obx(() {
+                        print("controller.categoryId.value.text: ${controller.categoryId.value.text}");
+                        // Kiểm tra nếu có dữ liệu và id là laptop hoặc pc, không hiển thị sản phẩm con
+                        if (controller.categoryId.value.text == 'laptop' ||
+                            controller.categoryId.value.text == 'pc') {
+                          return SizedBox
+                              .shrink(); // Nếu id là laptop hoặc pc, không hiển thị sản phẩm con
+                        } else if (controller.categoryId.value.text == 'linh kien') {
+                          // Nếu id là linh kien, hiển thị loại sản phẩm phụ kiện
+                          return CustomSelect(
+                            label1: 'Loại sản phẩm con 2',
+                            hint: 'Chọn loại sản phẩm phụ kiện',
+                            selectList: controllerComputer.accessoriesList
+                                .map((e) => Item(id: e.id, name: e.name))
+                                .toList(),
+                            onProjectSelected: (value) {
+                              controller.subCategoryId.text = value ?? "";
+                            },
+                          );
+                        } else {
+                          // Nếu id khác, hiển thị loại sản phẩm con 1
+                          return Column(
+                            children: [
+                              CustomSelect(
+                                label1: 'Loại sản phẩm con 1',
+                                hint: 'Chọn loại sản phẩm linh kiện',
+                                selectList: controller.subCategoryList
+                                    .map((e) => Item(id: e.id, name: e.name))
+                                    .toList(),
+                                onProjectSelected: (value) {
+                                  controller.subCategoryId.text = value ?? "";
+                                },
+                              ),
+                              CustomSelect(
+                                label1: 'Loại sản phẩm con 2',
+                                hint: 'Chọn loại sản phẩm phụ kiện',
+                                selectList: controllerComputer.accessoriesList
+                                    .map((e) => Item(id: e.id, name: e.name))
+                                    .toList(),
+                                onProjectSelected: (value) {
+                                  controller.subCategoryId.text = value ?? "";
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                      }),
                       TaskTitle(
                           label: 'SKU',
                           note: '',
@@ -152,7 +207,7 @@ class CreateProduct extends StatelessWidget {
             CustomButton(
               text: 'Lưu sản phẩm',
               onPressed: () {
-                controller.postAddProduct(productsController);
+                controller.postAddProduct(widget.productsController);
               },
               textColor: AppColors.white,
               color: AppColors.primary,

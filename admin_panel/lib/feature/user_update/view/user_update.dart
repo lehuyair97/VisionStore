@@ -20,92 +20,96 @@ class UserUpdate extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
       return AlertDialog(
+        backgroundColor: AppColors.backgroundCard,
         title: const TextWidget(
           text: 'Cập nhật thương hiệu',
-        fontSize: 24,
-        color: AppColors.primary,
-        fontWeight: FontWeight.bold,
-      ),
-      content: Container(
-        width: Get.width * 0.9,
-        height: Get.height * 0.9,
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    TaskTitle(
-                        label: 'Tên người dùng',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.name,
-                    ),
-                    TaskTitle(
-                      label: 'Email',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.email,
-                    ),
-                    TaskTitle(
-                      label: 'Số điện thoại',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.phoneNumber,
-                    ),
-                  ],
+          fontSize: 24,
+          color: AppColors.white,
+          fontWeight: FontWeight.bold,
+        ),
+        content: Container(
+          width: Get.width * 0.9,
+          height: Get.height * 0.9,
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      TaskTitle(
+                        sizeText: 30,
+                        isNameMain: true,
+                        label: '',
+                        note: 'Nhập tên người dùng',
+                        screenWidth: Get.width,
+                        controllerNote: controller.name,
+                      ),
+                      TaskTitle(
+                        sizeText: 18,
+                        isNameMain: true,
+                        label: '',
+                        note: 'Link ảnh đại diện',
+                        screenWidth: Get.width,
+                        controllerNote: controller.avatar,
+                      ),
+                    ],
+                  ),
                 ),
+                20.horizontalSpace,
+                Expanded(
+                  child: Column(
+                    children: [
+                      TaskTitle(
+                        label: 'Email',
+                        note: '',
+                        screenWidth: Get.width,
+                        controllerNote: controller.email,
+                      ),
+                      TaskTitle(
+                        label: 'Số điện thoại',
+                        note: '',
+                        screenWidth: Get.width,
+                        controllerNote: controller.phoneNumber,
+                      ),
+                      TaskTitle(
+                        label: 'Địa chỉ',
+                        note: '',
+                        screenWidth: Get.width,
+                        controllerNote: controller.addressSelected,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomButton(
+                text: 'Hủy',
+                onPressed: () {
+                  Get.back();
+                },
+                textColor: AppColors.white,
+                color: AppColors.primary,
               ),
               20.horizontalSpace,
-              Expanded(
-                child: Column(
-                  children: [
-                    TaskTitle(
-                      label: 'Ảnh đại diện',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.avatar,
-                    ),
-                    TaskTitle(
-                      label: 'Địa chỉ',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.addressSelected,
-                    ),
-                  ],
-                ),
+              CustomButton(
+                text: 'Lưu thương hiệu',
+                onPressed: () {
+                  controller.updateUser(userId);
+                },
+                textColor: AppColors.white,
+                color: AppColors.primary,
               ),
             ],
           ),
-        ),
-      ),
-      actions: [
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-              text: 'Hủy',
-              onPressed: () {
-                Get.back();
-              },
-              textColor: AppColors.white,
-              color: AppColors.primary,
-            ),
-            20.horizontalSpace,
-            CustomButton(
-              text: 'Lưu thương hiệu',
-              onPressed: () {
-                controller.updateUser(userId);
-              },
-              textColor: AppColors.white,
-              color: AppColors.primary,
-            ),
-          ],
-        ),
         ],
       );
     });

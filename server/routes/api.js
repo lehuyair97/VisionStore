@@ -157,6 +157,7 @@ router.post(
 );
 
 router.get("/products/subcategory/:id", productAPI.getProductBySubCategoryID);
+router.get("/products/limit", productAPI.getAllProductsLimit);
 
 // // carts
 router.post("/cart", cartAPI.addToCart);

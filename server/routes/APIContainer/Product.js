@@ -12,6 +12,16 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+exports.getAllProductsLimit = async (req, res) => {
+  try {
+    const products = await Product.find().limit(10);
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 exports.getAllProductsWithPagination = async (req, res) => {
   try {
     // Lấy tham số truy vấn từ yêu cầu

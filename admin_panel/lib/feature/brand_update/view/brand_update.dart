@@ -20,86 +20,90 @@ class BrandUpdate extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
       return AlertDialog(
+        backgroundColor: AppColors.backgroundCard,
         title: const TextWidget(
           text: 'Cập nhật thương hiệu',
-        fontSize: 24,
-        color: AppColors.primary,
-        fontWeight: FontWeight.bold,
-      ),
-      content: Container(
-        width: Get.width * 0.9,
-        height: Get.height * 0.9,
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    TaskTitle(
-                      label: 'Tên thương hiệu',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.name,
-                    ),
-                    TaskTitle(
-                      label: 'Mô tả',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.description,
-                    ),
-                  ],
+          fontSize: 24,
+          color: AppColors.white,
+          fontWeight: FontWeight.bold,
+        ),
+        content: Container(
+          width: Get.width * 0.9,
+          height: Get.height * 0.9,
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      TaskTitle(
+                        sizeText: 30,
+                        isNameMain: true,
+                        label: 'Tên thương hiệu',
+                        note: '',
+                        screenWidth: Get.width,
+                        controllerNote: controller.name,
+                      ),
+                      TaskTitle(
+                        sizeText: 18,
+                        isNameMain: true,
+                        label: 'Logo',
+                        note: '',
+                        screenWidth: Get.width,
+                        controllerNote: controller.logo,
+                      ),
+                    ],
+                  ),
                 ),
+                20.horizontalSpace,
+                Expanded(
+                  child: Column(
+                    children: [
+                      TaskTitle(
+                        label: 'Mô tả',
+                        note: '',
+                        screenWidth: Get.width,
+                        controllerNote: controller.description,
+                      ),
+                      TaskTitle(
+                        label: 'Banner thương hiệu',
+                        note: '',
+                        screenWidth: Get.width,
+                        controllerNote: controller.banner,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              CustomButton(
+                text: 'Hủy',
+                onPressed: () {
+                  Get.back();
+                },
+                textColor: AppColors.white,
+                color: AppColors.primary,
               ),
               20.horizontalSpace,
-              Expanded(
-                child: Column(
-                  children: [
-                    TaskTitle(
-                      label: 'Logo',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.logo,
-                    ),
-                    TaskTitle(
-                      label: 'Banner thương hiệu',
-                      note: '',
-                      screenWidth: Get.width,
-                      controllerNote: controller.banner,
-                    ),
-                  ],
-                ),
+              CustomButton(
+                text: 'Lưu thương hiệu',
+                onPressed: () {
+                  controller.updateBrand(brandId);
+                },
+                textColor: AppColors.white,
+                color: AppColors.primary,
               ),
             ],
           ),
-        ),
-      ),
-      actions: [
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            CustomButton(
-              text: 'Hủy',
-              onPressed: () {
-                Get.back();
-              },
-              textColor: AppColors.white,
-              color: AppColors.primary,
-            ),
-            20.horizontalSpace,
-            CustomButton(
-              text: 'Lưu thương hiệu',
-              onPressed: () {
-                controller.updateBrand(brandId);
-              },
-              textColor: AppColors.white,
-              color: AppColors.primary,
-            ),
-          ],
-        ),
         ],
       );
     });
