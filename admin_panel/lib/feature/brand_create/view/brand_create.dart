@@ -14,10 +14,11 @@ class BrandCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<BrandCreateController>();
     return AlertDialog(
+      backgroundColor: AppColors.backgroundCard,
       title: const TextWidget(
         text: 'Thêm thương hiệu',
         fontSize: 24,
-        color: AppColors.primary,
+        color: AppColors.white,
         fontWeight: FontWeight.bold,
       ),
       content: Container(
@@ -33,17 +34,22 @@ class BrandCreate extends StatelessWidget {
                 child: Column(
                   children: [
                     TaskTitle(
+                      sizeText: 30,
+                      isNameMain: true,
                       label: 'Tên thương hiệu',
                       note: '',
                       screenWidth: Get.width,
                       controllerNote: controller.name,
                     ),
                     TaskTitle(
-                      label: 'Mô tả',
+                      sizeText: 18,
+                      isNameMain: true,
+                      label: 'Logo',
                       note: '',
                       screenWidth: Get.width,
-                      controllerNote: controller.description,
+                      controllerNote: controller.logo,
                     ),
+
                   ],
                 ),
               ),
@@ -52,10 +58,10 @@ class BrandCreate extends StatelessWidget {
                 child: Column(
                   children: [
                     TaskTitle(
-                      label: 'Logo',
+                      label: 'Mô tả',
                       note: '',
                       screenWidth: Get.width,
-                      controllerNote: controller.logo,
+                      controllerNote: controller.description,
                     ),
                     TaskTitle(
                       label: 'Loại thương hiệu',

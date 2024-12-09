@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
-import 'package:flutter_web/feature/auth/model/user.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand_update/view/brand_update.dart';
-import 'package:flutter_web/feature/create_product/controller/create_product_controller.dart';
-import 'package:flutter_web/feature/create_product/model/brand_model.dart';
-import 'package:flutter_web/feature/products/model/product_model.dart';
+import 'package:flutter_web/feature/product_create/model/brand_model.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BrandGridCell {
   static const String id = 'id';
@@ -50,7 +46,9 @@ class BrandGridDataSource extends DataGridSource {
     bool isEvenRow = rowIndex % 2 == 0;
 
     return DataGridRowAdapter(
-      color: isEvenRow ? AppColors.grey.withOpacity(0.2) : AppColors.white,
+      color: isEvenRow
+          ? AppColors.grey.withOpacity(0.2)
+          : AppColors.backgroundCard,
       cells: row.getCells().map<Widget>((dataGridCell) {
         switch (dataGridCell.columnName) {
           case BrandGridCell.logo:
@@ -114,7 +112,7 @@ class BrandGridDataSource extends DataGridSource {
                       .value;
                   Get.dialog(BrandUpdate(brandId: brandId));
                 },
-                icon: Icon(Icons.edit),
+                icon: Icon(Icons.edit, color: AppColors.white),
               ),
             );
           case BrandGridCell.delete:

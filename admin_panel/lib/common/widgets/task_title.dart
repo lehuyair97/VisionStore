@@ -12,7 +12,9 @@ class TaskTitle extends StatefulWidget {
   final double screenWidth;
   final bool? isNumber;
   final int? minLines;
-
+  final bool? isNameMain;
+  final double? sizeText;
+  final Function(String)? onTextChanged;
   TaskTitle({
     required this.label,
     required this.note,
@@ -20,6 +22,9 @@ class TaskTitle extends StatefulWidget {
     required this.controllerNote,
     this.isNumber = false,
     this.minLines = 1,
+    this.isNameMain = false,
+    this.onTextChanged,
+    this.sizeText,
   });
 
   @override
@@ -73,12 +78,15 @@ class _TaskTitleState extends State<TaskTitle> {
             text: widget.label,
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppColors.black,
+            color: AppColors.white,
           ),
           8.verticalSpace,
           CustomTextField(
+            sizeText: widget.sizeText,
+            isNameMain: widget.isNameMain ?? false,
             controller: widget.controllerNote,
             hintText: widget.note,
+            onTextChanged: widget.onTextChanged as dynamic Function(String)?,
           )
         ],
       ),

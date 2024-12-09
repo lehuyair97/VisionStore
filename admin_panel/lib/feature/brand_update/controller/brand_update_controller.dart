@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
-import 'package:flutter_web/feature/create_product/model/brand_model.dart';
+import 'package:flutter_web/feature/product_create/model/brand_model.dart';
 
 import 'package:get/get.dart';
 

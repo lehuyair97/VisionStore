@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
 import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/common/repositoty/dio_api.dart';
-import 'package:flutter_web/feature/create_product/model/brand_model.dart';
-import 'package:flutter_web/feature/create_product/model/categoty_model.dart';
-import 'package:flutter_web/feature/create_product/model/sub_category_model.dart';
+import 'package:flutter_web/feature/product_create/model/brand_model.dart';
+import 'package:flutter_web/feature/product_create/model/categoty_model.dart';
+import 'package:flutter_web/feature/accessory/model/sub_category_model.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
 import 'package:get/get.dart';
 import 'package:mongo_dart/mongo_dart.dart';
@@ -28,12 +28,12 @@ class CreateProductController extends GetxController {
   final TextEditingController warrantyPeriod = TextEditingController();
   final TextEditingController stock = TextEditingController();
   final TextEditingController thumbnail = TextEditingController();
-  final TextEditingController image = TextEditingController();
+  final Rx<TextEditingController> image = TextEditingController().obs;  
   final TextEditingController descriptions = TextEditingController();
   final TextEditingController sku = TextEditingController();
   final TextEditingController weight = TextEditingController();
   final TextEditingController optionId = TextEditingController();
-  final TextEditingController categoryId = TextEditingController();
+  final Rx<TextEditingController> categoryId = TextEditingController().obs;
   final TextEditingController subCategoryId = TextEditingController();
 
   @override
@@ -54,11 +54,11 @@ class CreateProductController extends GetxController {
     warrantyPeriod.clear();
     stock.clear();
     thumbnail.clear();
-    image.clear();
+    image.value.clear();
     sku.clear();
     weight.clear();
     optionId.clear();
-    categoryId.clear();
+    categoryId.value.clear();
     subCategoryId.clear();
   }
 
@@ -73,12 +73,12 @@ class CreateProductController extends GetxController {
     warrantyPeriod.dispose();
     stock.dispose();
     thumbnail.dispose();
-    image.dispose();
+    image.value.dispose();
     descriptions.dispose();
     sku.dispose();
     weight.dispose();
     optionId.dispose();
-    categoryId.dispose();
+    categoryId.value.dispose();
     subCategoryId.dispose();
     super.dispose();
   }
@@ -122,7 +122,7 @@ class CreateProductController extends GetxController {
 
         if (response.statusCode == HttpStatusCodes.STATUS_CODE_CREATED ||
             response.statusCode == HttpStatusCodes.STATUS_CODE_OK) {
-          productsController.fetchProducts();
+          productsController.fetchProductsGroupedByBrand(categoryId.value.text);
           Get.back();
           Get.snackbar("Thông báo", "Tạo sản phẩm thành công");
         }
@@ -140,13 +140,13 @@ class CreateProductController extends GetxController {
         description.text.isNotEmpty &&
         descriptions.text.isNotEmpty &&
         brand.text.isNotEmpty &&
-        categoryId.text.isNotEmpty &&
+        categoryId.value.text.isNotEmpty &&
         warrantyPeriod.text.isNotEmpty &&
-        image.text.isNotEmpty;
+        image.value.text.isNotEmpty;
   }
 
   void _setOptionBasedOnCategory() {
-    switch (categoryId.text) {
+    switch (categoryId.value.text) {
       case "6714d3183a7b110c23478edf":
         option = {
           "configuration": [
@@ -191,8 +191,8 @@ class CreateProductController extends GetxController {
       "weight": double.tryParse(weight.text) ?? 0.1,
       "descriptions": descriptions.text,
       "thumbnail": thumbnail.text.isNotEmpty ? thumbnail.text : "",
-      "image": image.text,
-      "category_id": ObjectId.fromHexString(categoryId.text),
+      "image": image.value.text,
+      "category_id": ObjectId.fromHexString(categoryId.value.text),
       "sub_category_id": subCategoryId.text.isNotEmpty
           ? ObjectId.fromHexString(subCategoryId.text)
           : null,

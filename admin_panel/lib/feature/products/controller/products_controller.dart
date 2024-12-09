@@ -18,29 +18,25 @@ class ProductsController extends GetxController {
   ProductGridDataSource productGridDataSource =
       ProductGridDataSource(products: []);
   final isLoading = false.obs;
-  int currentPage = 1;
   RxInt selectedRowIndex = (-1).obs;
   RxInt currentTabIndex = 0.obs;
   List<int> selectedRowIndices = [-1, -1];
   int pageIndex = 0;
+  RxString categoryId = ''.obs;
 
-  int totalItems = 0;
-  int totalPages = 1;
-  int itemsPerPage = 999;
   @override
   void onInit() {
     super.onInit();
-    fetchProducts();
+    fetchProductsGroupedByBrand(categoryId.value);
   }
 
-  Future<void> fetchProducts() async {
+  Future<void> fetchProductsGroupedByBrand(String categoryId) async {
     if (isLoading.value) return;
     try {
       isLoading.value = true;
       final response =
-          await dio.get(ApiEndpoints.productPagination, queryParameters: {
-        'page': currentPage,
-        'limit': itemsPerPage,
+          await dio.get(ApiEndpoints.productsGroupedByBrand, queryParameters: {
+        'categoryId': categoryId,
       });
 
       if (response.statusCode ==
@@ -54,16 +50,28 @@ class ProductsController extends GetxController {
         print("Lỗi khi lấy dữ liệu sản phẩm");
         return;
       }
+
       productGridRows.clear();
-      final productData = Product.fromJson(response.data);
-      if (productData.products == null) {
-        print("Dữ liệu sản phẩm là null");
+
+      // Kiểm tra dữ liệu trả về và ánh xạ nó
+      final List<dynamic> groupedProducts =
+          response.data; // Dữ liệu là một mảng các nhóm sản phẩm
+      if (groupedProducts == null || groupedProducts.isEmpty) {
+        print("Dữ liệu sản phẩm là null hoặc trống");
         return;
       }
 
-      productGridRows.value = productData.products!;
-      totalItems = productData.totalProducts ?? 0;
-      totalPages = (totalItems / itemsPerPage).ceil();
+      // Duyệt qua mỗi nhóm sản phẩm và thêm sản phẩm vào danh sách
+      for (var group in groupedProducts) {
+        final List<dynamic> productsList =
+            group['products']; // Lấy danh sách sản phẩm trong nhóm
+        if (productsList != null) {
+          productGridRows.addAll(
+              productsList.map((item) => ProductItem.fromJson(item)).toList());
+        }
+      }
+
+      // Cập nhật dữ liệu cho grid
       productGridDataSource = ProductGridDataSource(products: productGridRows);
       productGridDataSource.notifyListeners();
     } catch (e) {
@@ -73,9 +81,49 @@ class ProductsController extends GetxController {
     }
   }
 
+  // Future<void> fetchProducts() async {
+  //   if (isLoading.value) return;
+  //   try {
+  //     isLoading.value = true;
+  //     final response =
+  //         await dio.get(ApiEndpoints.productPagination, queryParameters: {
+  //       'page': currentPage,
+  //       'limit': itemsPerPage,
+  //     });
+
+  //     if (response.statusCode ==
+  //         HttpStatusCodes.STATUS_CODE_TOO_MANY_REQUESTS) {
+  //       Get.snackbar(
+  //           'Lỗi', 'Bạn đã gửi quá nhiều yêu cầu, vui lòng thử lại sau');
+  //       return;
+  //     }
+
+  //     if (response.statusCode != HttpStatusCodes.STATUS_CODE_OK) {
+  //       print("Lỗi khi lấy dữ liệu sản phẩm");
+  //       return;
+  //     }
+  //     productGridRows.clear();
+  //     final productData = Product.fromJson(response.data);
+  //     if (productData.products == null) {
+  //       print("Dữ liệu sản phẩm là null");
+  //       return;
+  //     }
+
+  //     productGridRows.value = productData.products!;
+  //     totalItems = productData.totalProducts ?? 0;
+  //     totalPages = (totalItems / itemsPerPage).ceil();
+  //     productGridDataSource = ProductGridDataSource(products: productGridRows);
+  //     productGridDataSource.notifyListeners();
+  //   } catch (e) {
+  //     print("Error fetching products: $e");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
+
   Future<void> deleteProduct(String productId) async {
     await dio.delete(ApiEndpoints.deleteProduct(productId));
-    fetchProducts();
+    fetchProductsGroupedByBrand(categoryId.value);
   }
 
   Future<void> deleteProductById(String productId) async {
@@ -88,7 +136,7 @@ class ProductsController extends GetxController {
         .then((value) {
       if (value ?? false) {
         dio.delete(ApiEndpoints.deleteProduct(productId)).then((value) {
-          fetchProducts();
+          fetchProductsGroupedByBrand(categoryId.value);
         });
       }
     });
@@ -97,7 +145,7 @@ class ProductsController extends GetxController {
   Future<void> searchProduct(String searchText) async {
     if (isLoading.value) return;
     if (searchText.isEmpty) {
-      fetchProducts();
+      fetchProductsGroupedByBrand(categoryId.value);
       return;
     }
     try {

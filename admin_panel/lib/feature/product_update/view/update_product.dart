@@ -4,7 +4,7 @@ import 'package:flutter_web/common/widgets/custom_select.dart';
 import 'package:flutter_web/common/widgets/task_title.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
-import 'package:flutter_web/feature/update_product/controller/update_product_controller.dart';
+import 'package:flutter_web/feature/product_update/controller/update_product_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,15 +24,17 @@ class _UpdateProductState extends State<UpdateProduct> {
   Widget build(BuildContext context) {
     final controllerUpdate = Get.put(UpdateProductController());
     controllerUpdate.getProduct(widget.productId);
+    print("controllerUpdate.name.value: ${controllerUpdate.name.value.text}");
     return Obx(() {
       if (controllerUpdate.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
       }
       return AlertDialog(
+        backgroundColor: AppColors.backgroundCard,
         title: const TextWidget(
           text: 'Chỉnh sửa sản phẩm',
           fontSize: 24,
-          color: AppColors.primary,
+          color: AppColors.white,
           fontWeight: FontWeight.bold,
         ),
         content: Container(
@@ -52,10 +54,33 @@ class _UpdateProductState extends State<UpdateProduct> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TaskTitle(
-                            label: 'Tên sản phẩm',
-                            note: '',
+                            sizeText: 30,
+                            isNameMain: true,
+                            label: '',
+                            note: 'Nhập tên sản phẩm',
                             screenWidth: Get.width,
                             controllerNote: controllerUpdate.name),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20.w),
+                          child: TaskTitle(
+                              sizeText: 18,
+                              isNameMain: true,
+                              label: '',
+                              note: 'Thêm link ảnh',
+                              screenWidth: Get.width,
+                              controllerNote: controllerUpdate.image),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         TaskTitle(
                             label: 'Giá sản phẩm',
                             note: '',
@@ -82,33 +107,18 @@ class _UpdateProductState extends State<UpdateProduct> {
                             screenWidth: Get.width,
                             isNumber: true,
                             controllerNote: controllerUpdate.stock),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
                         TaskTitle(
                             label: 'Trọng lượng',
                             note: '',
                             screenWidth: Get.width,
                             isNumber: true,
                             controllerNote: controllerUpdate.weight),
-                        TaskTitle(
-                            label: 'Thêm link ảnh',
-                            note: '',
-                            screenWidth: Get.width,
-                            controllerNote: controllerUpdate.image),
                         CustomSelect(
                           label1: 'Thương hiệu',
                           name: controllerUpdate.brandId.text,
                           selectList: controllerUpdate.brandList
-                              .map((e) => Item(id: e.id ?? '', name: e.name ?? ''))
+                              .map((e) =>
+                                  Item(id: e.id ?? '', name: e.name ?? ''))
                               .toList(),
                           onProjectSelected: (value) {
                             controllerUpdate.brandId.text = value ?? "";

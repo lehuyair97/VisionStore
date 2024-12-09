@@ -11,31 +11,36 @@ class LeftTitleWidgets extends StatelessWidget {
     const style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 15,
+      color: Colors.white,
     );
     String text;
     switch (value.toInt()) {
       case 1:
         text = '10K';
         break;
-      case 2:
+      case 4:
         text = '20K';
         break;
-      case 3:
+      case 7:
         text = '30K';
         break;
-      case 4:
+      case 10:
         text = '40K';
         break;
-      case 5:
+      case 13:
         text = '50K';
         break;
-      case 6:
+      case 16:
         text = '60K';
         break;
       default:
         return Container();
     }
 
-    return Text(text, style: style, textAlign: TextAlign.left);
+    return Text(
+      text,
+      style: style,
+      textAlign: TextAlign.left,
+    );
   }
 }

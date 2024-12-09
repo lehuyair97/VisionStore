@@ -12,6 +12,7 @@ class BottomTitleWidgets extends StatelessWidget {
     final TextStyle style = TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 16,
+      color: Colors.white,
     );
     Widget text;
     switch (value.toInt()) {
@@ -31,16 +32,7 @@ class BottomTitleWidgets extends StatelessWidget {
         text = Text('Th 5', style: style);
         break;
       case 11:
-        text = Text('Th 8', style: style);
-        break;
-      case 13:
-        text = Text('Th 9', style: style);
-        break;
-      case 15:
-        text = Text('Th 11', style: style);
-        break;
-      case 17:
-        text = Text('Th 12', style: style);
+        text = Text('Th 6', style: style);
         break;
       default:
         text = Text('', style: style);

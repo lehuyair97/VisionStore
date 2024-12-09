@@ -10,7 +10,10 @@ class CustomTextField extends StatefulWidget {
   final Function(String)? onSubmit;
   final FocusNode? focusNode;
   final double? width;
+  final double? sizeText;
   final bool isMobile;
+  final bool isNameMain;
+  final Function(String)? onTextChanged;
 
   CustomTextField({
     required this.controller,
@@ -22,6 +25,9 @@ class CustomTextField extends StatefulWidget {
     this.focusNode,
     this.width,
     this.isMobile = false,
+    this.isNameMain = false,
+    this.sizeText = 30,
+    this.onTextChanged,
   });
 
   @override
@@ -52,29 +58,37 @@ class _CustomTextFieldState extends State<CustomTextField> {
           focusNode: widget.focusNode,
           controller: widget.controller,
           style: TextStyle(
-              fontSize: 16,
+              fontSize: widget.isNameMain ? widget.sizeText : 16,
               fontWeight: FontWeight.w400,
-              color: AppColors.black),
+              color: AppColors.white),
           textAlignVertical: TextAlignVertical.center,
           onTap: widget.onTap,
           obscureText: _obscureText,
           onSubmitted: widget.onSubmit,
+          onChanged: widget.onTextChanged,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
                 horizontal: widget.isMobile ? 12 : 24,
                 vertical: widget.isMobile ? 12 : 12),
             hintText: widget.hintText,
+            hintStyle: TextStyle(
+                fontSize: widget.isNameMain ? widget.sizeText : 16,
+                fontWeight: FontWeight.w400,
+                color: AppColors.white),
             errorBorder: InputBorder.none,
-            
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12), // Đặt độ bo tròn
-              borderSide:
-                  BorderSide(color: AppColors.primary), // Màu border khi focus
+              borderSide: BorderSide(
+                  color: widget.isNameMain
+                      ? Colors.transparent
+                      : AppColors.primary), // Màu border khi focus
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12), // Đặt độ bo tròn
               borderSide: BorderSide(
-                  color: Colors.grey.shade400,
+                  color: widget.isNameMain
+                      ? Colors.transparent
+                      : Colors.grey.shade400,
                   width: 1), // Màu border khi không focus
             ),
             suffixIcon: widget.suffixIcon != null

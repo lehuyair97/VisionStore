@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_web/common/widgets/text_widget.dart';
 
 class Indicator extends StatelessWidget {
   const Indicator({
@@ -11,7 +12,7 @@ class Indicator extends StatelessWidget {
   });
   final Color color;
   final String text;
-  
+
   final bool isSquare;
   final double size;
   final Color? textColor;
@@ -31,14 +32,12 @@ class Indicator extends StatelessWidget {
         const SizedBox(
           width: 4,
         ),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        )
+        TextWidget(
+          text: text,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
       ],
     );
   }

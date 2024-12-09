@@ -17,55 +17,60 @@ class LoginFrom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: Get.height * 0.8,
-      padding: EdgeInsets.symmetric(horizontal: 40.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(20.r),
-          bottomRight: Radius.circular(20.r),
-          bottomLeft: Radius.circular(borderRadius),
-          topLeft: Radius.circular(borderRadius),
+      padding: EdgeInsets.symmetric(horizontal: 60.w, vertical: 80.h),
+      child: Card(
+        color: AppColors.backgroundCard,
+        elevation: 3,
+        child: Container(
+          height: Get.height * 0.3,
+          width: Get.width * 0.5,
+          padding: EdgeInsets.symmetric(horizontal: 60.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              80.verticalSpace,
+              TextWidget(
+                text: 'Admin Panel',
+                color: AppColors.white,
+                fontSize: 44.sp,
+                fontWeight: FontWeight.bold,
+                textAlign: TextAlign.start,
+              ),
+              20.verticalSpace,
+              TextWidget(
+                text:
+                    'Quản trị viên của VisionStore có quyền truy cập vào bảng điều khiển để quản lý toàn bộ hệ thống.',
+                color: AppColors.white,
+                fontSize: 18.sp,
+                textAlign: TextAlign.start,
+                fontWeight: FontWeight.w300,
+                maxLines: 3,
+              ),
+              80.verticalSpace,
+              CustomTextField(
+                controller: loginController.emailController,
+                hintText: 'Email',
+              ),
+              30.verticalSpace,
+              CustomTextField(
+                controller: loginController.passwordController,
+                hintText: 'Password',
+                obscureText: true,
+                suffixIcon: Icons.visibility,
+                isMobile: false,
+              ),
+              30.verticalSpace,
+              CustomButton(
+                text: 'Đăng Nhập',
+                onPressed: loginController.login,
+                width: Get.width,
+                height: 80.h,
+                color: AppColors.primary,
+              )
+            ],
+          ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 1,
-            spreadRadius: 1,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const TextWidget(
-            text: 'Vision Store',
-            color: AppColors.primary,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-          ),
-          40.verticalSpace,
-          CustomTextField(
-            controller: loginController.emailController,
-            hintText: 'Email',
-          ),
-          30.verticalSpace,
-          CustomTextField(
-            controller: loginController.passwordController,
-            hintText: 'Password',
-            obscureText: true,
-            suffixIcon: Icons.visibility,
-            isMobile: false,
-          ),
-          30.verticalSpace,
-          CustomButton(
-            text: 'Đăng Nhập',
-            onPressed: loginController.login,
-            width: Get.width,
-            height: 50.h,
-            color: AppColors.primary,
-          )
-        ],
       ),
     );
   }

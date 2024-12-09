@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web/common/img/img.dart';
+import 'package:flutter_web/common/img/lottie.dart';
+import 'package:lottie/lottie.dart';
 
 class ImgLogin extends StatelessWidget {
   const ImgLogin({super.key});
@@ -7,11 +8,7 @@ class ImgLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Image.asset(
-        
-        Img.logo,
-        fit: BoxFit.cover,
-      ),
+      child: Lottie.network(LottieClass.login, fit: BoxFit.cover),
     );
   }
 }

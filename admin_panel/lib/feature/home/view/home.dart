@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web/common/img/img.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/home/controller/home_contrioller.dart';
 import 'package:flutter_web/feature/home/widget/LineChart/line_chart_sample%20.dart';
 import 'package:flutter_web/feature/home/widget/activity_details_card.dart';
-import 'package:flutter_web/common/widgets/search_field.dart';
-import 'package:flutter_web/feature/profile/profile.dart';
+import 'package:flutter_web/feature/home/widget/custom_appbar.dart';
+import 'package:flutter_web/feature/home/widget/pie/pie_chart.dart';
+import 'package:flutter_web/feature/home/widget/product_item_top.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,71 +25,172 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final controller = Get.find<HomeController>();
     return Scaffold(
-      backgroundColor: AppColors.white,
       body: Center(
         child: ResponsiveBuilder(builder: (context, sizingInformation) {
           return SingleChildScrollView(
-            child: Container(
-              height: Get.height * 2,
-              width: Get.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.w),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+              child: Container(
+            height: Get.height * 3,
+            width: Get.width,
+            child: Obx(
+              () => controller.isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.w),
+                                child: CustomAppBar(),
+                              ),
+                              ActivityDetailsCard(
+                                  healthDetails: controller.healthDetails),
+                              30.verticalSpace,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  10.verticalSpace,
-                                  SizedBox(
-                                    width: Get.width,
-                                    child: SearchField(
-                                      controller: controller.searchController,
-                                      onChanged: (value) {},
+                                  const Expanded(
+                                    flex: 2,
+                                    child: Card(
+                                      color: AppColors.backgroundCard,
+                                      elevation: 3,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          LineChartSample2(
+                                            color: AppColors.backgroundCard,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                  20.verticalSpace,
-                                  ActivityDetailsCard(
-                                      healthDetails: controller.healthDetails),
-                                  30.verticalSpace,
-                                  Container(
-                                    width: Get.width,
+                                  30.horizontalSpace,
+                                  Expanded(
+                                    flex: 1,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
                                       children: [
-                                       const TextWidget(
-                                          text: 'Biểu đồ doanh thu',
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.primary,
+                                        const PieChartWidget(
+                                          width: 1.5,
+                                          color: AppColors.backgroundCard,
                                         ),
-                                        10.verticalSpace,
-                                        LineChartSample2(
-                                          color: AppColors.backgroundTab,
+                                        25.verticalSpace,
+                                        const PieChartWidget(
+                                          width: 1.5,
+                                          color: AppColors.backgroundCard,
                                         ),
                                       ],
                                     ),
                                   ),
-                                ])),
-                      ),
-                      const Expanded(
-                          flex: 2,
-                          child: Profile(
-                              cardBackgroundColor: AppColors.white,
-                              avatar: Img.avatar)),
-                    ],
-                  ),
-                ],
-              ),
+                                ],
+                              ),
+                              20.verticalSpace,
+                              Container(
+                                width: Get.width,
+                                height: Get.height,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Card(
+                                        elevation: 3,
+                                        color: AppColors.backgroundCard,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 40.w, vertical: 30.w),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextWidget(
+                                                text: 'Sản phẩm bán chạy',
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              30.verticalSpace,
+                                              Container(
+                                                height: Get.height * 0.8,
+                                                width: Get.width,
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: controller
+                                                      .products.length,
+                                                  itemBuilder:
+                                                      (context, index) =>
+                                                          Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10.w),
+                                                    child: ProductItemTop(
+                                                      product: controller
+                                                          .products[index],
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Card(
+                                        elevation: 3,
+                                        color: AppColors.backgroundCard,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 40.w, vertical: 30.w),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextWidget(
+                                                text:
+                                                    'Thang 6 sản phẩm bán chạy',
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              30.verticalSpace,
+                                              Container(
+                                                height: Get.height * 0.8,
+                                                width: Get.width,
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  itemCount: controller
+                                                      .products.length,
+                                                  itemBuilder:
+                                                      (context, index) =>
+                                                          Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10.w),
+                                                    child: ProductItemTop(
+                                                      product: controller
+                                                          .products[index],
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
             ),
-          );
+          ));
         }),
       ),
     );

@@ -11,19 +11,23 @@ class Item {
 }
 
 class CustomSelect extends StatefulWidget {
-  final String label1;
+  final String? label1;
   final String? name;
   final String? hint;
   final List<Item>? selectList;
+  final List<String>? selectValue;
+  final int? height;
   final void Function(String?)? onProjectSelected;
 
   CustomSelect({
     Key? key,
-    required this.label1,
+    this.label1,
     this.name,
     this.hint,
     this.selectList,
     this.onProjectSelected,
+    this.selectValue,
+    this.height = 200,
   }) : super(key: key);
 
   @override
@@ -32,6 +36,16 @@ class CustomSelect extends StatefulWidget {
 
 class _CustomSelectState extends State<CustomSelect> {
   String? _selectedUser;
+
+  @override
+  void initState() {
+    super.initState();
+    // Cập nhật giá trị mặc định nếu có
+    if (widget.selectValue != null && widget.selectValue!.isNotEmpty) {
+      _selectedUser = widget.selectValue!.first;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -41,18 +55,19 @@ class _CustomSelectState extends State<CustomSelect> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextWidget(
-            text: widget.label1,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: AppColors.black,
-          ),
+          widget.label1 != null
+              ? TextWidget(
+                  text: widget.label1!,
+                  fontSize: 12, // Giảm kích thước font xuống 12
+                  fontWeight: FontWeight.w400, // Độ đậm của chữ
+                  color: AppColors.white,
+                )
+              : SizedBox.shrink(), // Nếu không có label, không hiển thị gì
           8.verticalSpace,
           Container(
             width: screenWidth,
-            height: 48.h,
             decoration: BoxDecoration(
-              color: Colors.transparent,
+              color: AppColors.white,
               borderRadius: BorderRadius.circular(12),
             ),
             child: DropdownButtonFormField<String>(
@@ -61,28 +76,24 @@ class _CustomSelectState extends State<CustomSelect> {
                     EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderSide: BorderSide(color: AppColors.primary),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide(color: AppColors.primary),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderSide: BorderSide(color: AppColors.primary),
                 ),
               ),
               isExpanded: true,
               value: _selectedUser,
               hint: TextWidget(
-                text: widget.selectList
-                        ?.firstWhere((e) => e.id == widget.name,
-                            orElse: () => Item(id: "", name: ""))
-                        .name ??
-                    "",
+                text: widget.hint ?? "",
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: Colors.grey.shade400,
+                color: AppColors.backgroundCard,
               ),
               onChanged: (String? newValue) {
                 setState(() {
@@ -92,16 +103,27 @@ class _CustomSelectState extends State<CustomSelect> {
                   }
                 });
               },
-              items: widget.selectList?.map((Item item) {
-                    return DropdownMenuItem<String>(
-                      value: item.id,
-                      child: Text(
-                        item.name,
-                        style: TextStyle(color: Colors.black87),
-                      ),
-                    );
-                  }).toList() ??
-                  [],
+              items: widget.selectList is List<Item>
+                  ? (widget.selectList as List<Item>).map((Item item) {
+                      return DropdownMenuItem<String>(
+                        value: item.id,
+                        child: Text(
+                          item.name,
+                          style: TextStyle(
+                              color: AppColors.backgroundCard, fontSize: 14),
+                        ),
+                      );
+                    }).toList()
+                  : (widget.selectList as List<String>).map((String item) {
+                      return DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: TextStyle(
+                              color: AppColors.backgroundCard, fontSize: 14),
+                        ),
+                      );
+                    }).toList(),
             ),
           ),
         ],

@@ -4,7 +4,7 @@ import 'package:flutter_web/core/configs/theme/app_colors.dart';
 class AppTheme {
   static final lightTheme = ThemeData(
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: AppColors.white,
+      scaffoldBackgroundColor: AppColors.darkBackground,
       brightness: Brightness.light,
       fontFamily: 'Satoshi',
       sliderTheme:
@@ -14,7 +14,7 @@ class AppTheme {
           fillColor: Colors.transparent,
           contentPadding: const EdgeInsets.all(30),
           hintStyle: const TextStyle(
-            color: Color(0xff383838),
+            color: AppColors.white,
             fontWeight: FontWeight.w500,
           ),
           border: OutlineInputBorder(
@@ -34,19 +34,19 @@ class AppTheme {
 
   static final darkTheme = ThemeData(
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: AppColors.darkBackground,
+      scaffoldBackgroundColor: AppColors.backgroundDark,
       brightness: Brightness.dark,
       fontFamily: 'Satoshi',
       sliderTheme: SliderThemeData(
           overlayShape: SliderComponentShape.noOverlay,
-          activeTrackColor: Color(0xffB7B7B7),
-          inactiveTrackColor: Colors.grey.withOpacity(0.3),
-          thumbColor: Color(0xffB7B7B7)),
+          activeTrackColor: AppColors.white,
+          inactiveTrackColor: AppColors.white,
+          thumbColor: AppColors.white),
       inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.transparent,
           hintStyle: const TextStyle(
-            color: Color(0xffA7A7A7),
+            color: AppColors.white,
             fontWeight: FontWeight.w500,
           ),
           contentPadding: const EdgeInsets.all(30),
@@ -60,8 +60,10 @@ class AppTheme {
           style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               elevation: 0,
-              textStyle:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.white),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)))));
 }
