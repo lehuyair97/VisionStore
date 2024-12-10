@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
 import 'package:flutter_web/common/utils/custom_dialog.dart';
+import 'package:flutter_web/feature/brand/widget/brand_gridRow.dart';
 import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/product_create/model/brand_model.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,8 @@ class BrandController extends GetxController {
   Dio dio = Dio();
   final isLoading = false.obs;
   final brandDataSource = <Brand>[].obs;
+  BrandGridDataSource brandGridDataSource = BrandGridDataSource(brands: []);
+  List<Brand> brands = [];
   final searchController = TextEditingController().obs;
 
   @override
@@ -27,9 +30,11 @@ class BrandController extends GetxController {
       brandDataSource.clear();
       List<dynamic> brandListJson = response.data;
 
-      List<Brand> brands = brandListJson.map((e) => Brand.fromJson(e)).toList();
+      brands = brandListJson.map((e) => Brand.fromJson(e)).toList();
 
       brandDataSource.value = brands;
+      brandGridDataSource = BrandGridDataSource(brands: brands);
+      brandGridDataSource.notifyListeners();
     } catch (e) {
       print(e);
     } finally {

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
 import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/common/repositoty/dio_api.dart';
+import 'package:flutter_web/feature/accessory/controller/accessory_controller.dart';
+import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/product_create/model/brand_model.dart';
 import 'package:flutter_web/feature/product_create/model/categoty_model.dart';
@@ -18,6 +20,8 @@ import 'package:mongo_dart/mongo_dart.dart';
 class UpdateProductController extends GetxController {
   final controller = Get.put(CreateProductController());
   final productsController = Get.put(ProductsController());
+  final accessoryController = Get.put(AccessoryController());
+  final computerAccessoriesController = Get.put(ComputerAccessoriesController());
   final DioApi dioApi = DioApi();
   final Dio dio = Dio();
   final isLoading = false.obs;
@@ -87,6 +91,7 @@ class UpdateProductController extends GetxController {
 
   Future<void> postUpdateProduct(String productId) async {
     try {
+      isLoading.value = true;
       final response = await dioApi.put(
         ApiEndpoints.updateProduct(productId),
         data: _buildProductData(),
@@ -95,10 +100,14 @@ class UpdateProductController extends GetxController {
         Get.snackbar("Thông báo", "Cập nhật sản phẩm thất bại");
       }
       await productsController.fetchProductsGroupedByBrand(categoryId.text);
+      await accessoryController.fetch_sub_product(accessoryController.sunCateId);
+      await computerAccessoriesController.fetch_sub_product(computerAccessoriesController.sunCateId);
       Get.back();
       Get.snackbar("Thông báo", "Cập nhật sản phẩm thành công");
     } catch (e) {
       print("error: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 

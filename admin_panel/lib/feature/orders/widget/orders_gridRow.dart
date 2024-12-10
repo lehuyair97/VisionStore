@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
+import 'package:flutter_web/feature/orders/controller/oder_controller.dart';
 import 'package:flutter_web/feature/orders/model/oders_model.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class OrdersGridCell {
@@ -12,6 +14,7 @@ class OrdersGridCell {
   static const String address = 'address';
   static const String paymentMethod = 'paymentMethod';
   static const String deliveryMethod = 'deliveryMethod';
+  static const String delete = 'delete';
 }
 
 class OrdersGridDataSource extends DataGridSource {
@@ -34,6 +37,8 @@ class OrdersGridDataSource extends DataGridSource {
         DataGridCell<String>(
             columnName: OrdersGridCell.deliveryMethod,
             value: e.deliveryMethod?.method ?? ''),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.delete, value: e.id ?? ''),
       ]);
     }).toList();
   }
@@ -45,6 +50,8 @@ class OrdersGridDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    final controller = Get.put(OrderController());
+
     int rowIndex = _employees.indexOf(row);
     bool isEvenRow = rowIndex % 2 == 0;
 
@@ -89,6 +96,15 @@ class OrdersGridDataSource extends DataGridSource {
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 maxLines: 2,
+              ),
+            );
+          case OrdersGridCell.delete:
+            return Center(
+              child: IconButton(
+                onPressed: () {
+                  controller.deleteOrder(dataGridCell.value.toString());
+                },
+                icon: Icon(Icons.delete, color: AppColors.primary),
               ),
             );
           case OrdersGridCell.user:

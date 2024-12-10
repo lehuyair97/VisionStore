@@ -7,10 +7,8 @@ class PieChartSections {
     int touchedIndex,
     double value1,
     double value2,
-    double value3,
-    double value4,
   ) {
-    return List.generate(4, (i) {
+    return List.generate(2, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
@@ -26,7 +24,7 @@ class PieChartSections {
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.yellow,
+              color: AppColors.backgroundCard,
               shadows: shadows,
             ),
           );
@@ -39,33 +37,7 @@ class PieChartSections {
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-              shadows: shadows,
-            ),
-          );
-        case 2:
-          return PieChartSectionData(
-            color: AppColors.backgroundSuccess,
-            value: value3,
-            title: '${value3}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: AppColors.yellow,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: AppColors.darkGrey,
-            value: value4,
-            title: '${value4}%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: AppColors.backgroundSuccess,
+              color: AppColors.backgroundCard,
               shadows: shadows,
             ),
           );

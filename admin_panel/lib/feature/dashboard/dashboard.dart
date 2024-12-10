@@ -76,6 +76,8 @@ class _DashboardState extends State<Dashboard> {
     createProductController.getBrand();
     createProductController.getCategory();
     homeController.getProducts();
+    homeController.getProductsTop();
+    
 
     createProductController.getSubCategory();
 

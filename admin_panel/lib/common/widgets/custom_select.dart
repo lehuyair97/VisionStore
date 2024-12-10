@@ -96,6 +96,7 @@ class _CustomSelectState extends State<CustomSelect> {
                 color: AppColors.backgroundCard,
               ),
               onChanged: (String? newValue) {
+                
                 setState(() {
                   _selectedUser = newValue;
                   if (widget.onProjectSelected != null) {

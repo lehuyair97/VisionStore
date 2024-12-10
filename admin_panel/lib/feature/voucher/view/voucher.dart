@@ -98,8 +98,7 @@ class VoucherView extends StatelessWidget {
                                         GridLinesVisibility.none,
                                     headerGridLinesVisibility:
                                         GridLinesVisibility.none,
-                                    source: VoucherGridDataSource(
-                                        vouchers: controller.vouchers),
+                                    source: controller.voucherGridDataSource,
                                     columns: <GridColumn>[
                                       GridColumn(
                                         columnName: VoucherGridCell.id,
@@ -187,6 +186,26 @@ class VoucherView extends StatelessWidget {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                ),
+                                  Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: SfDataPager(
+                                      pageCount: controller.vouchers.length / 6,
+                                      visibleItemsCount: 7,
+                                      delegate:
+                                          controller.voucherGridDataSource,
+                                      itemHeight: 50,
+                                      itemWidth: 50,
+                                      firstPageItemVisible: false,
+                                      lastPageItemVisible: false,
+                                      availableRowsPerPage: [7],
+                                    ),
                                   ),
                                 ),
                               ],

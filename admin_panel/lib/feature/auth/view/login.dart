@@ -20,7 +20,21 @@ class LoginPage extends StatelessWidget {
             sizingInformation.deviceScreenType == DeviceScreenType.mobile;
         return Stack(
           children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.black.withOpacity(0.98),
+                    AppColors.backgroundCard.withOpacity(0.9),
+                  ],
+                  end: Alignment.topLeft,
+                  begin: Alignment.bottomRight,
+                ),
+              ),
+            ),
             Scaffold(
+              backgroundColor:
+                  Colors.transparent, // Làm cho nền Scaffold trong suốt
               body: Center(
                 child: SingleChildScrollView(
                   child: Column(
@@ -74,7 +88,7 @@ class LoginPage extends StatelessWidget {
                                               SizedBox(height: 30.h),
                                               TextWidget(
                                                 text:
-                                                    'VisionStore là một ứng dụng bán hàng trực tuyến chuyên cung cấp các sản phẩm máy tính và phụ kiện công nghệ. Với sứ mệnh mang đến cho người dùng những sản phẩm chất lượng cùng dịch vụ tốt nhất, VisionStore là giải pháp mua sắm tiện lợi cho khách hàng có nhu cầu về thiết bị công nghệ.',
+                                                    ' VisionStore là một ứng dụng bán hàng trực tuyến chuyên cung cấp các sản phẩm máy tính và phụ kiện công nghệ. Với sứ mệnh mang đến cho người dùng những sản phẩm chất lượng cùng dịch vụ tốt nhất, VisionStore là giải pháp mua sắm tiện lợi cho khách hàng có nhu cầu về thiết bị công nghệ',
                                                 fontSize: 20.sp,
                                                 fontWeight: FontWeight.w300,
                                                 color: AppColors.primary,
@@ -82,7 +96,7 @@ class LoginPage extends StatelessWidget {
                                                 maxLines: 8,
                                               ),
                                               const SizedBox(height: 40),
-                                              const ImgLogin()
+                                              const ImgLogin(),
                                             ],
                                           ),
                                         ),
@@ -95,7 +109,7 @@ class LoginPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                     ],
                   ),
                 ),

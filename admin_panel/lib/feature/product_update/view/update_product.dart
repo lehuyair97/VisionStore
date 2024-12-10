@@ -4,15 +4,18 @@ import 'package:flutter_web/common/widgets/custom_select.dart';
 import 'package:flutter_web/common/widgets/task_title.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
+import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/product_update/controller/update_product_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UpdateProduct extends StatefulWidget {
   final String productId;
+  final String? categoryKey;
   const UpdateProduct({
     super.key,
     required this.productId,
+    this.categoryKey,
   });
 
   @override
@@ -23,8 +26,9 @@ class _UpdateProductState extends State<UpdateProduct> {
   @override
   Widget build(BuildContext context) {
     final controllerUpdate = Get.put(UpdateProductController());
+    final controllerComputer = Get.put(ComputerAccessoriesController());
+    
     controllerUpdate.getProduct(widget.productId);
-    print("controllerUpdate.name.value: ${controllerUpdate.name.value.text}");
     return Obx(() {
       if (controllerUpdate.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -115,7 +119,11 @@ class _UpdateProductState extends State<UpdateProduct> {
                             controllerNote: controllerUpdate.weight),
                         CustomSelect(
                           label1: 'Thương hiệu',
-                          name: controllerUpdate.brandId.text,
+                          hint: controllerUpdate.brandList
+                              .map((e) => controllerUpdate.brandId.text == e.id
+                                  ? e.name
+                                  : '')
+                              .join(''),
                           selectList: controllerUpdate.brandList
                               .map((e) =>
                                   Item(id: e.id ?? '', name: e.name ?? ''))
@@ -126,7 +134,11 @@ class _UpdateProductState extends State<UpdateProduct> {
                         ),
                         CustomSelect(
                           label1: 'Loại sản phẩm',
-                          name: controllerUpdate.categoryId.text,
+                          hint: controllerUpdate.categoryList
+                              .map((e) => controllerUpdate.categoryId.text == e.id
+                                  ? e.name
+                                  : '')
+                              .join(''),
                           selectList: controllerUpdate.categoryList
                               .map((e) => Item(id: e.id, name: e.name))
                               .toList(),
@@ -134,16 +146,43 @@ class _UpdateProductState extends State<UpdateProduct> {
                             controllerUpdate.categoryId.text = value ?? "";
                           },
                         ),
-                        CustomSelect(
-                          label1: 'Loại sản phẩm con',
-                          name: controllerUpdate.subCategoryId.text,
-                          selectList: controllerUpdate.subCategoryList
-                              .map((e) => Item(id: e.id, name: e.name))
-                              .toList(),
-                          onProjectSelected: (value) {
-                            controllerUpdate.subCategoryId.text = value ?? "";
-                          },
-                        ),
+                     widget.categoryKey == 'linh-kien'
+                          ? CustomSelect(
+                              label1: 'Chon Linh Kien',
+                              hint: controllerUpdate.subCategoryList
+                                  .map((e) => controllerUpdate.subCategoryId.text == e.id
+                                      ? e.name
+                                      : '')
+                                  .join(''),
+                              selectList: controllerUpdate.subCategoryList
+                                  .map((e) => Item(id: e.id, name: e.name))
+                                  .toList(),
+                              onProjectSelected: (value) {
+                                controllerUpdate.subCategoryId.text = value ?? "";
+                              },
+                            )
+                          : SizedBox.shrink(),
+                      widget.categoryKey == 'phu-kien'
+                          ? Column(
+                              children: [
+                                CustomSelect(
+                                  label1: 'Chọn phụ kiện',
+                                  hint: controllerComputer.accessoriesList
+                                      .map((e) => controllerUpdate.subCategoryId.text == e.id
+                                          ? e.name
+                                          : '')
+                                      .join(''),
+                                  selectList: controllerComputer.accessoriesList
+                                      .map((e) => Item(id: e.id, name: e.name))
+                                      .toList(),
+                                  onProjectSelected: (value) {
+                                    controllerUpdate.subCategoryId.text =
+                                        value ?? "";
+                                  },
+                                ),
+                              ],
+                            )
+                          : SizedBox.shrink(),
                         TaskTitle(
                             label: 'SKU',
                             note: '',
