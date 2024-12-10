@@ -225,7 +225,13 @@ router.post("/message", messageAPI.sendMessage);
 // router.delete("/message/:id", messageAPI.deleteMessage);
 // router.put("/message/:id", messageAPI.updateMessage);
 router.get("/conversations", messageAPI.getAllActiveConversations); 
-
+router.post("/message/:id/accept", messageAPI.acceptMessage);
+router.get("/conversations/:id", messageAPI.getMessagesByConversation); // Lấy tất cả cuộc trò chuyện với các client
+router.get(
+  "/conversations/:adminId/get-all",
+  messageAPI.getAllActiveConversations
+); // Lấy tất cả cuộc trò chuyện với các client
+router.get("/message/pending", messageAPI.getAllPendingMessages);
 // // paypal
 router.post("/paypal/create", paypalAPI.createPayment);
 router.post("/paypal/execute", paypalAPI.executePayment);

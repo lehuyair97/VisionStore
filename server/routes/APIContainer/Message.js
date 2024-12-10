@@ -1,4 +1,4 @@
-const Conversation = require("../../models/conversationModel")
+const Conversation = require("../../models/conversationModel");
 const Message = require("../../models/messageModel");
 
 exports.sendMessage = async (req, res) => {
@@ -7,21 +7,20 @@ exports.sendMessage = async (req, res) => {
   try {
     const conversation = await Conversation.findOne({
       participants: { $all: [idClient] },
-      status: "active", 
+      status: "active",
     });
     let newMessage;
     if (conversation) {
       newMessage = new Message({
-        idClient,
+        senderId: idClient,
         content,
         conversationId: conversation._id,
-        status: "active", 
+        status: "active",
       });
     } else {
       newMessage = new Message({
-        idClient,
+        senderId: idClient,
         content,
-        status: "pending", 
       });
     }
     await newMessage.save();
@@ -41,7 +40,7 @@ exports.acceptMessage = async (req, res) => {
 
     const conversation = new Conversation({
       participants: [message.idClient, adminId],
-      status: "active", 
+      status: "active",
     });
 
     await conversation.save();
@@ -49,7 +48,10 @@ exports.acceptMessage = async (req, res) => {
     message.conversationId = conversation._id;
     await message.save();
 
-    res.status(200).json({ message: "Message accepted, conversation started", conversation });
+    res.status(200).json({
+      message: "Message accepted, conversation started",
+      conversation,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -60,7 +62,7 @@ exports.getMessagesByConversation = async (req, res) => {
 
   try {
     const messages = await Message.find({ conversationId })
-      .sort({ createdAt: 1 }) 
+      .sort({ createdAt: 1 })
       .populate("idClient", "username email");
 
     res.status(200).json(messages);
@@ -69,8 +71,22 @@ exports.getMessagesByConversation = async (req, res) => {
   }
 };
 
+exports.getAllPendingMessages = async (req, res) => {
+
+  console.log('here')
+  try {
+    const messages = await Message.find({ status: "pending" }) 
+      .sort({ createdAt: -1 })
+      .populate("senderId", "_id username email avatar"); 
+    
+    res.status(200).json({ messages }); 
+  } catch (error) {
+    res.status(500).json({ message: 'There is something wrong: ' + error.message });
+  }
+};
+
 exports.getAllActiveConversations = async (req, res) => {
-  const adminId = req.user.id; 
+  const adminId = req.user.id;
 
   try {
     const conversations = await Conversation.find({

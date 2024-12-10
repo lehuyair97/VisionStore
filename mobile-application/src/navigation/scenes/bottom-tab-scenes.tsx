@@ -1,148 +1,98 @@
-/* eslint-disable max-len */
+import React, { useEffect } from "react";
 import { Pressable, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { BuildPC, Cart, Home, Profile } from "@features/common";
 import { Block, Text } from "@components";
 import changeNavigationBarColor from "react-native-navigation-bar-color";
-import {
-  BottomTabRoutes,
-  ScreenOptions,
-  TScreen,
-} from "@navigation/config/types";
-import {
-  BottomTabNavigationOptions,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { localImages } from "@assets/icons/images";
 import { navigate } from "@navigation/config/navigation-service";
-import { useEffect } from "react";
 import useCommon from "@hooks/common/use-common";
 
-const Tab = createBottomTabNavigator<BottomTabRoutes>();
+const Tab = createBottomTabNavigator();
+const COMPONENT_MAP = {
+  HomeStack: Home,
+  BuildPCStack: BuildPC,
+  CartStack: Cart,
+  ProfileStack: Profile,
+};
+const TAB_CONFIG = {
+  HomeStack: {
+    label: "Trang chủ",
+    focusedIcon: localImages().ic_home_fill,
+    defaultIcon: localImages().ic_home,
+  },
+  BuildPCStack: {
+    label: "Build PC",
+    focusedIcon: localImages().ic_window_fill,
+    defaultIcon: localImages().ic_window,
+  },
+  CartStack: {
+    label: "Giỏ hàng",
+    focusedIcon: localImages().ic_shopping_cart_fill,
+    defaultIcon: localImages().ic_shopping_cart,
+  },
+  ProfileStack: {
+    label: "Cá nhân",
+    focusedIcon: localImages().ic_profile_fill,
+    defaultIcon: localImages().ic_profile,
+  },
+};
 
-export const bottomTabScreensRoute = [
-  { component: Home, name: "HomeStack" },
-  { component: BuildPC, name: "BuildPCStack" },
-  { component: Cart, name: "CartStack" },
-  { component: Profile, name: "ProfileStack" },
-];
 const BottomTabScenes = () => {
   const { checkValidate } = useCommon();
+
   useEffect(() => {
     changeNavigationBarColor("#DF5454", true);
-  });
+  }, []);
 
-  const renderTabBarIcon = (title: keyof BottomTabRoutes, focused: boolean) => {
-    switch (title) {
-      case "HomeStack":
-        return (
-          <Image
-            source={
-              focused ? localImages().ic_home_fill : localImages().ic_home
-            }
-          />
-        );
-      case "BuildPCStack":
-        return (
-          <Image
-            source={
-              focused ? localImages().ic_window_fill : localImages().ic_window
-            }
-          />
-        );
-      case "CartStack":
-        return (
-          <Image
-            source={
-              focused
-                ? localImages().ic_shopping_cart_fill
-                : localImages().ic_shopping_cart
-            }
-          />
-        );
-      case "ProfileStack":
-        return (
-          <Image
-            source={
-              focused ? localImages().ic_profile_fill : localImages().ic_profile
-            }
-          />
-        );
-      default:
-        return null;
-    }
-  };
+  const renderTabBarIcon = (name: keyof typeof TAB_CONFIG, focused: boolean) => (
+    <Image source={focused ? TAB_CONFIG[name].focusedIcon : TAB_CONFIG[name].defaultIcon} />
+  );
 
-  const renderTabBarLabel = (label: string, focused: boolean) => (
+  const renderTabBarLabel = (name: keyof typeof TAB_CONFIG, focused: boolean) => (
     <Text
       fontSize={12}
       lineHeight={16}
       textAlign="center"
       color={focused ? "white255" : "whiteC4"}
     >
-      {label}
+      {TAB_CONFIG[name].label}
     </Text>
   );
 
-  const screenOptions: ScreenOptions<
-    BottomTabRoutes,
-    BottomTabNavigationOptions
-  > = {
-    HomeStack: {
-      tabBarLabel: ({ focused }) => renderTabBarLabel("Trang chủ", focused),
-      tabBarIcon: ({ focused }) => renderTabBarIcon("HomeStack", focused),
-      tabBarButton: (props) => <Pressable {...props} />,
-    },
-    BuildPCStack: {
-      tabBarLabel: ({ focused }) => renderTabBarLabel("Build PC", focused),
-      tabBarIcon: ({ focused }) => renderTabBarIcon("BuildPCStack", focused),
-      tabBarButton: (props) => <Pressable {...props} />,
-    },
-    CartStack: {
-      tabBarLabel: ({ focused }) => renderTabBarLabel("Giỏ hàng", focused),
-      tabBarIcon: ({ focused }) => renderTabBarIcon("CartStack", focused),
-      tabBarButton: (props) => <Pressable {...props} />,
-    },
-    ProfileStack: {
-      tabBarLabel: ({ focused }) => renderTabBarLabel("Cá nhân", focused),
-      tabBarIcon: ({ focused }) => renderTabBarIcon("ProfileStack", focused),
-      tabBarButton: (props) => <Pressable {...props} />,
-    },
-  };
-
   return (
-    <>
-      <Tab.Navigator
-        screenOptions={{
-          tabBarAllowFontScaling: false,
-          headerShown: false,
-          tabBarStyle: styles.tabBar,
-          tabBarBackground: () => <Block flex={1} bg="primary" />,
-        }}
-      >
-        {bottomTabScreensRoute.map(({ name, component }: TScreen) => (
-          <Tab.Screen
-            key={name}
-            name={name as keyof BottomTabRoutes}
-            component={component}
-            options={{
-              ...screenOptions[name],
-              tabBarButton: (props) => (
-                <TouchableOpacity
-                  {...props}
-                  onPress={() => {
-                    if (name === "CartStack" || name === "ProfileStack") {
-                      checkValidate(() => navigate(name));
-                      return;
-                    }
-                    navigate(name);
-                  }}
-                />
-              ),
-            }}
-          />
-        ))}
-      </Tab.Navigator>
-    </>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarAllowFontScaling: false,
+        headerShown: false,
+        tabBarStyle: styles.tabBar,
+        tabBarBackground: () => <Block flex={1} bg="primary" />,
+      }}
+    >
+      {Object.entries(TAB_CONFIG).map(([name, config]) => (
+        <Tab.Screen
+          key={name}
+          name={name as keyof typeof TAB_CONFIG}
+          component={COMPONENT_MAP[name]}
+          options={{
+            tabBarLabel: ({ focused }) => renderTabBarLabel(name as keyof typeof TAB_CONFIG, focused),
+            tabBarIcon: ({ focused }) => renderTabBarIcon(name as keyof typeof TAB_CONFIG, focused),
+            tabBarButton: (props) => (
+              <TouchableOpacity
+                {...props}
+                onPress={() => {
+                  if (name === "CartStack" || name === "ProfileStack") {
+                    checkValidate(() => navigate(name));
+                    return;
+                  }
+                  navigate(name);
+                }}
+              />
+            ),
+          }}
+        />
+      ))}
+    </Tab.Navigator>
   );
 };
 

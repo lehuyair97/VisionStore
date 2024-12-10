@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   TouchableOpacity,
@@ -11,6 +11,8 @@ import { makeStyles } from "@theme";
 import dayjs from "dayjs";
 import StarRating from "../detail_product/components/start-rating";
 import ProductItem from "./product-item";
+import { localImages } from "@assets/icons/images";
+import { Helper } from "@utils/helper";
 
 const { width } = Dimensions.get("window");
 const imageWidth = width * 0.48 - 16;
@@ -27,7 +29,6 @@ type Props = {
   isUserReview?: boolean;
   onLike: () => void;
 };
-
 const CommentItem: React.FC<Props> = ({
   avatar,
   name,
@@ -42,6 +43,7 @@ const CommentItem: React.FC<Props> = ({
   onLike,
 }) => {
   const styles = useStyle();
+  const [imageError, setImageError] = useState(false);
   return (
     <Block borderBottomColor={"gray_200"} borderBottomWidth={1}>
       <Row alignItems={"center"} justifyContent={"space-between"}>
@@ -76,15 +78,25 @@ const CommentItem: React.FC<Props> = ({
       <Block mb={"_12"}>
         <Text style={styles.comment}>{comment}</Text>
       </Block>
-      <Row center gap={"m"}>
-        {images.map((image, index) => (
-          <Image
-            key={index}
-            source={{ uri: image }}
-            style={[styles.image as ImageStyle, { width: imageWidth }]}
-          />
-        ))}
-      </Row>
+      {images && (
+        <Row center gap={"m"}>
+          {imageError ? (
+            <Image
+              source={localImages().ic_mac}
+              style={styles.image as ImageStyle}
+            />
+          ) : (
+            images.map((image, index) => (
+              <Image
+                key={index}
+                onError={() => setImageError(true)}
+                source={{ uri: Helper.convertToLocalUrl(image) }}
+                style={[styles.image as ImageStyle, { width: imageWidth }]}
+              />
+            ))
+          )}
+        </Row>
+      )}
       <Row between center mb={"_20"}>
         <Text color={"gray136"}>{dayjs(timestamp).format("DD/MM/YYYY")}</Text>
         <StarRating rating={rating} />
@@ -115,6 +127,7 @@ const useStyle = makeStyles((theme) => ({
     height: 100,
     marginBottom: 8,
     borderRadius: 8,
+    resizeMode: "contain",
   },
 }));
 

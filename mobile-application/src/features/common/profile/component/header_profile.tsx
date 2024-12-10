@@ -1,6 +1,6 @@
 import { Row, Icon, MainContainer, Block, Text } from "@components";
 import Colors from "@theme/colors";
-import { EDGES } from "@utils/helper";
+import { EDGES, Helper } from "@utils/helper";
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native"; // Thêm StyleSheet vào đây
 import { commonStyles } from "../styles/styles";
 import useCommon from "@hooks/common/use-common";
@@ -30,7 +30,7 @@ const HeaderProfile = ({
         <Row between>
           <Row center>
             <Image
-              source={avatar ? { uri: avatar }: localImages().default_avatar}
+              source={avatar ? { uri: Helper.convertToLocalUrl(avatar) }: localImages().default_avatar}
               style={{ width: 60, height: 60, borderRadius: 100 }}
             />
             <Block ml={"_15"}>

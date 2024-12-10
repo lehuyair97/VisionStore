@@ -3,11 +3,12 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ProductItem from "./product-item";
+import { Product } from "@hooks/common/use-get-product-by-brand";
 
 interface ProductBrandProps {
   data: any;
   brandSelected?: string;
-  handleNavigateToDetailProduct: (id: string) => void;
+  handleNavigateToDetailProduct: (product: Product) => void;
   handleNavigateToDetailBrand: ({
     id,
     brandName,
@@ -29,7 +30,6 @@ const ProductBrand: React.FC<ProductBrandProps> = ({
   const filteredData = allBrands
     ? data?.data
     : data?.data?.filter((brand) => brand?._id === brandSelected);
-  console.log(data?.type);
   const renderProductGroup = ({ item }) => (
     <Block my={"_20"}>
       <Row between style={{ paddingHorizontal: 4 }}>

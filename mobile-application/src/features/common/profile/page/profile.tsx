@@ -13,6 +13,7 @@ import { shipingStatus } from "@utils/containts";
 import { useRef } from "react";
 import { RBSheetRef } from "@features/common/components/bottom-sheet";
 import ProfileActions from "../component/profile-bottom-sheet";
+import Chat from "../component/chat";
 
 export default function Profile() {
   const { userInfo } = useAuth();
@@ -46,6 +47,7 @@ export default function Profile() {
         height={250}
         onClose={() => refRBSheet.current.close()}
       />
+      {/* <Chat/> */}
     </MainContainer>
   );
 }

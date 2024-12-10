@@ -22,6 +22,7 @@ import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 import { CategoryCustomProps } from "./types";
 import useGetBanner from "@hooks/common/use-get-banner";
+import { Product } from "@hooks/common/use-get-product-by-brand";
 const AppBarCustom = lazy(() => import("../component/appbar_custom"));
 const Banner = lazy(() => import("../component/banner"));
 const FitAdvisor = lazy(() => import("../component/fit_advisor"));
@@ -120,10 +121,10 @@ export default function Home() {
     }
   }, [productsByCategory, productsBySubCategoryChild, categorySelected]);
 
-  const handleNavigateToDetailProduct = async (id: string) => {
-    navigate(ROUTES.DetailProduct as keyof ParamListBase, { productId: id });
+  const handleNavigateToDetailProduct = async (product: Product) => {
+    navigate(ROUTES.DetailProduct as keyof ParamListBase, { product});
     if (authenticationStatus === "AUTHENTICATED") {
-      await addRecentProduct(id);
+      await addRecentProduct(product._id);
     }
   };
 

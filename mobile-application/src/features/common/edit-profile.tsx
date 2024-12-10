@@ -21,6 +21,7 @@ import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
 import { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import useUpdateAvatar from "@hooks/common/use-update-avatar";
+import { Helper } from "@utils/helper";
 export default function EditProfile() {
   const { userInfo } = useAuth();
   const { editProfile, isPending } = useEditProfile(userInfo?._id);
@@ -103,7 +104,7 @@ export default function EditProfile() {
                 <Image
                   style={{
                     marginTop: -80,
-                    resizeMode: "stretch",
+                    resizeMode: "cover",
                     width: 160,
                     height: 160,
                     alignSelf: "center",
@@ -115,7 +116,7 @@ export default function EditProfile() {
                     imageUrl
                       ? { uri: imageUrl }
                       : hasAvatar
-                      ? { uri: hasAvatar }
+                      ? { uri: Helper.convertToLocalUrl(hasAvatar) }
                       : localImages().default_avatar
                   }
                 />

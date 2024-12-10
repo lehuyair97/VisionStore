@@ -4,6 +4,8 @@ import { Block, Text } from "@components";
 import Colors from "@theme/colors";
 import { localImages } from "@assets/icons/images";
 import { SCREEN_WIDTH } from "@utils/helper";
+import { Product } from "@hooks/common/use-get-product-by-brand";
+import Animated from "react-native-reanimated";
 
 interface ProductItemProps {
   product:
@@ -15,19 +17,20 @@ interface ProductItemProps {
         price: string;
       }
     | any;
-  onPress: (id: string) => void;
+  onPress: (product: Product) => void;
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
   const price = product?.price?.toLocaleString();
   const [imageError, setImageError] = useState(false);
   return (
-    <TouchableOpacity onPress={() => onPress(product._id)}>
+    <TouchableOpacity onPress={() => onPress(product)}>
       <View style={styles.itemWrapper}>
         {imageError ? (
           <Image source={localImages().ic_mac} style={styles.productImage} />
         ) : (
-          <Image
+          <Animated.Image
+            sharedTransitionTag={`detail-image-${product._id}`}
             source={{ uri: product.image }}
             style={styles.productImage}
             onError={() => setImageError(true)}
@@ -43,7 +46,10 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
         <Block style={styles.priceContainer}>
           <Text style={styles.productPrice}>
             {price}
-            <Text color={'primary'} fontSize={7}>  VND</Text>
+            <Text color={"primary"} fontSize={7}>
+              {" "}
+              VND
+            </Text>
           </Text>
         </Block>
         <Block height={10} />
@@ -54,7 +60,7 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
 
 const styles = StyleSheet.create({
   itemWrapper: {
-    marginTop:10,
+    marginTop: 10,
     backgroundColor: "#FFF",
     borderRadius: 10,
     alignItems: "center",

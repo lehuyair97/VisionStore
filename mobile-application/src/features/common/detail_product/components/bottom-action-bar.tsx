@@ -18,7 +18,7 @@ const ActionBottomBar: React.FC<ActionBottomBarProps> = ({
       my={"_20"}
       position={"absolute"}
       height={60}
-      bottom={-17}
+      bottom={-20}
       width={SCREEN_WIDTH}
       backgroundColor={"container"}
     >

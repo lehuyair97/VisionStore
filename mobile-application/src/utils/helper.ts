@@ -17,7 +17,8 @@ export const queryClient = new QueryClient({
     },
   },
 });
-export const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('screen');
+export const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } =
+  Dimensions.get("screen");
 
 export const EDGES: Record<
   "LEFT" | "RIGHT" | "LEFT_RIGHT" | "TOP_BOTTOM" | "FULL" | "LEFT_RIGHT_BOTTOM",
@@ -82,5 +83,12 @@ export const Helper = {
       str.includes("Request failed with status code 502") ||
       str.includes("Request failed with status code 500")
     );
+  },
+  convertToLocalUrl(url: string) {
+    if (url.includes("http://")) {
+      const [, result] = url.split("/api");
+      return `${process.env.EXPO_PUBLIC_API_URL}${result}`;
+    }
+    return null;
   },
 };

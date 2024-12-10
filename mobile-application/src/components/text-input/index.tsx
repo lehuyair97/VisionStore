@@ -108,7 +108,6 @@ function TextInputComponent(props: InputProps, ref: any) {
       fontSize: size,
       borderRadius: 16,
       paddingLeft: leftIcon ? 30 : 10,
-      backgroundColor: theme.colors.title,
       paddingRight: rightIcon || props.secureTextEntry ? 44 : 15,
       justifyContent: "center",
       alignSelf: "center",
