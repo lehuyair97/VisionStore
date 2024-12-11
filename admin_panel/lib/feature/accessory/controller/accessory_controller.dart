@@ -7,8 +7,8 @@ import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/common/repositoty/dio_api.dart';
 import 'package:flutter_web/common/utils/custom_dialog.dart';
 import 'package:flutter_web/feature/accessory/model/sub_category_model.dart';
+import 'package:flutter_web/feature/accessory/widget/accessory_gridRow.dart';
 import 'package:flutter_web/feature/products/model/product_model.dart';
-import 'package:flutter_web/feature/products/widget/product_gridRow.dart';
 import 'package:get/get.dart';
 
 class AccessoryController extends GetxController {
@@ -57,6 +57,8 @@ class AccessoryController extends GetxController {
         return;
       }
       productSup.clear();
+      
+      productGridDataSource.notifyListeners();
 
       productSup.value = products;
       if (products.isNotEmpty) {
@@ -85,6 +87,39 @@ class AccessoryController extends GetxController {
         });
       }
     });
+  }
+
+
+    Future<void> searchProduct(String searchText) async {
+    if (isLoading.value) return;
+    if (searchText.isEmpty) {
+      fetch_sub_product(subCateId.value);
+      return;
+    }
+    try {
+      isLoading.value = true;
+      final response = await dio.post(ApiEndpoints.searchProduct, data: {
+        'name': searchText,
+      });
+      productSup.clear();
+
+      List<dynamic> productListJson = response.data;
+
+      List<ProductItem> products =
+          productListJson.map((item) => ProductItem.fromJson(item)).toList();
+
+      if (products.isEmpty) {
+        print("Dữ liệu sản phẩm là null");
+        return;
+      }
+      productSup.value = products;
+      productGridDataSource = ProductGridDataSource(products: productSup);
+      productGridDataSource.notifyListeners();
+    } catch (e) {
+      print("Error searching products: $e");
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void onPageChanged(int pageIndex) {

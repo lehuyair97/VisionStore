@@ -1,30 +1,30 @@
 // Định nghĩa mô hình người dùng
 class User {
-  String role;
-  String id;
-  String userName;
-  String email;
-  String password;
-  List<String> favorites;
-  List<Address> address;
-  DateTime createdAt;
-  int v;
-  String deviceToken;
-  String displayName;
-  String avatar;
-  String phoneNumber;
+  String? role;
+  String? id;
+  String? userName;
+  String? email;
+  String? password;
+  List<String>? favorites;
+  List<Address>? address;
+  DateTime? createdAt;
+  int? v;
+  String? deviceToken;
+  String? displayName;
+  String? avatar;
+  String? phoneNumber;
 
   User({
-    required this.role,
-    required this.id,
-    required this.userName,
-    required this.email,
-    required this.password,
-    required this.favorites,
-    required this.address,
-    required this.createdAt,
-    required this.v,
-    required this.deviceToken,
+     this.role,
+     this.id,
+     this.userName,
+     this.email,
+     this.password,
+     this.favorites,
+     this.address,
+     this.createdAt,
+     this.v,
+     this.deviceToken,
     this.displayName = '',
     this.avatar = '',
     this.phoneNumber = '',
@@ -60,8 +60,8 @@ class User {
       'email': email,
       'password': password,
       'favorites': favorites,
-      'address': List<dynamic>.from(address.map((x) => x.toJson())),
-      'createdAt': createdAt.toIso8601String(),
+      'address': List<dynamic>.from(address?.map((x) => x.toJson()) ?? []),
+      'createdAt': createdAt?.toIso8601String(),
       '__v': v,
       'device_token': deviceToken,
       'display_name': displayName,

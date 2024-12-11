@@ -81,12 +81,13 @@ class ProductGridDataSource extends DataGridSource {
     bool isEvenRow = rowIndex % 2 == 0;
 
     return DataGridRowAdapter(
-      color: isEvenRow ? AppColors.backgroundCard : AppColors.primary,
+      color: isEvenRow
+          ? AppColors.grey.withOpacity(0.2)
+          : AppColors.backgroundCard,
       cells: row.getCells().map<Widget>((dataGridCell) {
         final controllerProducts = Get.put(ProductsController());
 
         switch (dataGridCell.columnName) {
-          
           case ProductGridCell.image:
             String imageUrl = dataGridCell.value ?? '';
             return Container(
@@ -130,9 +131,12 @@ class ProductGridDataSource extends DataGridSource {
                     .firstWhere((cell) => cell.columnName == ProductGridCell.id)
                     .value
                     .toString();
-                Get.dialog(UpdateProduct(productId: productId));
+                Get.dialog(UpdateProduct(
+                  productId: productId,
+                  categoryKey: 'linh-kien',
+                ));
               },
-              icon: Icon(Icons.edit, color: AppColors.black),
+              icon: Icon(Icons.edit, color: AppColors.white),
             );
           case ProductGridCell.delete:
             return IconButton(
@@ -152,7 +156,8 @@ class ProductGridDataSource extends DataGridSource {
               height: 80.0,
               alignment: Alignment.center,
               padding: EdgeInsets.all(16.0),
-              child: Text(dataGridCell.value.toString()),
+              child: Text(dataGridCell.value.toString(),
+                  style: TextStyle(color: AppColors.white)),
             );
         }
       }).toList(),

@@ -83,8 +83,7 @@ class OrdersView extends StatelessWidget {
                                         GridLinesVisibility.none,
                                     headerGridLinesVisibility:
                                         GridLinesVisibility.none,
-                                    source: OrdersGridDataSource(
-                                        orders: controller.orders),
+                                    source: controller.ordersGridDataSource,
                                     columns: <GridColumn>[
                                       GridColumn(
                                         visible: false,
@@ -137,7 +136,7 @@ class OrdersView extends StatelessWidget {
                                       ),
                                       GridColumn(
                                         columnName: OrdersGridCell.address,
-                                        width: Get.width * 0.2,
+                                        width: Get.width * 0.1,
                                         label: Container(
                                           padding: EdgeInsets.all(16.0),
                                           alignment: Alignment.center,
@@ -175,6 +174,16 @@ class OrdersView extends StatelessWidget {
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
+                                      GridColumn(
+                                        columnName: OrdersGridCell.delete,
+                                        width: Get.width * 0.08,
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                              text: 'Xóa', fontSize: 16),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -189,8 +198,7 @@ class OrdersView extends StatelessWidget {
                                     child: SfDataPager(
                                       pageCount: controller.orders.length / 7,
                                       visibleItemsCount: 7,
-                                      delegate: OrdersGridDataSource(
-                                          orders: controller.orders),
+                                      delegate: controller.ordersGridDataSource,
                                       itemHeight: 50,
                                       itemWidth: 50,
                                       firstPageItemVisible: false,

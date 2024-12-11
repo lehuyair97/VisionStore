@@ -198,6 +198,26 @@ class UserView extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+                                30.verticalSpace,
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: SfDataPager(
+                                      pageCount: controller.userList.length / 7,
+                                      visibleItemsCount: 7,
+                                      delegate: controller.userDataSource.first,
+                                      itemHeight: 50,
+                                      itemWidth: 50,
+                                      firstPageItemVisible: false,
+                                      lastPageItemVisible: false,
+                                      availableRowsPerPage: [7],
+                                    ),
+                                  ),
+                                ),
                               ],
                             );
                           }),

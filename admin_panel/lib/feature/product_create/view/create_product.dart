@@ -11,9 +11,14 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CreateProduct extends StatefulWidget {
+  final String? categoryKey;
   final ProductsController productsController;
 
-  const CreateProduct({super.key, required this.productsController});
+  const CreateProduct({
+    super.key,
+    required this.productsController,
+    this.categoryKey,
+  });
 
   @override
   State<CreateProduct> createState() => _CreateProductState();
@@ -24,6 +29,7 @@ class _CreateProductState extends State<CreateProduct> {
   final controllerComputer = Get.put(ComputerAccessoriesController());
   @override
   Widget build(BuildContext context) {
+    print("widget.categoryKey: ${widget.categoryKey}");
     return AlertDialog(
       backgroundColor: AppColors.backgroundCard,
       title: const TextWidget(
@@ -131,53 +137,34 @@ class _CreateProductState extends State<CreateProduct> {
                           controller.categoryId.value.text = value ?? "";
                         },
                       ),
-                      Obx(() {
-                        print("controller.categoryId.value.text: ${controller.categoryId.value.text}");
-                        // Kiểm tra nếu có dữ liệu và id là laptop hoặc pc, không hiển thị sản phẩm con
-                        if (controller.categoryId.value.text == 'laptop' ||
-                            controller.categoryId.value.text == 'pc') {
-                          return SizedBox
-                              .shrink(); // Nếu id là laptop hoặc pc, không hiển thị sản phẩm con
-                        } else if (controller.categoryId.value.text == 'linh kien') {
-                          // Nếu id là linh kien, hiển thị loại sản phẩm phụ kiện
-                          return CustomSelect(
-                            label1: 'Loại sản phẩm con 2',
-                            hint: 'Chọn loại sản phẩm phụ kiện',
-                            selectList: controllerComputer.accessoriesList
-                                .map((e) => Item(id: e.id, name: e.name))
-                                .toList(),
-                            onProjectSelected: (value) {
-                              controller.subCategoryId.text = value ?? "";
-                            },
-                          );
-                        } else {
-                          // Nếu id khác, hiển thị loại sản phẩm con 1
-                          return Column(
-                            children: [
-                              CustomSelect(
-                                label1: 'Loại sản phẩm con 1',
-                                hint: 'Chọn loại sản phẩm linh kiện',
-                                selectList: controller.subCategoryList
-                                    .map((e) => Item(id: e.id, name: e.name))
-                                    .toList(),
-                                onProjectSelected: (value) {
-                                  controller.subCategoryId.text = value ?? "";
-                                },
-                              ),
-                              CustomSelect(
-                                label1: 'Loại sản phẩm con 2',
-                                hint: 'Chọn loại sản phẩm phụ kiện',
-                                selectList: controllerComputer.accessoriesList
-                                    .map((e) => Item(id: e.id, name: e.name))
-                                    .toList(),
-                                onProjectSelected: (value) {
-                                  controller.subCategoryId.text = value ?? "";
-                                },
-                              ),
-                            ],
-                          );
-                        }
-                      }),
+                      widget.categoryKey == 'linh-kien'
+                          ? CustomSelect(
+                              label1: 'Chon Linh Kien',
+                              hint: 'Chọn loại sản phẩm linh kiện',
+                              selectList: controller.subCategoryList
+                                  .map((e) => Item(id: e.id, name: e.name))
+                                  .toList(),
+                              onProjectSelected: (value) {
+                                controller.subCategoryId.text = value ?? "";
+                              },
+                            )
+                          : SizedBox.shrink(),
+                      widget.categoryKey == 'phu-kien'
+                          ? Column(
+                              children: [
+                                CustomSelect(
+                                  label1: 'Chọn phụ kiện',
+                                  hint: 'Chọn loại sản phẩm phụ kiện',
+                                  selectList: controllerComputer.accessoriesList
+                                      .map((e) => Item(id: e.id, name: e.name))
+                                      .toList(),
+                                  onProjectSelected: (value) {
+                                    controller.subCategoryId.text = value ?? "";
+                                  },
+                                ),
+                              ],
+                            )
+                          : SizedBox.shrink(),
                       TaskTitle(
                           label: 'SKU',
                           note: '',

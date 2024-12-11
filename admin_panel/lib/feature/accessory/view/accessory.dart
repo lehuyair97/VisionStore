@@ -22,6 +22,7 @@ class Accessory extends StatelessWidget {
     final controller = Get.find<AccessoryController>();
     final controllerProduct = Get.put(CreateProductController());
     final controllerProducts = Get.put(ProductsController());
+    
 
     if (controllerProduct.subCategoryList.isNotEmpty) {
       controller.subCateId.value =
@@ -68,7 +69,8 @@ class Accessory extends StatelessWidget {
                                 controller: controller.searchController,
                                 onChanged: (value) {},
                                 onSearch: (value) {
-                                  // controller.searchProduct(value);
+                                  controller.searchProduct(value ?? '');
+
                                 },
                               ),
                             ),
@@ -100,6 +102,7 @@ class Accessory extends StatelessWidget {
                                   builder: (BuildContext context) {
                                     return CreateProduct(
                                       productsController: controllerProducts,
+                                      categoryKey: 'linh-kien',
                                     );
                                   },
                                 );
@@ -117,7 +120,8 @@ class Accessory extends StatelessWidget {
                             alignment: Alignment.center,
                             child: Obx(
                               () {
-                                if (controller.isLoading.value) {
+                                if (controller.isLoading.value || controllerProducts.isLoading.value) {
+                                  controller.fetch_sub_product(controller.subCateId.value);
                                   return const Center(
                                       child: CircularProgressIndicator());
                                 }

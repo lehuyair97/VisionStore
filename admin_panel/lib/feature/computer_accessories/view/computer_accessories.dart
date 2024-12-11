@@ -69,7 +69,7 @@ class ComputerAccessories extends StatelessWidget {
                               controller: controller.searchController,
                               onChanged: (value) {},
                               onSearch: (value) {
-                                // controller.searchProduct(value);
+                                controller.searchProduct(value ?? '');
                               },
                             ),
                           ),
@@ -100,6 +100,7 @@ class ComputerAccessories extends StatelessWidget {
                                 builder: (BuildContext context) {
                                   return CreateProduct(
                                     productsController: productsController,
+                                    categoryKey: 'phu-kien',
                                   );
                                 },
                               );
@@ -117,7 +118,8 @@ class ComputerAccessories extends StatelessWidget {
                           alignment: Alignment.center,
                           child: Obx(
                             () {
-                              if (controller.isLoading.value) {
+                              if (productsController.isLoading.value ||
+                                  controller.isLoading.value) {
                                 return const Center(
                                     child: CircularProgressIndicator());
                               }

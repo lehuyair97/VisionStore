@@ -11,7 +11,11 @@ import 'package:lottie/lottie.dart';
 class ActivityDetailsCard extends StatelessWidget {
   final List<HealthModel> healthDetails;
   final Color? color;
-  ActivityDetailsCard({super.key, this.color, required this.healthDetails});
+  ActivityDetailsCard({
+    super.key,
+    this.color,
+    required this.healthDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,7 @@ class ActivityDetailsCard extends StatelessWidget {
                     ),
                     TextWidget(
                       text: healthDetails[i].value,
-                      fontSize: 13,
+                      fontSize: 14,
                       color: Colors.grey,
                       fontWeight: FontWeight.normal,
                     ),

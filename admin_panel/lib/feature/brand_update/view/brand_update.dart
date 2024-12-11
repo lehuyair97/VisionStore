@@ -30,7 +30,8 @@ class BrandUpdate extends StatelessWidget {
         content: Container(
           width: Get.width * 0.9,
           height: Get.height * 0.9,
-          padding: const EdgeInsets.all(16.0),
+          padding:
+              const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20.0),
           child: SingleChildScrollView(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,13 +56,6 @@ class BrandUpdate extends StatelessWidget {
                         screenWidth: Get.width,
                         controllerNote: controller.logo,
                       ),
-                    ],
-                  ),
-                ),
-                20.horizontalSpace,
-                Expanded(
-                  child: Column(
-                    children: [
                       TaskTitle(
                         label: 'Mô tả',
                         note: '',

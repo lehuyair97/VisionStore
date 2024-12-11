@@ -43,9 +43,9 @@ class UserGridDataSource extends DataGridSource {
         DataGridCell<String>(
             columnName: UserGridCell.user, value: e.userName ?? ''),
         DataGridCell<String>(
-            columnName: UserGridCell.email, value: e.phoneNumber ?? ''),
+            columnName: UserGridCell.phone, value: e.phoneNumber ?? ''),
         DataGridCell<String>(
-            columnName: UserGridCell.phone, value: e.email?.toString() ?? ''),
+            columnName: UserGridCell.email, value: e.email?.toString() ?? ''),
         DataGridCell<String>(columnName: UserGridCell.address, value: address),
         DataGridCell<String>(columnName: UserGridCell.edit, value: ''),
         DataGridCell<String>(columnName: UserGridCell.changePass, value: ''),

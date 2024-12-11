@@ -4,6 +4,7 @@ import 'package:flutter_web/common/img/lottie.dart';
 import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
+import 'package:flutter_web/feature/auth/controller/login_comtroller.dart';
 import 'package:flutter_web/feature/home/controller/home_contrioller.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -15,6 +16,7 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
+    final controllerUser = Get.put(LoginController());
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -33,13 +35,9 @@ class CustomAppBar extends StatelessWidget {
               ),
             ),
             Spacer(),
-            customAppBar(
-                'https://lottie.host/38f169f0-7c2c-41d9-aaa0-e7aab81321b3/boogcJvd4F.json',
-                AppColors.backgroundTab),
+            customAppBar(LottieClass.chat, AppColors.backgroundTab),
             customAppBar(LottieClass.notification, AppColors.backgroundTab),
-            customAppBar(
-                'https://lottie.host/38f169f0-7c2c-41d9-aaa0-e7aab81321b3/boogcJvd4F.json',
-                AppColors.backgroundTab),
+            customAppBar(LottieClass.present, AppColors.backgroundTab),
             Image.asset(Img.logo, height: 44, width: 44),
             10.horizontalSpace,
             const Column(

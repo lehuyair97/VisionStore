@@ -97,9 +97,7 @@ class BrandView extends StatelessWidget {
                                         GridLinesVisibility.none,
                                     headerGridLinesVisibility:
                                         GridLinesVisibility.none,
-                                    source: BrandGridDataSource(
-                                        brands:
-                                            controller.brandDataSource.value),
+                                    source: controller.brandGridDataSource,
                                     columns: <GridColumn>[
                                       GridColumn(
                                         visible: false,
@@ -176,6 +174,26 @@ class BrandView extends StatelessWidget {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                ),
+                                30.verticalSpace,
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: SfDataPager(
+                                      pageCount: controller.brands.length / 7,
+                                      visibleItemsCount: 7,
+                                      delegate: controller.brandGridDataSource,
+                                      itemHeight: 50,
+                                      itemWidth: 50,
+                                      firstPageItemVisible: false,
+                                      lastPageItemVisible: false,
+                                      availableRowsPerPage: [7],
+                                    ),
                                   ),
                                 ),
                               ],
