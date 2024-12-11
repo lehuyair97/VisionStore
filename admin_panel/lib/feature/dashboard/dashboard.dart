@@ -5,6 +5,7 @@ import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/accessory/controller/accessory_controller.dart';
 import 'package:flutter_web/feature/accessory/view/accessory.dart';
+import 'package:flutter_web/feature/auth/controller/login_comtroller.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand/view/brand.dart';
 import 'package:flutter_web/feature/brand_create/controller/brand_create_controller.dart';
@@ -66,6 +67,7 @@ class _DashboardState extends State<Dashboard> {
       Get.put(UserUpdateController());
   final ChangePassController changePassController =
       Get.put(ChangePassController());
+  final LoginController loginController = Get.put(LoginController());
 
   bool isMenuOpen = true;
 
@@ -77,7 +79,6 @@ class _DashboardState extends State<Dashboard> {
     createProductController.getCategory();
     homeController.getProducts();
     homeController.getProductsTop();
-    
 
     createProductController.getSubCategory();
 

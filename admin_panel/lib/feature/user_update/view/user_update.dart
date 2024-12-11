@@ -102,7 +102,7 @@ class UserUpdate extends StatelessWidget {
               ),
               20.horizontalSpace,
               CustomButton(
-                text: 'Lưu thương hiệu',
+                text: 'Cập nhật người dùng',
                 onPressed: () {
                   controller.updateUser(userId);
                 },

@@ -11,6 +11,7 @@ class LoginController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final isLoading = false.obs;
+  User? users;
 
   Future<void> login() async {
     final email = emailController.text;
@@ -30,12 +31,21 @@ class LoginController extends GetxController {
         return;
       }
 
-      final user = User.fromJson(response.data);
-      if (user.role == 'client') {
+      final data = response.data['user'];
+
+      if (data == null) {
+        Get.snackbar('Thông báo', 'Đăng nhập thất bại Dữ liệu không tồn tại');
+        return;
+      }
+
+      users = User.fromJson(data);
+      update();
+
+      if (users?.role == 'client') {
         Get.snackbar('Thông báo', 'Bạn không có quyền truy cập');
         return;
       }
-      Get.offAllNamed(AppRouter.dashboard);
+      Get.toNamed(AppRouter.dashboard);
     } catch (e) {
       print("Lỗi: $e");
       Get.snackbar('Thông báo', 'Đăng nhập thất bại');
