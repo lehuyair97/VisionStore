@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
+import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/common/utils/custom_dialog.dart';
 import 'package:flutter_web/feature/auth/model/user.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
@@ -20,26 +21,30 @@ class UserUpdateController extends GetxController {
   final avatar = TextEditingController();
   final addressSelected = TextEditingController();
 
-    final controllerUser = Get.put(UserController());
-  
+  final controllerUser = Get.put(UserController());
+
   @override
   void onInit() {
     super.onInit();
   }
 
   Future<void> updateUser(String userId) async {
+    print("userId: $userId");
     try {
       isLoading.value = true;
-        final response = await dio.put(ApiEndpoints.updateUser(userId), data: {
+      final response = await dio.put(ApiEndpoints.updateUser(userId), data: {
         'name': name.text,
         'email': email.text,
         'phoneNumber': phoneNumber.text,
         'avatar': avatar.text,
         'addressSelected': addressSelected.text,
       });
-      Get.back();
-      controllerUser.fetchUserList();
-      Get.snackbar('Thành công', 'Người dùng đã được cập nhật thành công');
+      print("response: ${response.statusCode}");
+      if (response.statusCode == HttpStatusCodes.STATUS_CODE_OK) {
+        Get.back();
+        controllerUser.fetchUserList();
+        Get.snackbar('Thành công', 'Người dùng đã được cập nhật thành công');
+      }
     } catch (e) {
       print(e);
     } finally {
@@ -64,8 +69,7 @@ class UserUpdateController extends GetxController {
     }
   }
 
-
-    Future<void> deleteUserById(String userId) async {
+  Future<void> deleteUserById(String userId) async {
     CustomDialog()
         .showConfirmationDialog(
       'Xóa sản phẩm',
@@ -80,6 +84,4 @@ class UserUpdateController extends GetxController {
       }
     });
   }
-
-
 }

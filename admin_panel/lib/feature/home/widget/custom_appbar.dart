@@ -16,7 +16,8 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
-    final controllerUser = Get.put(LoginController());
+    final controllerLogin = Get.put(LoginController());
+    print("controllerLogin.users?.userName ${controllerLogin.users?.userName}");
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -38,19 +39,37 @@ class CustomAppBar extends StatelessWidget {
             customAppBar(LottieClass.chat, AppColors.backgroundTab),
             customAppBar(LottieClass.notification, AppColors.backgroundTab),
             customAppBar(LottieClass.present, AppColors.backgroundTab),
-            Image.asset(Img.logo, height: 44, width: 44),
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppColors.backgroundTab,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Image.network(
+                controllerLogin.users?.avatar ??
+                    "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+                height: 44,
+                width: 44,
+                scale: 1.0,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    Image.asset(Img.logo, height: 44, width: 44),
+              ),
+            ),
             10.horizontalSpace,
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextWidget(
-                    text: 'Admin',
+                    text: '${controllerLogin.users?.userName ?? 'Admin'}',
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: AppColors.white),
                 TextWidget(
-                    text: 'Pham Dong Thao',
+                    text:
+                        '${controllerLogin.users?.email ?? 'thaodongpham@gmail.com'}',
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: AppColors.white),
