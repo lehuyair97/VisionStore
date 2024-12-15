@@ -10,6 +10,7 @@ import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand/view/brand.dart';
 import 'package:flutter_web/feature/brand_create/controller/brand_create_controller.dart';
 import 'package:flutter_web/feature/brand_update/controller/brand_update_controller.dart';
+import 'package:flutter_web/feature/chat/view/chat_service.dart';
 import 'package:flutter_web/feature/chat_supoport/view/chat_supoport.dart';
 import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/computer_accessories/view/computer_accessories.dart';
@@ -133,7 +134,7 @@ class _DashboardState extends State<Dashboard> {
                     UserView(),
                     BrandView(),
                     VoucherView(),
-                    ChatSupport(),
+                    ChatService(),
                   ],
                 ),
               ),

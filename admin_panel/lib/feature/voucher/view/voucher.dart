@@ -3,6 +3,7 @@ import 'package:flutter_web/common/widgets/custom_button.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/common/widgets/search_field.dart';
+import 'package:flutter_web/feature/home/widget/custom_appbar.dart';
 import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
 import 'package:flutter_web/feature/voucher/widget/voucher_gridRow.dart';
 import 'package:flutter_web/feature/voucher_create/view/voucher_create.dart';
@@ -24,6 +25,8 @@ class VoucherView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              CustomAppBar(),
+              30.verticalSpace,
               Container(
                 alignment: Alignment.center,
                 width: Get.width * 0.8,
@@ -188,7 +191,7 @@ class VoucherView extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                  Expanded(
+                                Expanded(
                                   flex: 1,
                                   child: Container(
                                     decoration: BoxDecoration(
