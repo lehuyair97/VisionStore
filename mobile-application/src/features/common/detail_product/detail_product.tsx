@@ -78,7 +78,7 @@ const DetailProduct = () => {
   const handleBuyNow = () => {
     const selectProduct = product as any;
     selectProduct.quantity = 1;
-    selectProduct.productId = product._id;
+    selectProduct.productId = product?._id;
     navigate("Payment", {
       selectedProducts: [selectProduct],
       totalPrice: product.price,
@@ -111,7 +111,7 @@ const DetailProduct = () => {
       <ScrollView style={{ flex: 1 }}>
         <Block paddingVertical={"_40"} backgroundColor={"container"}>
           <Animated.Image
-            sharedTransitionTag={`detail-image-${product._id}`}
+            sharedTransitionTag={`detail-image-${product?._id}`}
             source={{ uri: product?.image }}
             style={{
               width: SCREEN_WIDTH,

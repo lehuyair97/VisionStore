@@ -11,7 +11,7 @@ const {
 const RefreshToken = require("./../../models/refresh_token");
 
 require("dotenv").config();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 exports.createUser = async (req, res) => {
   try {

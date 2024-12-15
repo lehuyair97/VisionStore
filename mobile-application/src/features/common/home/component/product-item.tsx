@@ -22,6 +22,7 @@ interface ProductItemProps {
 
 const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
   const price = product?.price?.toLocaleString();
+
   const [imageError, setImageError] = useState(false);
   return (
     <TouchableOpacity onPress={() => onPress(product)}>
@@ -30,7 +31,6 @@ const ProductItem: React.FC<ProductItemProps> = ({ product, onPress }) => {
           <Image source={localImages().ic_mac} style={styles.productImage} />
         ) : (
           <Animated.Image
-            sharedTransitionTag={`detail-image-${product._id}`}
             source={{ uri: product.image }}
             style={styles.productImage}
             onError={() => setImageError(true)}

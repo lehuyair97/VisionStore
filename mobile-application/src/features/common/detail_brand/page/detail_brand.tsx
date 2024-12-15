@@ -27,9 +27,9 @@ const DetailBrand = () => {
     brandType: brandType,
     subCategoryId: subCategoryId,
   });
-  const handleNavigateToDetailProduct = (id: string) => {
+  const handleNavigateToDetailProduct = (product: any) => {
     navigate(ROUTES.DetailProduct as keyof ParamListBase, {
-      productId: id,
+      product: product,
     });
   };
   return (
@@ -62,11 +62,12 @@ const DetailBrand = () => {
           fontWeight={"bold"}
           fontStyle={"italic"}
           color={"black"}
+          mx={'_20'}
         >
           {productsBrand?.data?.brand?.description}
         </Text>
         <Block mt="_20" />
-        <Block style={{ paddingHorizontal: 16 }}>
+        <Block style={{ paddingHorizontal: 16 }} flex={1}>
           <Block mt="_20" />
           <FlatList
             numColumns={2}

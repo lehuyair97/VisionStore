@@ -51,7 +51,7 @@ export default function Comment({ productID }: { productID: string }) {
             </Text>
             <Row>
               <Text color="black">
-                {averageRating.toFixed(1)}/5 ({count} Đánh giá)
+                {averageRating?.toFixed(1)}/5 ({count} Đánh giá)
               </Text>
             </Row>
           </Block>

@@ -1,13 +1,18 @@
-const http = require("http");
+const https = require("https");
 const socketIo = require("socket.io");
+var fs = require("fs");
 
-// Tạo server HTTP
-const server = http.createServer();
+const server = https.createServer({
+  cert: fs.readFileSync("./cert.pem"),
+  key: fs.readFileSync("./privkey.pem"),
+});
 
-// Tạo một Socket.io server
 const io = socketIo(server, {
   cors: {
-    origin: "*", // Cho phép tất cả các domain kết nối, bạn có thể thay đổi theo yêu cầu bảo mật của mình
+    origin: "https://visionstore.onrender.com",  
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true,
   },
 });
 
@@ -78,7 +83,6 @@ const broadcastMessageStatus = (data) => {
 const broadcastNotificationStatus = (data) => {
   io.emit("notificationStatus", data);
 };
-
 
 const sendEventToClient = (userId, type, data) => {
   const client = clients.get(userId);

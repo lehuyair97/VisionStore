@@ -32,9 +32,7 @@ const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const socket = useRef<Socket | null>(null);
 
   useEffect(() => {
-    socket.current = io(
-      process.env.EXPO_PUBLIC_DOMAIN_WEBSOCKET ?? "http://192.168.1.238:8080"
-    );
+    socket.current = io("https://visionstore.onrender.com");
 
     socket.current.on("connect", () => {
       console.log("Web socket connected");
@@ -46,7 +44,7 @@ const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     });
     socket.current.on("commentStatus", (message) => {
       setComment(message);
-      console.log('comment',message)
+      console.log("comment", message);
     });
     socket.current.on("notificationStatus", (message) => {
       setNotifications(message);

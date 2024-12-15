@@ -2,7 +2,7 @@ const Banner = require("./../../models/bannerModel");
 
 exports.getAllBanners = async (req, res) => {
   try {
-    const banners = await Banner.find();
+    const banners = await Banner.find().populate("productId", "_id price name  warrantyPeriod image" );
     res.status(200).json(banners);
   } catch (error) {
     res.status(500).json({ message: error.message });

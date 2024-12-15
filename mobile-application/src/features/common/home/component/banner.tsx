@@ -27,7 +27,7 @@ const Banner = ({ data, borderRadius = 16, nums = 3 }: BannerProps) => {
           <Block justifyContent={"center"} alignItems={"center"} key={index}>
             <TouchableOpacity
               onPress={() => {
-                navigate(ROUTES.DetailProduct, { productId: banner.productId });
+                navigate(ROUTES.DetailProduct, { product: banner.productId });
               }}
               style={{ width: "100%", height: height }}  
             >

@@ -16,7 +16,7 @@ export default function RootScenes() {
   useEffect(() => {
     if (isBackOnline) {
       toast.success("Kết nối đã được khôi phục");
-      resetWasOffline(); // Reset trạng thái offline
+      resetWasOffline();
     }
   }, [isBackOnline, resetWasOffline]);
 
