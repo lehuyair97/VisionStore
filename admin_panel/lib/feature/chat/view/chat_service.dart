@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/common/widgets/search_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:dio/dio.dart';
+import 'dart:convert';
+import 'dart:async';
 
 class ChatService extends StatefulWidget {
   const ChatService({super.key});
@@ -13,10 +16,14 @@ class ChatService extends StatefulWidget {
 class _ChatServiceState extends State<ChatService> {
   final List<Map<String, String>> messages = [];
   final TextEditingController _controller = TextEditingController();
+  final Dio _dio = Dio();
+  bool _isLoading = false;
 
-  void _sendMessage() {
+
+  void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
       setState(() {
+        _isLoading = true;
         messages.add({
           'message': _controller.text,
           'time': TimeOfDay.now().format(context),
@@ -24,6 +31,24 @@ class _ChatServiceState extends State<ChatService> {
         });
         _controller.clear();
       });
+
+      try {
+        String message = _controller.text;
+        // String response = await _sendRequestToAPI(message);
+
+        setState(() {
+          messages.add({
+            'time': TimeOfDay.now().format(context),
+            'sender': 'bot',
+          });
+          _isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        print('Error: $e');
+      }
     }
   }
 
@@ -111,7 +136,11 @@ class _ChatServiceState extends State<ChatService> {
                 CircleAvatar(
                   backgroundColor: Colors.blue,
                   child: IconButton(
-                    icon: Icon(Icons.send, color: Colors.white),
+                    icon: _isLoading
+                        ? CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : Icon(Icons.send, color: Colors.white),
                     onPressed: _sendMessage,
                   ),
                 ),

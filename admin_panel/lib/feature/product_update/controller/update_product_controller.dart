@@ -89,19 +89,24 @@ class UpdateProductController extends GetxController {
     option = product.option as Map<String, dynamic> ?? {};
   }
 
-  Future<void> postUpdateProduct(String productId) async {
+  Future<void> postUpdateProduct(String productId, String key) async {
     try {
       isLoading.value = true;
       final response = await dioApi.put(
         ApiEndpoints.updateProduct(productId),
         data: _buildProductData(),
       );
+      print("response: ${response.data}");
       if (response.statusCode != HttpStatusCodes.STATUS_CODE_OK) {
         Get.snackbar("Thông báo", "Cập nhật sản phẩm thất bại");
+        return;
       }
-      await productsController.fetchProductsGroupedByBrand(categoryId.text);
-      await accessoryController.fetch_sub_product(accessoryController.sunCateId);
-      await computerAccessoriesController.fetch_sub_product(computerAccessoriesController.sunCateId);
+      if(key == 'phu-kien') { computerAccessoriesController.fetch_sub_product(computerAccessoriesController.subCateId.value);}
+
+      if(key == 'linh-kien'){accessoryController.fetch_sub_product(accessoryController.subCateId.value);}
+
+       productsController.fetchProductsGroupedByBrand(categoryId.text);
+       
       Get.back();
       Get.snackbar("Thông báo", "Cập nhật sản phẩm thành công");
     } catch (e) {

@@ -212,7 +212,7 @@ class _UpdateProductState extends State<UpdateProduct> {
               CustomButton(
                 text: 'Lưu sản phẩm',
                 onPressed: () {
-                  controllerUpdate.postUpdateProduct(widget.productId);
+                  controllerUpdate.postUpdateProduct(widget.productId, widget.categoryKey ?? '');
                 },
                 textColor: AppColors.white,
                 color: AppColors.primary,

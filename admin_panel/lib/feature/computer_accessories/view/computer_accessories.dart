@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/custom_select.dart';
-import 'package:flutter_web/feature/accessory/controller/accessory_controller.dart';
 import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/home/widget/custom_appbar.dart';
-import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/product_create/view/create_product.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
 import 'package:flutter_web/feature/products/widget/product_gridRow.dart';
@@ -23,11 +21,11 @@ class ComputerAccessories extends StatelessWidget {
     final controller = Get.find<ComputerAccessoriesController>();
     final productsController = Get.put(ProductsController());
 
-    // Gán giá trị cho subCateId nếu danh sách không rỗng
+
     if (controller.accessoriesList.isNotEmpty) {
       controller.subCateId.value = controller.accessoriesList.first.id ?? '';
       controller.fetch_sub_product(
-          controller.subCateId.value); // Gọi hàm để lấy sản phẩm
+          controller.subCateId.value); 
     }
 
     return Scaffold(
@@ -83,6 +81,7 @@ class ComputerAccessories extends StatelessWidget {
                                       Item(id: e.id ?? '', name: e.name ?? ''))
                                   .toList(),
                               onProjectSelected: (value) {
+                                controller.subCateId.value = value ?? '';
                                 controller.fetch_sub_product(value ?? '');
                               },
                             ),
@@ -118,8 +117,7 @@ class ComputerAccessories extends StatelessWidget {
                           alignment: Alignment.center,
                           child: Obx(
                             () {
-                              if (productsController.isLoading.value ||
-                                  controller.isLoading.value) {
+                              if ( controller.isLoading.value) {
                                 return const Center(
                                     child: CircularProgressIndicator());
                               }

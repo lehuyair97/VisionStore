@@ -17,7 +17,6 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(HomeController());
     final controllerLogin = Get.put(LoginController());
-    print("controllerLogin.users?.userName ${controllerLogin.users?.userName}");
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -46,16 +45,17 @@ class CustomAppBar extends StatelessWidget {
                 color: AppColors.backgroundTab,
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: Image.network(
-                controllerLogin.users?.avatar ??
-                    "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
-                height: 44,
-                width: 44,
-                scale: 1.0,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    Image.asset(Img.logo, height: 44, width: 44),
-              ),
+              child: Image.asset(Img.logo, height: 44, width: 44),
+              // child: Image.network(
+              //   controllerLogin.users?.avatar ??
+              //       "https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png",
+              //   height: 44,
+              //   width: 44,
+              //   scale: 1.0,
+              //   fit: BoxFit.cover,
+              //   errorBuilder: (context, error, stackTrace) =>
+              //       Image.asset(Img.logo, height: 44, width: 44),
+              // ),
             ),
             10.horizontalSpace,
             Column(

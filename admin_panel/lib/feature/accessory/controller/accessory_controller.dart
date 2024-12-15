@@ -21,7 +21,7 @@ class AccessoryController extends GetxController {
   ProductGridDataSource productGridDataSource =
       ProductGridDataSource(products: []);
 
-  final String sunCateId = "";
+  final String sunCateId = "6728734ca6595b31391c62e8";
   final isLoading = false.obs;
 
   int get currentPage => 0;
@@ -36,7 +36,10 @@ class AccessoryController extends GetxController {
     if (isLoading.value) return;
     try {
       isLoading.value = true;
+            productSup.clear();
+      productGridDataSource = ProductGridDataSource(products: []);
       final response = await dio.get(ApiEndpoints.productSub(sunCateId));
+      print("fetch_subnew: ${response.data}");
 
       if (response.statusCode ==
           HttpStatusCodes.STATUS_CODE_TOO_MANY_REQUESTS) {
@@ -56,8 +59,7 @@ class AccessoryController extends GetxController {
       if (products.isEmpty) {
         return;
       }
-      productSup.clear();
-      
+
       productGridDataSource.notifyListeners();
 
       productSup.value = products;
@@ -67,6 +69,7 @@ class AccessoryController extends GetxController {
       productGridDataSource = ProductGridDataSource(products: productSup);
       productGridDataSource.notifyListeners();
     } catch (e) {
+      productGridDataSource = ProductGridDataSource(products: []);
       print("Error fetching products: $e");
     } finally {
       isLoading.value = false;

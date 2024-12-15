@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
 import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/common/repositoty/dio_api.dart';
+import 'package:flutter_web/feature/accessory/controller/accessory_controller.dart';
+import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/product_create/model/brand_model.dart';
 import 'package:flutter_web/feature/product_create/model/categoty_model.dart';
 import 'package:flutter_web/feature/accessory/model/sub_category_model.dart';
@@ -17,7 +19,6 @@ class CreateProductController extends GetxController {
   final List<CategoryModel> categoryList = [];
   final List<SubCategory> subCategoryList = [];
   Map<String, dynamic> option = {};
-
   // // TextEditingControllers
   final TextEditingController name = TextEditingController();
   final TextEditingController price = TextEditingController();
@@ -28,7 +29,7 @@ class CreateProductController extends GetxController {
   final TextEditingController warrantyPeriod = TextEditingController();
   final TextEditingController stock = TextEditingController();
   final TextEditingController thumbnail = TextEditingController();
-  final Rx<TextEditingController> image = TextEditingController().obs;  
+  final Rx<TextEditingController> image = TextEditingController().obs;
   final TextEditingController descriptions = TextEditingController();
   final TextEditingController sku = TextEditingController();
   final TextEditingController weight = TextEditingController();
@@ -110,7 +111,11 @@ class CreateProductController extends GetxController {
     }
   }
 
-  Future<void> postAddProduct(ProductsController productsController) async {
+  Future<void> postAddProduct(
+      ProductsController productsController,
+      AccessoryController accessoryController,
+      ComputerAccessoriesController computerAccessoriesController,
+      String key) async {
     if (_isInputValid()) {
       try {
         _setOptionBasedOnCategory();
@@ -122,6 +127,15 @@ class CreateProductController extends GetxController {
 
         if (response.statusCode == HttpStatusCodes.STATUS_CODE_CREATED ||
             response.statusCode == HttpStatusCodes.STATUS_CODE_OK) {
+          if (key == 'phu-kien') {
+            computerAccessoriesController
+                .fetch_sub_product(computerAccessoriesController.subCateId.value);
+          }
+
+          if (key == 'linh-kien') {
+            accessoryController
+                .fetch_sub_product(accessoryController.sunCateId);
+          }
           productsController.fetchProductsGroupedByBrand(categoryId.value.text);
           Get.back();
           Get.snackbar("Thông báo", "Tạo sản phẩm thành công");
