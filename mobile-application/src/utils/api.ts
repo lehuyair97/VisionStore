@@ -101,7 +101,7 @@ export const REQUEST_URL = {
   GET_MESSAGE: (id) => `conversations/${id}`,
 };
 
-const BASE_URL ="https://visionstore.onrender.com/api";
+const BASE_URL = "http://192.168.182.213:3000/api";
 export type AxiosParams = {
   url: string;
   method: Method;

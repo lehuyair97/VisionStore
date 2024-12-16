@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import api, { REQUEST_URL } from "@utils/api";
 import toast from "@components/toast";
 import { signInForm } from "@navigation/config/types";
+import useAuth from "./use-auth";
 
 export type signInReponse = {
   isSuccess: boolean;
@@ -38,6 +39,7 @@ export type User = {
 };
 
 const useSignIn = () => {
+  const { setErrorSignIn } = useAuth();
   const {
     data,
     mutateAsync: submit,
@@ -56,17 +58,10 @@ const useSignIn = () => {
 
     onSuccess: () => {
       toast.success("Đăng nhập thành công");
+      setErrorSignIn("");
     },
     onError: (error: any) => {
-      if (error.response) {
-        if (error.response.status === 400) {
-          toast.error(error?.response?.data?.message);
-        } else if (error.response.status === 403) {
-          toast.error("Bạn không có quyền truy cập vào tài nguyên này.");
-        }
-      } else {
-        toast.error(error?.response?.data?.message);
-      }
+      setErrorSignIn(error?.response?.data?.message);
     },
     networkMode: "always",
   });

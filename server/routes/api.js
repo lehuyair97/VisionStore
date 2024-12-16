@@ -184,6 +184,8 @@ router.put("/orders/:id/commented", orderAPI.markAsCommented);
 router.get("/orders/status", orderAPI.getOrdersByStatus);
 router.delete("/orders/:id", orderAPI.deleteOrder);
 router.get("/orders/users/:id", orderAPI.getOrdersByUserId);
+router.get("/orders/revenue/:type", orderAPI.getRevenue);
+router.get("/orders/compareMonthLy/revenue/", orderAPI.compareMonthlyRevenue);
 
 // // Brand routes
 router.get("/brands", brandAPI.getAllBrands);

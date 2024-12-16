@@ -42,21 +42,18 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/api', api);
 
-// Catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// Error handler
 app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
+  p
   res.status(err.status || 500);
   res.render('error');
 });
 
-// Connect to the database
-database.connect;  // Make sure to call the function here
+database.connect;  
 
 module.exports = app;

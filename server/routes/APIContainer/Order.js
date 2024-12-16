@@ -2,7 +2,7 @@ const Order = require("../../models/orderModel");
 const Cart = require("../../models/cartModel");
 const Notification = require("../../models/notificationModel");
 const { handleEvent } = require("../../config/websocket");
-
+const moment = require('moment')
 async function createOrder(req, res) {
   const orderData = req.body;
   const { customerId, items } = orderData;
@@ -137,6 +137,103 @@ async function getOrdersByStatus(req, res) {
     res.status(500).json({ error: "Không thể lấy đơn hàng theo trạng thái" });
   }
 }
+async function getRevenue(req, res) {
+  try {
+    const { type } = req.query;
+    let matchStage = {};
+    const today = moment();
+
+    if (type === "day") {
+      matchStage.createdAt = {
+        $gte: today.startOf('day').toDate(),
+        $lte: today.endOf('day').toDate(),
+      };
+    } else if (type === "month") {
+      matchStage.createdAt = {
+        $gte: today.startOf('month').toDate(),
+        $lte: today.endOf('month').toDate(),
+      };
+    } else if (type === "year") {
+      matchStage.createdAt = {
+        $gte: today.startOf('year').toDate(),
+        $lte: today.endOf('year').toDate(),
+      };
+    }
+
+    const revenueData = await Order.aggregate([
+      { $match: { ...matchStage, status: "delivered", createdAt: { $exists: true } } },
+      { $group: { _id: null, totalRevenue: { $sum: "$totalBill" } } }
+    ]);
+
+    const totalRevenue = revenueData.length ? revenueData[0].totalRevenue : 0;
+
+    res.status(200).json({ isSuccess: true, revenue: revenueData });
+  } catch (error) {
+    console.error("Error while calculating revenue: ", error);
+    res.status(500).json({ error: "Không thể tính doanh thu. Lỗi: " + error.message });
+  }
+}
+
+
+
+async function compareMonthlyRevenue(req, res) {
+  try {
+    const now = new Date();
+
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+
+    const currentMonthRevenue = await Order.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: currentMonthStart,
+            $lte: currentMonthEnd,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalAmount" },
+          totalOrders: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const previousMonthRevenue = await Order.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: previousMonthStart,
+            $lte: previousMonthEnd,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalAmount" },
+          totalOrders: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const result = {
+      currentMonth: currentMonthRevenue[0] || { totalRevenue: 0, totalOrders: 0 },
+      previousMonth: previousMonthRevenue[0] || { totalRevenue: 0, totalOrders: 0 },
+    };
+
+    res.status(200).json({ isSuccess: true, data: result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Không thể tính doanh thu giữa các tháng" });
+  }
+}
+
 
 module.exports = {
   createOrder,
@@ -146,5 +243,7 @@ module.exports = {
   getOrderById,
   getOrdersByStatus,
   getOrdersByUserId,
-  markAsCommented
+  markAsCommented,
+  getRevenue,
+  compareMonthlyRevenue,
 };

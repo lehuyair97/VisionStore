@@ -1,4 +1,10 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import useRefreshToken from "@hooks/auth/use-refresh-token";
 import useGetProfile from "@hooks/common/use-get-profile";
 import { getUserInfoStorage, setUserInfoStorage } from "@utils/storage";
@@ -28,8 +34,10 @@ type TAuthContext = {
   }) => void;
   setAuthenticationStatus: (status: AuthenticationStatus) => void;
   logout: () => Promise<void>;
-  userInfo: User 
+  userInfo: User;
   setUserInfo: (user: User | null) => void;
+  errorSignin: string;
+  setErrorSignIn: (error: string) => void;
 };
 
 export const AuthContext = createContext<TAuthContext | undefined>(undefined);
@@ -39,9 +47,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useState<AuthenticationStatus>("UNAUTHENTICATED");
   const [accessToken, setAccessToken] = useState<string | undefined>();
   const [userInfo, setUserInfo] = useState<User | null>(null);
-
+  const [errorSignin, setErrorSignIn] = useState<string>("");
   const { submit: submitRefreshToken } = useRefreshToken();
-  const { data: userData, refetchUserInfo } = useGetProfile(userInfo?._id || "");
+  const { data: userData, refetchUserInfo } = useGetProfile(
+    userInfo?._id || ""
+  );
 
   const refreshToken = useCallback(async () => {
     try {
@@ -108,7 +118,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (userData) {
-      setUserInfo(userData); 
+      setUserInfo(userData);
     }
   }, [userData]);
 
@@ -134,8 +144,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       handleLoginSuccess,
       userInfo,
       setUserInfo,
+      setErrorSignIn,
+      errorSignin,
     }),
-    [authenticationStatus, logout, accessToken, handleLoginSuccess, userInfo]
+    [
+      authenticationStatus,
+      logout,
+      accessToken,
+      handleLoginSuccess,
+      userInfo,
+      errorSignin,
+      setErrorSignIn,
+    ]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

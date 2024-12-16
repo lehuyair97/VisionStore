@@ -23,7 +23,7 @@ export default function OrderManagerment() {
     if (routeIndex !== undefined && routeIndex !== index) {
       setIndex(routeIndex); 
     }
-  }, [routeIndex, index, setIndex]);
+  }, []);
 
   const renderScene = ({ route: { key } }: { route: Route }) => {
     const components = {

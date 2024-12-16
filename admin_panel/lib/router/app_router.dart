@@ -3,7 +3,6 @@ import 'package:flutter_web/feature/auth/view/login.dart';
 import 'package:flutter_web/feature/chat/view/chat_service.dart';
 import 'package:flutter_web/feature/chat_supoport/view/chat_supoport.dart';
 import 'package:flutter_web/feature/home/widget/custom_appbar.dart';
-import 'package:flutter_web/feature/product_create/view/create_product.dart';
 import 'package:flutter_web/feature/dashboard/dashboard.dart';
 import 'package:flutter_web/feature/home/binding/home_binding.dart';
 import 'package:flutter_web/feature/home/view/home.dart';
@@ -11,7 +10,6 @@ import 'package:flutter_web/feature/products/binding/products_binding.dart';
 import 'package:flutter_web/feature/products/view/products.dart';
 import 'package:flutter_web/feature/product_update/binding/update_product_binding.dart';
 import 'package:flutter_web/feature/product_update/view/update_product.dart';
-import 'package:get/get.dart';
 
 class AppRouter {
   static final String login = '/login';

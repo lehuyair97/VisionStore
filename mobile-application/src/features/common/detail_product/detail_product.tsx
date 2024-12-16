@@ -77,11 +77,11 @@ const DetailProduct = () => {
 
   const handleBuyNow = () => {
     const selectProduct = product as any;
-    selectProduct.quantity = 1;
+    selectProduct.quantity = quantity;
     selectProduct.productId = product?._id;
     navigate("Payment", {
       selectedProducts: [selectProduct],
-      totalPrice: product.price,
+      totalPrice: product.price * quantity,
     });
   };
   return (

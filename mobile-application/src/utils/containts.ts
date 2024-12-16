@@ -120,13 +120,13 @@ export const deliveryMethods = [
     method: "Giao nhanh",
     description: "Giao hàng nhanh",
     estimated_delivery_time: dayjs().add(2, "day").format("DD-MM-YYYY"),
-    price: 35,
+    price: 35000,
   },
   {
     method: "Giao thường",
     description: "Giao hàng chậm",
     estimated_delivery_time: dayjs().add(3, "day").format("DD-MM-YYYY"),
-    price: 25,
+    price: 25000,
   },
 ];
 export const paymentMethods = [

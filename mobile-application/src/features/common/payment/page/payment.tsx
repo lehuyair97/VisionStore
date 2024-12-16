@@ -125,7 +125,6 @@ const Payment = () => {
 
   return (
     <MainContainer edges={EDGES.LEFT_RIGHT}>
-      <ScrollView style={{flex:1}}>
         <Block backgroundColor={"gray_profile"} flex={1}>
           <AppBarCustom
             title="Thanh toán"
@@ -190,7 +189,6 @@ const Payment = () => {
           refRBSheet={refRBSheetPayment}
           height={320}
         />
-      </ScrollView>
     </MainContainer>
   );
 };
