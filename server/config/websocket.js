@@ -1,6 +1,7 @@
 const https = require("https");
 const socketIo = require("socket.io");
 var fs = require("fs");
+const path = require("path");
 
 const server = https.createServer({
   cert: fs.readFileSync("./cert.pem"),
@@ -8,6 +9,7 @@ const server = https.createServer({
 });
 
 const io = socketIo(server, {
+  path:"/" ,
   cors: {
     origin: "https://visionstore.onrender.com",  
     methods: ["GET", "POST"],
@@ -40,6 +42,7 @@ io.on("connection", (socket) => {
 
 const broadcast = (data) => {
   io.emit("message", data);
+  
 };
 
 const sendMessageToClient = (userId, data) => {
