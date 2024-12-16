@@ -8,6 +8,7 @@ import { EDGES } from "@utils/helper";
 import useCommon from "@hooks/common/use-common";
 import { useAuth } from "@hooks/auth";
 import useMarkAsReadNotification from "@hooks/common/use-mark-as-read-notification";
+import Text from "@components/text";
 const NotificationScreen: React.FC = () => {
   const { userInfo } = useAuth();
   const { notifications } = useCommon();
@@ -41,11 +42,19 @@ const NotificationScreen: React.FC = () => {
           paddingVertical={10}
         />
         <Block flex={1}>
-          <FlatList
-            data={notifications}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id}
-          />
+          {!notifications || notifications.length === 0 ? (
+            <Block flex={1} justifyContent={"center"} alignItems={"center"}>
+              <Text color={"red_400"} fontSize={16} fontWeight={"bold"}>
+                Hiện tại bạn không có thông báo nào!
+              </Text>
+            </Block>
+          ) : (
+            <FlatList
+              data={notifications}
+              renderItem={renderItem}
+              keyExtractor={(item) => item._id}
+            />
+          )}
         </Block>
       </Block>
     </MainContainer>

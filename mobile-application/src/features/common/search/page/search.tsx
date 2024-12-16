@@ -23,7 +23,7 @@ const Search = () => {
 
   const handleNavigateToDetailProduct = (item: any) => {
     navigation.navigate(ROUTES.DetailProduct as keyof ParamListBase, {
-      productId: item?._id,
+      product: item,
     });
   };
   const handleSearch = () => {

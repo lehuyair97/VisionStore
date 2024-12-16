@@ -8,9 +8,11 @@ import { useAuth } from "@hooks/auth";
 import useChangePassword from "@hooks/common/use-change-password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { validateChangePW } from "@utils/validate";
+import { Alert } from "react-native";
 interface ChangePasswordForm {
   oldPassword: string;
   newPassword: string;
+  re_newPassword: string;
 }
 
 const ChangePassword = () => {
@@ -19,6 +21,7 @@ const ChangePassword = () => {
   const {
     control,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<ChangePasswordForm>({
     mode: "onChange",
@@ -26,6 +29,10 @@ const ChangePassword = () => {
   });
 
   const handleChangePassword = async (data) => {
+    const { oldPassword, newPassword, re_newPassword } = getValues();
+    if(newPassword !== re_newPassword){
+      Alert.alert('Mật khẩu không trùng khớp!')
+    }
     const res = await changePassword(data);
   };
   return (
@@ -57,6 +64,17 @@ const ChangePassword = () => {
           control={control}
           error={errors.newPassword?.message}
           showError={!!errors.newPassword?.message}
+          secureTextEntry={true}
+        />
+
+        <Input
+          name="re_newPassword"
+          label="xác nhận mật khẩu mới"
+          placeholder="xác nhận mật khẩu mới"
+          labelStyle={{ fontSize: 14 }}
+          control={control}
+          error={errors.re_newPassword?.message}
+          showError={!!errors.re_newPassword?.message}
           secureTextEntry={true}
         />
         {data?.isSuccess === false && (

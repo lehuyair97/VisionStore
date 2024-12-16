@@ -80,7 +80,7 @@ const ProductItem = ({
         {isRecent || isComment ? (
           <TouchableOpacity
             onPress={() =>
-              navigate(ROUTES.DetailProduct, { productId: product?._id })
+              navigate(ROUTES.DetailProduct, { product: product })
             }
           >
             <Row center gap={"_10"}>

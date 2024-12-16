@@ -1,19 +1,17 @@
 import { MainContainer } from "@components";
 import Block from "@components/block";
+import { RBSheetRef } from "@features/common/components/bottom-sheet";
+import { useAuth } from "@hooks/auth";
+import useGetBrand from "@hooks/common/use-get-brand";
 import Colors from "@theme/colors";
+import { shipingStatus } from "@utils/containts";
 import { EDGES } from "@utils/helper";
+import { useRef } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import FeaturesProfile from "../component/features_profile";
 import HeaderProfile from "../component/header_profile";
 import OrderManagement from "../component/order_management_bar";
-import Trademark from "../component/trademark";
-import { useAuth } from "@hooks/auth";
-import useGetBrand from "@hooks/common/use-get-brand";
-import { shipingStatus } from "@utils/containts";
-import { useRef } from "react";
-import { RBSheetRef } from "@features/common/components/bottom-sheet";
 import ProfileActions from "../component/profile-bottom-sheet";
-import Chat from "../component/chat";
 
 export default function Profile() {
   const { userInfo } = useAuth();

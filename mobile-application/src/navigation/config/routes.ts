@@ -20,8 +20,10 @@ import OrderPending from "@features/common/profile/component/order-managerment/o
 import OrderManagerment from "@features/common/profile/component/order-managerment";
 import ProductReview from "@features/common/profile/component/product-review";
 import UserReviewProduct from "@features/common/profile/component/user-review-product";
+import SplashScreen from "@features/auth/splash-screen";
 
 export const notLoggedInScreens = {
+  SplashScreen: SplashScreen,
   Signin: Signin,
   SignUp: Signup,
 };
@@ -50,6 +52,7 @@ export const loggedInScreens = {
 };
 
 export const ROUTES = createEnum({
+  SplashScreen: "SplashScreen",
   //Auth Rotues
   Signin: "Signin",
   SignUp: "SignUp",

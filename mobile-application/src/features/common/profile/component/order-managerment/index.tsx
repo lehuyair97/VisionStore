@@ -12,10 +12,19 @@ import OrderCancle from "./order-cancle";
 import OrderDelivered from "./order-delivered";
 import OrderPending from "./order-progress";
 import OrderShipping from "./order-shipping";
+import { useEffect } from "react";
+
 export default function OrderManagerment() {
   const route = useRoute();
-  const { routeIndex } = route.params as any;
+  const { routeIndex } = route.params as { routeIndex?: number } || {};
   const { index, setIndex, routes } = useTabState(TAB_ORDER_MANGAGERMENT);
+
+  useEffect(() => {
+    if (routeIndex !== undefined && routeIndex !== index) {
+      setIndex(routeIndex); 
+    }
+  }, [routeIndex, index, setIndex]);
+
   const renderScene = ({ route: { key } }: { route: Route }) => {
     const components = {
       Progress: <OrderPending />,
@@ -25,6 +34,7 @@ export default function OrderManagerment() {
     };
     return components[key];
   };
+
   return (
     <MainContainer>
       <AppBarCustom
