@@ -17,6 +17,8 @@ export default function Profile() {
   const { userInfo } = useAuth();
   const { data: brands } = useGetBrand();
   const refRBSheet = useRef<RBSheetRef>();
+  console.log(userInfo)
+
   const toglleOpenSetting = () => {
     if (refRBSheet?.current?.close) {
       refRBSheet.current.open();

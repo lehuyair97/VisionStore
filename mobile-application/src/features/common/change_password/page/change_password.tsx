@@ -32,6 +32,7 @@ const ChangePassword = () => {
     const { oldPassword, newPassword, re_newPassword } = getValues();
     if(newPassword !== re_newPassword){
       Alert.alert('Mật khẩu không trùng khớp!')
+      return
     }
     const res = await changePassword(data);
   };

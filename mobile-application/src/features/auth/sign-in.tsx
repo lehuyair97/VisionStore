@@ -41,9 +41,6 @@ function Signin({ navigation }) {
     console.log('value ', errorSignin)
   }, [errorSignin]);
   const handleSignIn = async (type: "normal" | "google") => {
-    if (Object.keys(errors).length > 0) {
-      return;
-    }
     const token = await messaging().getToken();
     const data = getValues();
     const userForm = { ...data, ...{ device_token: token } };

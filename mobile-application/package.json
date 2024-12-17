@@ -8,7 +8,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "prebuild": "expo prebuild",
-    "android-dev": "cross-env STAGE=production NODE_ENV=production expo run android"
+    "android-dev": "cross-env STAGE=production NODE_ENV=production expo run android",
+    "build:android:production": "cross-env STAGE=production NODE_ENV=production eas build -p android --profile production"
+
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

@@ -6,24 +6,31 @@ const moment = require("moment");
 async function createOrder(req, res) {
   const orderData = req.body;
   const { customerId, items } = orderData;
+
   try {
     const newOrder = new Order(orderData);
     await newOrder.save();
+    let cart = await Cart.findOne({ customerId });
 
-    const cart = await Cart.findOne({ customerId });
-    if (cart) {
-      const productIdsPaid = items.map((item) => item.productId);
-      cart.carts = cart.carts.filter(
-        (item) => !productIdsPaid.includes(item.productId)
-      );
-      cart.totalBill = cart.carts.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
-      await cart.save();
-    } else {
-      return res.status(400).json({ error: "Giỏ hàng không tồn tại" });
+    if (!cart) {
+      cart = new Cart({
+        customerId,
+        carts: [],
+        totalBill: 0,
+      });
     }
+
+    const productIdsPaid = items.map((item) => item.productId);
+    cart.carts = cart.carts.filter(
+      (item) => !productIdsPaid.includes(item.productId)
+    );
+
+    cart.totalBill = cart.carts.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+
+    await cart.save();
 
     const notificationMessage = `Đơn hàng của bạn (Mã đơn hàng: ${newOrder._id}) đã được tạo thành công. Chúng tôi sẽ xử lý ngay!`;
     const notification = new Notification({
@@ -32,22 +39,24 @@ async function createOrder(req, res) {
       title: "Đặt hàng thành công!",
       message: notificationMessage,
       orderId: newOrder._id,
-      customerId: orderData.customerId,
     });
     await notification.save();
 
-    const notis = await Notification.find({ customerId: orderData.customerId });
+    const notis = await Notification.find({ customerId });
     if (notis.length > 0) {
       handleEvent("notification", notis);
     }
 
     res.status(200).json({ isSuccess: true, data: newOrder });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Không thể tạo đơn hàng hoặc cập nhật giỏ hàng", error });
+    console.error(error);
+    res.status(500).json({
+      error: "Không thể tạo đơn hàng hoặc cập nhật giỏ hàng",
+      details: error.message,
+    });
   }
 }
+
 
 async function deleteOrder(req, res) {
   const { id } = req.params;

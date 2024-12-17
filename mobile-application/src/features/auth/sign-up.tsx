@@ -1,5 +1,6 @@
 import { memo } from "react";
 import {
+  Alert,
   Image,
   Keyboard,
   KeyboardAvoidingView,
@@ -42,7 +43,12 @@ const SignUp = () => {
   });
 
   const handleSignUp = async () => {
+   
     const data = getValues();
+    if(data.password !== data.re_password){
+      Alert.alert('Mật khẩu không trùng khớp')
+      return
+    }
     const { re_password, ...newData } = data;
     if (Object.keys(errors).length === 0) {
       const { accessToken, isSuccess, refreshToken, user } = await submitSignUp(
@@ -51,7 +57,6 @@ const SignUp = () => {
 
       if (isSuccess) {
         navigate(ROUTES.Home);
-
         handleLoginSuccess({
           accessToken,
           refreshToken,
