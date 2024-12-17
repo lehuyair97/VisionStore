@@ -1,5 +1,5 @@
 import { Block, Icon, Row, Text } from "@components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useGetActiveVoucher from "@hooks/common/use-get-voucher-active";
 import BottomSheet from "@features/common/components/bottom-sheet";
 import SearchView from "@features/common/build-pc/components/search-app-bar";
@@ -17,6 +17,21 @@ export default function Vouchers({
   onVoucherSelected,
 }: VouchersProp) {
   const { data, isPending } = useGetActiveVoucher();
+  const [filterData, setFilterData] = useState([]);
+  useEffect(() => {
+    setFilterData(data);
+  }, [data]);
+
+  const handleFilter = () => {
+    if (!value || value.trim() === "") {
+      setFilterData(data);
+      return;
+    }
+    const filtered = data.filter((f) =>
+      f.title.toLowerCase().startsWith(value.toLowerCase())
+    );
+    setFilterData(filtered);
+  };
   const [value, setValues] = useState<string>();
   return (
     <BottomSheet height={height} refRBSheet={refRBSheet}>
@@ -28,9 +43,11 @@ export default function Vouchers({
           <Icon type="entypo" name="chevron-down" color={"black"} size={24} />
         </Row>
         <SearchView
+          keyboardType="default"
           textPlaceHolder="Nhập mã voucher"
           onValueChange={setValues}
           textValue={value}
+          onPress={handleFilter}
           buttonTitle="Áp dụng"
         />
         {isPending ? (
@@ -40,7 +57,7 @@ export default function Vouchers({
         ) : (
           <Block style={{ paddingBottom: 230, paddingTop: 10 }}>
             <FlatList
-              data={data}
+              data={filterData}
               keyExtractor={Helper.getKeyExtractor}
               scrollEnabled={true}
               renderItem={({ item }: any) => (

@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
+import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/home/model/health_model.dart';
+import 'package:flutter_web/feature/home/model/revenue_model.dart';
+import 'package:flutter_web/feature/home/model/revenue_month.dart';
 import 'package:flutter_web/feature/orders/controller/oder_controller.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
 import 'package:flutter_web/feature/products/model/product_model.dart';
@@ -20,10 +23,17 @@ class HomeController extends GetxController {
   final brandController = Get.put(BrandController());
   final isLoading = RxBool(false);
   final productsController = Get.put(ProductsController());
+  final type = RxString("year");
+
+  RevenueMonth? revenueMonth;
+
+  RevenueData? revenueData;
 
   @override
   void onInit() {
     super.onInit();
+    getRevenue(type.value);
+    getRevenueMonth();
   }
 
   Future<void> getProducts() async {
@@ -74,4 +84,30 @@ class HomeController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+  Future<void> getRevenue(String? type) async {
+    try {
+      final response = await dio.get(ApiEndpoints.total(type ?? "year"));
+       print("$response");
+       if(response.statusCode != HttpStatusCodes.STATUS_CODE_OK) { print("error"); return; }
+       revenueData = RevenueData.fromJson(response.data);
+       print("revenueData: ${revenueData?.revenue}");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+
+    Future<void> getRevenueMonth() async {
+    try {
+      final response = await dio.get(ApiEndpoints.totalMonth);
+       print("$response");
+       if(response.statusCode != HttpStatusCodes.STATUS_CODE_OK) { print("error"); return; }
+       revenueMonth = RevenueMonth.fromJson(response.data);
+    } catch (e) {
+      print(e);
+    }
+  }
+  
 }

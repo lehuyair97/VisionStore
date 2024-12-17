@@ -2,10 +2,9 @@ const Comment = require("./../../models/commentModel");
 const { broadcast, handleEvent } = require("./../../config/websocket");
 
 async function getCommentsData(productID) {
-  const comments = await Comment.find({ productID }).populate(
-    "userID",
-    "email userName avatar"
-  );
+  const comments = await Comment.find({ productID })
+    .populate("userID", "email userName avatar")
+    .sort({ created_at: -1 });
 
   const count = comments.length;
   const totalRating = comments.reduce(
@@ -30,13 +29,11 @@ exports.likeComment = async (req, res) => {
     await comment.save();
     res.status(201).json({ isSuccess: true, data: comment });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        isSuccess: false,
-        message: "Internal Server Error",
-        error: error.message,
-      });
+    res.status(500).json({
+      isSuccess: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
   }
 };
 
@@ -54,7 +51,7 @@ async function getCommentsDataByUser(userID) {
   const comments = await Comment.find({ userID }).populate(
     "productID",
     "name price image"
-  );
+  ).sort({created_at: -1});
 
   const count = comments.length;
   const totalRating = comments.reduce(

@@ -1,6 +1,7 @@
 import { Button, Row } from "@components";
 import { TextInput } from "@components/text-input";
 import { makeStyles } from "@theme";
+import { KeyboardTypeOptions } from "react-native";
 
 type SearchAppBarProps = {
   textValue: string;
@@ -8,19 +9,21 @@ type SearchAppBarProps = {
   buttonTitle: string;
   textPlaceHolder: string;
   onPress: () => void
+  keyboardType?: KeyboardTypeOptions
 };
 export default function SearchAppBar({
   textValue,
   onValueChange,
   buttonTitle,
   textPlaceHolder,
+  keyboardType,
   onPress
 }: SearchAppBarProps) {
   const style = useStyle();
   return (
     <Row center mx={"m"} gap={"_10"}>
       <TextInput
-      keyboardType="number-pad"
+      keyboardType= {keyboardType?? "number-pad"}
         value={textValue}
         style={style.textInput}
         containerStyle={{

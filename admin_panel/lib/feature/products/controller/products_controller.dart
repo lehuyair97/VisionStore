@@ -138,4 +138,7 @@ class ProductsController extends GetxController {
   void onPageChanged(int pageIndex) {
     pageIndex = pageIndex;
   }
+
+
+  
 }

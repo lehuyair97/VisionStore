@@ -59,4 +59,10 @@ class ApiEndpoints {
       "${Config.baseUrl}/orders/users/$userId";
   // voucher
   static const String voucher = "${Config.baseUrl}/voucher";
+
+  // toall
+  static String total(String type) => "${Config.baseUrl}/orders/revenue/type?type=$type";
+
+  static const String totalMonth =
+      "${Config.baseUrl}/orders/compareMonthLy/revenue";
 }

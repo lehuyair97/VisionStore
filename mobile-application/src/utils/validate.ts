@@ -24,8 +24,9 @@ export const validateEditProfile = z.object({
 });
 
 export const validateChangePW = z.object({
-  oldPassword: z.string().min(1, "Vui lòng không để trống mật khẩu cũ"),
-  newPassword: z.string().min(1, "Vui lòng không để trống mật khẩu mới"),
+  oldPassword: z.string().min(1, "Vui lòng không để trống"),
+  newPassword: z.string().min(1, "Vui lòng không để trống"),
+  re_newPassword: z.string().min(1, "Vui lòng không để trống"),
 });
 
 export const validNewAddress = z.object({

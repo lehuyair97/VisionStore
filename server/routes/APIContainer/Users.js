@@ -11,7 +11,7 @@ const {
 const RefreshToken = require("./../../models/refresh_token");
 
 require("dotenv").config();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 exports.createUser = async (req, res) => {
   try {
@@ -194,13 +194,16 @@ exports.addRecentProducts = async (req, res) => {
         message: `User not found with ID: ${id}`,
       });
     }
-    user.recent_products = user.recent_products.filter(
+
+    const updatedProducts = [productId, ...user.recent_products.filter(
       (item) => item.toString() !== productId
-    );
-    user.recent_products.unshift(productId);
-    if (user.recent_products.length > 6) {
-      user.recent_products = user.recent_products.slice(0, 6);
+    )];
+
+    if (updatedProducts.length > 10) {
+      updatedProducts.pop(); 
     }
+
+    user.recent_products = updatedProducts;
 
     await user.save();
 
@@ -219,6 +222,7 @@ exports.addRecentProducts = async (req, res) => {
   }
 };
 
+
 exports.getRecentProducts = async (req, res) => {
   try {
     const { id } = req.params;
@@ -230,7 +234,6 @@ exports.getRecentProducts = async (req, res) => {
     }
     const user = await User.findById(id).populate({
       path: "recent_products",
-      options: { sort: { Timestamp: -1 } },
     });
 
     if (!user) {

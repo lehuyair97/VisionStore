@@ -65,8 +65,8 @@ class _HomeViewState extends State<HomeView> {
                                   HealthModel(
                                       icon: 'assets/svg/burn.svg',
                                       value:
-                                          "${controllerUser.userList.value.length}",
-                                      title: "Người dùng đã đăng ký",
+                                          "${controller.revenueData?.revenue} VND",
+                                      title: "Tổng doanh thu",
                                       color: AppColors.backgroundCard),
                                   HealthModel(
                                       icon: 'assets/svg/steps.svg',
@@ -91,7 +91,7 @@ class _HomeViewState extends State<HomeView> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Expanded(
+                                  Expanded(
                                     flex: 2,
                                     child: Card(
                                       color: AppColors.backgroundCard,
@@ -101,6 +101,7 @@ class _HomeViewState extends State<HomeView> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           LineChartSample2(
+                                            revenueMonth: controller.revenueMonth!,
                                             color: AppColors.backgroundCard,
                                           ),
                                         ],
@@ -113,7 +114,8 @@ class _HomeViewState extends State<HomeView> {
                                     child: Column(
                                       children: [
                                         PieChartWidget(
-                                          title: 'Người dùng mong muốn sử dụng',
+                                          revenueMonth: controller.revenueMonth!,
+                                          title: 'Biểu So sanh doanh thu trước và sau',
                                           width: 1.5,
                                           color: AppColors.backgroundCard,
                                           userCount: controllerUser

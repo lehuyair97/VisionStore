@@ -11,18 +11,19 @@ import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import theme from "@theme";
 import { EDGES } from "@utils/helper";
 import { validateUser } from "@utils/validate";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Image } from "react-native";
 
 function Signin({ navigation }) {
-  const { handleLoginSuccess } = useAuth();
+  const { handleLoginSuccess, errorSignin } = useAuth();
   const { submit, submitting } = useSignIn();
   const { submit: signInByGoogle, submitting: googleSubmitting } =
     useSignInGoogle();
   const {
     control,
     getValues,
+    setError,
     formState: { errors },
   } = useForm<signInForm>({
     resolver: zodResolver(validateUser),
@@ -32,7 +33,13 @@ function Signin({ navigation }) {
       password: __DEV__ ? "123" : "",
     },
   });
-
+  useEffect(() => {
+    setError("password", {
+      type: "manual",
+      message: errorSignin,
+    });
+    console.log('value ', errorSignin)
+  }, [errorSignin]);
   const handleSignIn = async (type: "normal" | "google") => {
     if (Object.keys(errors).length > 0) {
       return;
@@ -88,7 +95,7 @@ function Signin({ navigation }) {
             color: theme.colors.primary,
             fontWeight: "bold",
             textAlign: "center",
-            fontStyle:'italic',
+            fontStyle: "italic",
           }}
         />
         <Button

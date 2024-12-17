@@ -29,9 +29,10 @@ const SignUp = () => {
     control,
     getValues,
     formState: { errors },
+    handleSubmit
   } = useForm<signUpForm>({
     resolver: zodResolver(validateUser),
-    mode: "onChange",
+    mode: "onSubmit",
     defaultValues: {
       display_name: "",
       email: "",
@@ -43,7 +44,6 @@ const SignUp = () => {
   const handleSignUp = async () => {
     const data = getValues();
     const { re_password, ...newData } = data;
-
     if (Object.keys(errors).length === 0) {
       const { accessToken, isSuccess, refreshToken, user } = await submitSignUp(
         newData
@@ -126,7 +126,7 @@ const SignUp = () => {
                 buttonStyle={{ marginTop: 30 }}
                 label="Đăng Ký"
                 textStyle={{ color: "white" }}
-                onPress={handleSignUp}
+                onPress={handleSubmit(handleSignUp)}
               />
             </Block>
             <Row justifyContent="center" marginVertical="_20">

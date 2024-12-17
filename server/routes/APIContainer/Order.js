@@ -2,7 +2,7 @@ const Order = require("../../models/orderModel");
 const Cart = require("../../models/cartModel");
 const Notification = require("../../models/notificationModel");
 const { handleEvent } = require("../../config/websocket");
-
+const moment = require("moment");
 async function createOrder(req, res) {
   const orderData = req.body;
   const { customerId, items } = orderData;
@@ -137,6 +137,174 @@ async function getOrdersByStatus(req, res) {
     res.status(500).json({ error: "Không thể lấy đơn hàng theo trạng thái" });
   }
 }
+async function getRevenue(req, res) {
+  try {
+    const { type } = req.query;
+    let matchStage = {};
+    const todayStart = moment().startOf("day");
+    const todayEnd = moment().endOf("day");
+
+    if (type === "day") {
+      matchStage.createdAt = {
+        $gte: todayStart.toDate(),
+        $lt: todayEnd.toDate(),
+      };
+    } else if (type === "month") {
+      matchStage.createdAt = {
+        $gte: todayStart.startOf("month").toDate(),
+        $lte: todayStart.endOf("month").toDate(),
+      };
+    } else if (type === "year") {
+      matchStage.createdAt = {
+        $gte: todayStart.startOf("year").toDate(),
+        $lte: todayStart.endOf("year").toDate(),
+      };
+    }
+
+    const revenueData = await Order.aggregate([
+      {
+        $match: { ...matchStage, status: "delivered" },
+      },
+      { $unwind: "$items" },
+      {
+        $group: {
+          _id: null, 
+          totalRevenue: {
+            $sum: { $multiply: ["$items.price", "$items.quantity"] },
+          },
+          totalQuantity: { $sum: "$items.quantity" }, 
+          totalOrders: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const totalRevenue = revenueData.length ? revenueData[0].totalRevenue : 0;
+    const totalQuantity = revenueData.length ? revenueData[0].totalQuantity : 0;
+    const totalOrders = revenueData.length ? revenueData[0].totalOrders : 0;
+
+    res.status(200).json({
+      isSuccess: true,
+      revenue: totalRevenue,
+      quantityProducts: totalQuantity,
+      totalOrders: totalOrders, 
+    });
+  } catch (error) {
+    console.error("Error while calculating revenue: ", error);
+    res.status(500).json({
+      error: "Không thể tính doanh thu. Lỗi: " + error.message,
+    });
+  }
+}
+
+
+async function compareMonthlyRevenue(req, res) {
+  try {
+    const now = new Date();
+
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const currentMonthEnd = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999
+    );
+
+    const previousMonthStart = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      1
+    );
+    const previousMonthEnd = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      0,
+      23,
+      59,
+      59,
+      999
+    );
+
+    const currentMonthRevenue = await Order.aggregate([
+      {
+        $match: {
+          status: "delivered",
+          createdAt: {
+            $gte: currentMonthStart,
+            $lte: currentMonthEnd,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalBill" },
+          totalOrders: { $sum: 1 },
+          totalQuantity: { $sum: "$items.quantity" }, 
+        },
+      },
+    ]);
+
+    const previousMonthRevenue = await Order.aggregate([
+      {
+        $match: {
+          status: "delivered",
+          createdAt: {
+            $gte: previousMonthStart,
+            $lte: previousMonthEnd,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$totalBill" },
+          totalOrders: { $sum: 1 },
+          totalQuantity: { $sum: "$items.quantity" }, 
+        },
+      },
+    ]);
+
+    const currentMonthData = currentMonthRevenue[0] || {
+      totalRevenue: 0,
+      totalOrders: 0,
+      totalQuantity: 0,
+    };
+    const previousMonthData = previousMonthRevenue[0] || {
+      totalRevenue: 0,
+      totalOrders: 0,
+      totalQuantity: 0,
+    };
+
+    const revenueGrowth = previousMonthData.totalRevenue
+      ? ((currentMonthData.totalRevenue - previousMonthData.totalRevenue) / previousMonthData.totalRevenue) * 100
+      : 0;
+
+    const orderGrowth = previousMonthData.totalOrders
+      ? ((currentMonthData.totalOrders - previousMonthData.totalOrders) / previousMonthData.totalOrders) * 100
+      : 0;
+
+    const quantityGrowth = previousMonthData.totalQuantity
+      ? ((currentMonthData.totalQuantity - previousMonthData.totalQuantity) / previousMonthData.totalQuantity) * 100
+      : 0;
+
+    const result = {
+      currentMonth: currentMonthData,
+      previousMonth: previousMonthData,
+      revenueGrowth: revenueGrowth.toFixed(2),
+      orderGrowth: orderGrowth.toFixed(2),
+      quantityGrowth: quantityGrowth.toFixed(2), 
+    };
+
+    res.status(200).json({ isSuccess: true, data: result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Không thể tính doanh thu giữa các tháng" });
+  }
+}
+
 
 module.exports = {
   createOrder,
@@ -146,5 +314,7 @@ module.exports = {
   getOrderById,
   getOrdersByStatus,
   getOrdersByUserId,
-  markAsCommented
+  markAsCommented,
+  getRevenue,
+  compareMonthlyRevenue,
 };
