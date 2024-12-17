@@ -22,7 +22,7 @@ class VoucherController extends GetxController {
     try {
       isLoading.value = true;
       final response = await dio.get(ApiEndpoints.voucher);
-
+        voucherGridDataSource = VoucherGridDataSource(vouchers: []);
       if (response.data is List) {
         vouchers.value = (response.data as List)
             .map((e) => Voucher.fromJson(e as Map<String, dynamic>))

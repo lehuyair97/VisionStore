@@ -12,6 +12,7 @@ class ApiEndpoints {
   static String deleteBrand(String brandId) =>
       "${Config.baseUrl}/brands/$brandId";
 
+      static String brandDetail = "${Config.baseUrl}/products-brands";
   // category
   static const String getCategory = "${Config.baseUrl}/category";
   static const String subcategory =
@@ -51,10 +52,11 @@ class ApiEndpoints {
 
   // orders
   static const String orders = "${Config.baseUrl}/orders";
+    static  String fetchOrdersID(String id) => "${Config.baseUrl}/orders/$id";
+
   static const String searchProduct = "${Config.baseUrl}/products/search";
   static String deleteOrdersByUserId(String userId) =>
       "${Config.baseUrl}/orders/users/$userId";
-
   // voucher
   static const String voucher = "${Config.baseUrl}/voucher";
 }

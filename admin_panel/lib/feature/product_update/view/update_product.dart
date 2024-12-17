@@ -27,7 +27,7 @@ class _UpdateProductState extends State<UpdateProduct> {
   Widget build(BuildContext context) {
     final controllerUpdate = Get.put(UpdateProductController());
     final controllerComputer = Get.put(ComputerAccessoriesController());
-    
+
     controllerUpdate.getProduct(widget.productId);
     return Obx(() {
       if (controllerUpdate.isLoading.value) {
@@ -65,15 +65,28 @@ class _UpdateProductState extends State<UpdateProduct> {
                             screenWidth: Get.width,
                             controllerNote: controllerUpdate.name),
                         Padding(
-                          padding: EdgeInsets.only(left: 20.w),
-                          child: TaskTitle(
+                            padding: EdgeInsets.only(left: 20.w),
+                            child: TaskTitle(
                               sizeText: 18,
                               isNameMain: true,
                               label: '',
                               note: 'Thêm link ảnh',
                               screenWidth: Get.width,
-                              controllerNote: controllerUpdate.image),
-                        ),
+                              controllerNote: controllerUpdate.image,
+                            )),
+                        Obx(
+                          () => (controllerUpdate.imageobs.value != '')
+                              ? Image.network(
+                                  controllerUpdate.imageobs.value,
+                                  width: Get.width * 0.5,
+                                  height: Get.width * 0.2,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(
+                                    Icons.error,
+                                  ),
+                                )
+                              : SizedBox.shrink(),
+                        )
                       ],
                     ),
                   ),
@@ -135,9 +148,10 @@ class _UpdateProductState extends State<UpdateProduct> {
                         CustomSelect(
                           label1: 'Loại sản phẩm',
                           hint: controllerUpdate.categoryList
-                              .map((e) => controllerUpdate.categoryId.text == e.id
-                                  ? e.name
-                                  : '')
+                              .map((e) =>
+                                  controllerUpdate.categoryId.text == e.id
+                                      ? e.name
+                                      : '')
                               .join(''),
                           selectList: controllerUpdate.categoryList
                               .map((e) => Item(id: e.id, name: e.name))
@@ -146,43 +160,50 @@ class _UpdateProductState extends State<UpdateProduct> {
                             controllerUpdate.categoryId.text = value ?? "";
                           },
                         ),
-                     widget.categoryKey == 'linh-kien'
-                          ? CustomSelect(
-                              label1: 'Chon Linh Kien',
-                              hint: controllerUpdate.subCategoryList
-                                  .map((e) => controllerUpdate.subCategoryId.text == e.id
-                                      ? e.name
-                                      : '')
-                                  .join(''),
-                              selectList: controllerUpdate.subCategoryList
-                                  .map((e) => Item(id: e.id, name: e.name))
-                                  .toList(),
-                              onProjectSelected: (value) {
-                                controllerUpdate.subCategoryId.text = value ?? "";
-                              },
-                            )
-                          : SizedBox.shrink(),
-                      widget.categoryKey == 'phu-kien'
-                          ? Column(
-                              children: [
-                                CustomSelect(
-                                  label1: 'Chọn phụ kiện',
-                                  hint: controllerComputer.accessoriesList
-                                      .map((e) => controllerUpdate.subCategoryId.text == e.id
-                                          ? e.name
-                                          : '')
-                                      .join(''),
-                                  selectList: controllerComputer.accessoriesList
-                                      .map((e) => Item(id: e.id, name: e.name))
-                                      .toList(),
-                                  onProjectSelected: (value) {
-                                    controllerUpdate.subCategoryId.text =
-                                        value ?? "";
-                                  },
-                                ),
-                              ],
-                            )
-                          : SizedBox.shrink(),
+                        widget.categoryKey == 'linh-kien'
+                            ? CustomSelect(
+                                label1: 'Chon Linh Kien',
+                                hint: controllerUpdate.subCategoryList
+                                    .map((e) =>
+                                        controllerUpdate.subCategoryId.text ==
+                                                e.id
+                                            ? e.name
+                                            : '')
+                                    .join(''),
+                                selectList: controllerUpdate.subCategoryList
+                                    .map((e) => Item(id: e.id, name: e.name))
+                                    .toList(),
+                                onProjectSelected: (value) {
+                                  controllerUpdate.subCategoryId.text =
+                                      value ?? "";
+                                },
+                              )
+                            : SizedBox.shrink(),
+                        widget.categoryKey == 'phu-kien'
+                            ? Column(
+                                children: [
+                                  CustomSelect(
+                                    label1: 'Chọn phụ kiện',
+                                    hint: controllerComputer.accessoriesList
+                                        .map((e) => controllerUpdate
+                                                    .subCategoryId.text ==
+                                                e.id
+                                            ? e.name
+                                            : '')
+                                        .join(''),
+                                    selectList: controllerComputer
+                                        .accessoriesList
+                                        .map(
+                                            (e) => Item(id: e.id, name: e.name))
+                                        .toList(),
+                                    onProjectSelected: (value) {
+                                      controllerUpdate.subCategoryId.text =
+                                          value ?? "";
+                                    },
+                                  ),
+                                ],
+                              )
+                            : SizedBox.shrink(),
                         TaskTitle(
                             label: 'SKU',
                             note: '',
@@ -212,7 +233,8 @@ class _UpdateProductState extends State<UpdateProduct> {
               CustomButton(
                 text: 'Lưu sản phẩm',
                 onPressed: () {
-                  controllerUpdate.postUpdateProduct(widget.productId, widget.categoryKey ?? '');
+                  controllerUpdate.postUpdateProduct(
+                      widget.productId, widget.categoryKey ?? '');
                 },
                 textColor: AppColors.white,
                 color: AppColors.primary,

@@ -85,7 +85,7 @@ class VoucherView extends StatelessWidget {
                           alignment: Alignment.center,
                           child: Obx(() {
                             if (controller.isLoading.value) {
-                              return const Center(
+                              return  Center(
                                   child: CircularProgressIndicator());
                             }
                             return Column(
@@ -133,6 +133,35 @@ class VoucherView extends StatelessWidget {
                                         ),
                                       ),
                                       GridColumn(
+                                        columnName: VoucherGridCell.discount,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Số lượng',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
+                                        columnName:
+                                            VoucherGridCell.expirationDate,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Ngày hết hạn',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
                                         columnName: VoucherGridCell.title,
                                         width:
                                             Get.width * 0.2, // Adjusted width
@@ -149,7 +178,7 @@ class VoucherView extends StatelessWidget {
                                       GridColumn(
                                         columnName: VoucherGridCell.description,
                                         width:
-                                            Get.width * 0.25, // Adjusted width
+                                            Get.width * 0.1, // Adjusted width
                                         label: Container(
                                           padding: EdgeInsets.all(16.0),
                                           alignment: Alignment.center,
@@ -199,15 +228,12 @@ class VoucherView extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: SfDataPager(
-                                      pageCount: controller.vouchers.length / 6,
+                                      pageCount:  (controller.vouchers.length / 7).ceil().ceilToDouble(),
                                       visibleItemsCount: 7,
                                       delegate:
                                           controller.voucherGridDataSource,
                                       itemHeight: 50,
                                       itemWidth: 50,
-                                      firstPageItemVisible: false,
-                                      lastPageItemVisible: false,
-                                      availableRowsPerPage: [7],
                                     ),
                                   ),
                                 ),

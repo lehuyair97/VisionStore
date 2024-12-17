@@ -45,12 +45,18 @@ class UpdateProductController extends GetxController {
   final TextEditingController sku = TextEditingController();
   final TextEditingController weight = TextEditingController();
 
+  var imageobs = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
     brandList.addAll(controller.brandList);
     categoryList.addAll(controller.categoryList);
     subCategoryList.addAll(controller.subCategoryList);
+        image.addListener(() {
+      imageobs.value = image.text;
+    });
+    
   }
 
   Future<void> getProduct(String productId) async {
@@ -82,6 +88,7 @@ class UpdateProductController extends GetxController {
     stock.text = product.stock.toString() ?? "";
     weight.text = product.weight.toString() ?? "";
     image.text = product.image ?? "";
+    imageobs.value = product.image ?? "";
     sku.text = product.sku ?? "";
     brandId.text = product.brand?.toString() ?? "";
     categoryId.text = product.categoryId?.toString() ?? "";

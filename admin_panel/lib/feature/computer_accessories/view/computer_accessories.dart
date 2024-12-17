@@ -246,17 +246,29 @@ class ComputerAccessories extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  // Expanded(
-                                  //   flex: 1,
-                                  //   child: SfDataPager(
-                                  //     pageCount: controller.productSup.length / 7,
-                                  //     visibleItemsCount: 7,
-                                  //     delegate: controller.productGridDataSource,
-                                  //     onPageNavigationEnd: (pageIndex) {
-                                  //       controller.onPageChanged(pageIndex);
-                                  //     },
-                                  //   ),
-                                  // ),
+                                  30.verticalSpace,
+                                  Expanded(
+                                    flex: 1,
+                                    child: Card(
+                                      color: AppColors.white,
+                                      elevation: 3,
+                                      child: SfDataPager(
+                                        itemHeight: 50,
+                                        itemWidth: 50,
+                                        pageCount:
+                                            controller.productSup.length / 7 < 1
+                                                ? 1
+                                                : controller.productSup.length /
+                                                    7,
+                                        visibleItemsCount: 7,
+                                        delegate:
+                                            controller.productGridDataSource,
+                                        onPageNavigationEnd: (pageIndex) {
+                                          controller.onPageChanged(pageIndex);
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               );
                             },

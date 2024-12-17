@@ -29,7 +29,7 @@ class CreateProductController extends GetxController {
   final TextEditingController warrantyPeriod = TextEditingController();
   final TextEditingController stock = TextEditingController();
   final TextEditingController thumbnail = TextEditingController();
-  final Rx<TextEditingController> image = TextEditingController().obs;
+  final TextEditingController image = TextEditingController();
   final TextEditingController descriptions = TextEditingController();
   final TextEditingController sku = TextEditingController();
   final TextEditingController weight = TextEditingController();
@@ -37,11 +37,17 @@ class CreateProductController extends GetxController {
   final Rx<TextEditingController> categoryId = TextEditingController().obs;
   final TextEditingController subCategoryId = TextEditingController();
 
+  var imageobs = "".obs;
+
   @override
   void onInit() {
     super.onInit();
     clearTextFields();
     Get.lazyPut<ProductsController>(() => ProductsController());
+    image.addListener(() {
+      imageobs.value = image.value.text;
+      
+    } );
   }
 
   void clearTextFields() {
@@ -55,7 +61,7 @@ class CreateProductController extends GetxController {
     warrantyPeriod.clear();
     stock.clear();
     thumbnail.clear();
-    image.value.clear();
+    image.clear();
     sku.clear();
     weight.clear();
     optionId.clear();
@@ -74,7 +80,7 @@ class CreateProductController extends GetxController {
     warrantyPeriod.dispose();
     stock.dispose();
     thumbnail.dispose();
-    image.value.dispose();
+    image.dispose();
     descriptions.dispose();
     sku.dispose();
     weight.dispose();

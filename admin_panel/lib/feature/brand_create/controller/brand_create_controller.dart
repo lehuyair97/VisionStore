@@ -12,8 +12,19 @@ class BrandCreateController extends GetxController {
   final logo = TextEditingController();
   final brandType = TextEditingController();
   final isLoading = false.obs;
+  var imageobs = ''.obs;
 
   final controllerBrand = Get.put(BrandController());
+
+  @override
+  void onInit() {
+    super.onInit();
+    logo.addListener((){
+      imageobs.value = logo.text;
+    });
+  }
+
+  
 
 
   Future<void> createBrand() async {

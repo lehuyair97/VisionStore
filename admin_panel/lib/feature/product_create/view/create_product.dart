@@ -72,8 +72,21 @@ class _CreateProductState extends State<CreateProduct> {
                             label: '',
                             note: 'Thêm link ảnh',
                             screenWidth: Get.width,
-                            controllerNote: controller.image.value),
+                            controllerNote: controller.image),
                       ),
+                      Obx(
+                        () => (controller.imageobs.value != '')
+                            ? Image.network(
+                                controller.imageobs.value,
+                                width: Get.width * 0.5,
+                                height: Get.width * 0.2,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(
+                                  Icons.error,
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                      )
                     ],
                   ),
                 ),
@@ -196,7 +209,11 @@ class _CreateProductState extends State<CreateProduct> {
             CustomButton(
               text: 'Lưu sản phẩm',
               onPressed: () {
-                controller.postAddProduct(widget.productsController,accessoryController,controllerComputer  , widget.categoryKey ?? '');
+                controller.postAddProduct(
+                    widget.productsController,
+                    accessoryController,
+                    controllerComputer,
+                    widget.categoryKey ?? '');
               },
               textColor: AppColors.white,
               color: AppColors.primary,

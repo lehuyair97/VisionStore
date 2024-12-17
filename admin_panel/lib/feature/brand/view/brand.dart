@@ -147,6 +147,19 @@ class BrandView extends StatelessWidget {
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
+                                     GridColumn(
+                                        columnName: BrandGridCell.detail,
+                                        width: Get.width * 0.1,
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'chi tiết',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                                       GridColumn(
                                         columnName: BrandGridCell.edit,
                                         width: Get.width * 0.1,

@@ -175,6 +175,16 @@ class OrdersView extends StatelessWidget {
                                         ),
                                       ),
                                       GridColumn(
+                                        columnName: OrdersGridCell.detail,
+                                        width: Get.width * 0.08,
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                              text: 'Chi tiết', fontSize: 16),
+                                        ),
+                                      ),
+                                      GridColumn(
                                         columnName: OrdersGridCell.delete,
                                         width: Get.width * 0.08,
                                         label: Container(

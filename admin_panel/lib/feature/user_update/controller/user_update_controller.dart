@@ -20,12 +20,16 @@ class UserUpdateController extends GetxController {
   final phoneNumber = TextEditingController();
   final avatar = TextEditingController();
   final addressSelected = TextEditingController();
+  var imageobs = ''.obs;
 
   final controllerUser = Get.put(UserController());
 
   @override
   void onInit() {
     super.onInit();
+    avatar.addListener(() {
+      imageobs.value = avatar.text;
+    });
   }
 
   Future<void> updateUser(String userId) async {

@@ -4,6 +4,7 @@ import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand_update/view/brand_update.dart';
 import 'package:flutter_web/feature/product_create/model/brand_model.dart';
+import 'package:flutter_web/router/app_router.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -14,6 +15,7 @@ class BrandGridCell {
   static const String description = 'description';
   static const String brandType = 'brandType';
   //edit
+  static const String detail = 'detail';
   static const String edit = 'edit';
   static const String delete = 'delete';
 }
@@ -29,6 +31,7 @@ class BrandGridDataSource extends DataGridSource {
             columnName: BrandGridCell.name, value: e.name ?? ''),
         DataGridCell<String>(
             columnName: BrandGridCell.description, value: e.description ?? ''),
+                    DataGridCell<String>(columnName: BrandGridCell.detail, value: ''),
         DataGridCell<String>(columnName: BrandGridCell.edit, value: ''),
         DataGridCell<String>(columnName: BrandGridCell.delete, value: ''),
       ]);
@@ -101,6 +104,24 @@ class BrandGridDataSource extends DataGridSource {
                 fontWeight: FontWeight.w600,
               ),
             );
+
+       case BrandGridCell.detail:
+            return Center(
+              child: IconButton(
+                onPressed: () {
+                  final brandId = row
+                      .getCells()
+                      .firstWhere(
+                          (element) => element.columnName == BrandGridCell.id)
+                      .value;
+                  Get.toNamed(AppRouter.brandDetail, arguments: brandId);
+                },
+                icon: Icon(Icons.remove_red_eye, color: AppColors.white),
+              ),
+            );
+
+
+
           case BrandGridCell.edit:
             return Center(
               child: IconButton(

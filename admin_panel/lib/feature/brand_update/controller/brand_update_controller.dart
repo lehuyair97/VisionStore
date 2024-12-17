@@ -16,12 +16,15 @@ class BrandUpdateController extends GetxController {
   final isLoading = false.obs;
   final brand = Rx<Brand?>(null);
   final isLoadingFetch = false.obs;
-
   final controllerBrand = Get.put(BrandController());
+  var imageobs = ''.obs;
   
   @override
   void onInit() {
     super.onInit();
+    logo.addListener((){
+      imageobs.value = logo.text;
+    });
   }
 
   Future<void> updateBrand(String brandId) async {
