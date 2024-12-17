@@ -306,6 +306,114 @@ async function compareMonthlyRevenue(req, res) {
 }
 
 
+async function getMonthlyRevenue(req, res) {
+  try {
+    const months = [];
+    const currentDate = moment();
+
+    for (let i = 0; i < 12; i++) {
+      months.push(currentDate.clone().subtract(i, "months"));
+    }
+
+    const monthLabels = months.map(month => month.format("YYYY-MM"));
+    const monthlyRevenue = await Order.aggregate([
+      {
+        $match: {
+          status: "delivered",
+          createdAt: { $gte: months[11].startOf("month").toDate() }
+        },
+      },
+      {
+        $project: {
+          yearMonth: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+          totalBill: 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$yearMonth",
+          totalRevenue: { $sum: "$totalBill" },
+          totalOrders: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { _id: 1 }, 
+      },
+    ]);
+
+    const result = monthLabels.map(month => {
+      const monthData = monthlyRevenue.find(revenue => revenue._id === month);
+      return {
+        month,
+        totalRevenue: monthData ? monthData.totalRevenue : 0,
+        totalOrders: monthData ? monthData.totalOrders : 0,
+      };
+    });
+
+    res.status(200).json({ isSuccess: true, data: result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Không thể tính doanh thu hàng tháng" });
+  }
+}
+
+
+async function getTop10MostPurchasedProducts(req, res) {
+  try {
+    console.log('here')
+
+    const topProducts = await Order.aggregate([
+      {
+        $match: {
+          status: "delivered", 
+        },
+      },
+      { $unwind: "$items" }, 
+      {
+        $group: {
+          _id: "$items.productId", 
+          totalQuantity: { $sum: "$items.quantity" }, 
+        },
+      },
+      {
+        $sort: { totalQuantity: -1 }, 
+      },
+      {
+        $limit: 10, 
+      },
+      {
+        $lookup: {
+          from: "products", 
+          localField: "_id",
+          foreignField: "_id", 
+          as: "productDetails", 
+        },
+      },
+      {
+        $unwind: "$productDetails", 
+      },
+      {
+        $project: {
+          productId: "$_id", 
+          productName: "$productDetails.name", 
+          totalQuantity: 1, 
+          totalRevenue: { $multiply: ["$totalQuantity", "$productDetails.price"] }, 
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      isSuccess: true,
+      data: topProducts,
+    });
+  } catch (error) {
+    console.error("Error while fetching top 10 products:", error);
+    res.status(500).json({ error: "Không thể lấy thông tin sản phẩm bán chạy nhất" });
+  }
+}
+
+
+
 module.exports = {
   createOrder,
   deleteOrder,
@@ -317,4 +425,6 @@ module.exports = {
   markAsCommented,
   getRevenue,
   compareMonthlyRevenue,
+  getMonthlyRevenue,
+  getTop10MostPurchasedProducts
 };
