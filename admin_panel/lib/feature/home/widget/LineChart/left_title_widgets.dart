@@ -16,22 +16,22 @@ class LeftTitleWidgets extends StatelessWidget {
     String text;
     switch (value.toInt()) {
       case 2:
-        text = '10K';
+        text = '10Tr';
         break;
       case 5:
-        text = '20K';
+        text = '20Tr';
         break;
       case 8:
-        text = '30K';
+        text = '30Tr';
         break;
       case 11:
-        text = '40K';
+        text = '40Tr';
         break;
       case 14:
-        text = '50K';
+        text = '50Tr';
         break;
       case 17:
-        text = '60K';
+        text = '60Tr';
         break;
       default:
         return Container();

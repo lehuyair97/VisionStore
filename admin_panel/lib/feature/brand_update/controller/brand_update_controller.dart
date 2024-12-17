@@ -18,12 +18,17 @@ class BrandUpdateController extends GetxController {
   final isLoadingFetch = false.obs;
   final controllerBrand = Get.put(BrandController());
   var imageobs = ''.obs;
+    var bannerobs = ''.obs;
+
   
   @override
   void onInit() {
     super.onInit();
     logo.addListener((){
       imageobs.value = logo.text;
+    });
+    banner.addListener((){
+      bannerobs.value = banner.text;
     });
   }
 
@@ -34,7 +39,7 @@ class BrandUpdateController extends GetxController {
         'name': name.text,
         'description': description.text,
         'logo': logo.text,
-        'banner': banner.text,
+        'banner': bannerobs.value
       });
       Get.back();
       controllerBrand.getBrand();

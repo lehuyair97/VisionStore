@@ -72,10 +72,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
     final revenueMonth = widget.revenueMonth;
     final maxtotal = 60000000;
     //thang 1
-    final totalRevenue1 = (revenueMonth.currentMonth.totalRevenue!/maxtotal) * 16;
-    final totalRevenue2 = (revenueMonth.previousMonth.totalRevenue!/maxtotal )* 16;  
+    final totalRevenue1 = (revenueMonth.currentMonth.totalRevenue!/maxtotal) * 17;
+    final totalRevenue2 = (revenueMonth.previousMonth.totalRevenue!/maxtotal )* 17;  
 
-    return LineChartData(
+   return LineChartData(
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -137,8 +137,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
         LineChartBarData(
           spots:  [
             FlSpot(0, 0),
-            FlSpot(1, totalRevenue1),
-            FlSpot(4, totalRevenue2),
+            FlSpot(1, totalRevenue2),
+            FlSpot(4, totalRevenue1),
           ],
           isCurved: true,
           gradient: LinearGradient(

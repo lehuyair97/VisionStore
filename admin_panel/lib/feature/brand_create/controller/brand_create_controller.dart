@@ -10,9 +10,11 @@ class BrandCreateController extends GetxController {
   final name = TextEditingController();
   final description = TextEditingController();
   final logo = TextEditingController();
+  final baner = TextEditingController();
   final brandType = TextEditingController();
   final isLoading = false.obs;
   var imageobs = ''.obs;
+  var bannerobs = ''.obs;
 
   final controllerBrand = Get.put(BrandController());
 
@@ -21,6 +23,9 @@ class BrandCreateController extends GetxController {
     super.onInit();
     logo.addListener((){
       imageobs.value = logo.text;
+    });
+    baner.addListener((){
+      bannerobs.value = baner.text;
     });
   }
 
@@ -35,6 +40,7 @@ class BrandCreateController extends GetxController {
         'description': description.text,
         'logo': logo.text,
         'brandType': brandType.text,
+        'banner': bannerobs.value
       });
       print(response.data);
       if (response.statusCode != HttpStatusCodes.STATUS_CODE_CREATED) return;

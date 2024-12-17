@@ -23,6 +23,22 @@ exports.createVoucher = async (req, res) => {
   }
 };
 
+
+
+
+exports.deleteVoucher = async (req, res) => {
+  try {
+    const voucher = await Voucher.findByIdAndDelete(req.params.id);
+    if (!voucher) {
+      return res.status(404).json({ message: "Voucher not found" });
+    }
+    res.status(200).json({ message: "Voucher deleted successfully", voucher });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 exports.useVoucher = async (req, res) => {
   const { code, userID } = req.body;
   try {

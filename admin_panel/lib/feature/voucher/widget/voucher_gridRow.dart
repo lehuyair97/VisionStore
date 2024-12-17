@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
+import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
 import 'package:flutter_web/feature/voucher/model/voucher_model.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +18,7 @@ class VoucherGridCell {
   static const String description = 'description';
   static const String status = 'status';
   static const String type = 'type';
+  static const String delete = 'delete';
 }
 
 class VoucherGridDataSource extends DataGridSource {
@@ -41,6 +43,8 @@ class VoucherGridDataSource extends DataGridSource {
             columnName: VoucherGridCell.status, value: e.status ?? ''),
         DataGridCell<String>(
             columnName: VoucherGridCell.type, value: e.type ?? ''),
+        DataGridCell<String>(
+            columnName: VoucherGridCell.delete, value: e.id ?? ''),
       ]);
     }).toList();
   }
@@ -52,6 +56,7 @@ class VoucherGridDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    final controller = Get.put(VoucherController());
     int rowIndex = _employees.indexOf(row);
     bool isEvenRow = rowIndex % 2 == 0;
 
@@ -78,6 +83,10 @@ class VoucherGridDataSource extends DataGridSource {
                 fontWeight: FontWeight.w600,
               ),
             );
+            case VoucherGridCell.delete:
+            return Center(child: IconButton(onPressed: (){
+              controller.deleteVoucherById(dataGridCell.value.toString());
+            }, icon: Icon(Icons.delete),color: AppColors.primary,));
           case VoucherGridCell.description:
           case VoucherGridCell.status:
           case VoucherGridCell.type:

@@ -5,6 +5,7 @@ import 'package:flutter_web/common/constants/http_status_codes.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/home/model/health_model.dart';
+import 'package:flutter_web/feature/home/model/product_top10_model.dart';
 import 'package:flutter_web/feature/home/model/revenue_model.dart';
 import 'package:flutter_web/feature/home/model/revenue_month.dart';
 import 'package:flutter_web/feature/orders/controller/oder_controller.dart';
@@ -24,6 +25,9 @@ class HomeController extends GetxController {
   final isLoading = RxBool(false);
   final productsController = Get.put(ProductsController());
   final type = RxString("year");
+  final isloadingtop = RxBool(false);
+
+  List<ProductTop10Model>? productTop10Model;
 
   RevenueMonth? revenueMonth;
 
@@ -34,6 +38,7 @@ class HomeController extends GetxController {
     super.onInit();
     getRevenue(type.value);
     getRevenueMonth();
+    getProductsTop();
   }
 
   Future<void> getProducts() async {
@@ -62,26 +67,16 @@ class HomeController extends GetxController {
   }
 
   Future<void> getProductsTop() async {
-    isLoading.value = true;
+    isloadingtop.value = true;
     try {
-      final response = await dio.get(ApiEndpoints.productPagination(3, 10));
-
-      print("getProductsresponse: ${response.data['products']}");
-
-      // Kiểm tra và chuyển đổi dữ liệu
-      if (response.data['products'] != null) {
-        // Sử dụng List.from để chuyển đổi kiểu dữ liệu
-        final List<dynamic> productList = List.from(response.data['products']);
-        final List<ProductItem> data =
-            productList.map((e) => ProductItem.fromJson(e)).toList();
-        productTop.value = data;
-      } else {
-        print("Không có sản phẩm.");
-      }
+      final response = await dio.get(ApiEndpoints.productTop10);
+      List<dynamic> dataList = response.data['data'];
+      productTop10Model = dataList.map((e) => ProductTop10Model.fromJson(e)).toList();
+      print("productTop10Model: $productTop10Model");
     } catch (e) {
       print("Lỗi khi gọi API: $e");
     } finally {
-      isLoading.value = false;
+      isloadingtop.value = false;
     }
   }
 

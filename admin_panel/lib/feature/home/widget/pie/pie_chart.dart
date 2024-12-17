@@ -163,13 +163,13 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       children: <Widget>[
         BuildIndicator(
           color: AppColors.white,
-          text: 'Thangs hiện tại',
+          text: 'Tháng trước',
           textColor: AppColors.white,
         ),
         const SizedBox(height: 8), // Thêm khoảng cách giữa các indicator
         BuildIndicator(
           color: AppColors.primary,
-          text: 'Tháng trước',
+          text: 'Tháng hiện tại',
           textColor: AppColors.white,
         ),
       ],
