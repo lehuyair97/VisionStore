@@ -12,6 +12,7 @@ class ApiEndpoints {
   static String deleteBrand(String brandId) =>
       "${Config.baseUrl}/brands/$brandId";
 
+      static String brandDetail = "${Config.baseUrl}/products-brands";
   // category
   static const String getCategory = "${Config.baseUrl}/category";
   static const String subcategory =
@@ -40,6 +41,8 @@ class ApiEndpoints {
   static String deleteProduct(String productId) =>
       "${Config.baseUrl}/products/$productId";
 
+      static const String  productTop10 = "${Config.baseUrl}/orders/revenue/top-purchase";
+
   // user
   static const String users = "${Config.baseUrl}/users";
   static String getUserId(String userId) => "${Config.baseUrl}/users/$userId";
@@ -51,10 +54,22 @@ class ApiEndpoints {
 
   // orders
   static const String orders = "${Config.baseUrl}/orders";
+    static  String fetchOrdersID(String id) => "${Config.baseUrl}/orders/$id";
+
   static const String searchProduct = "${Config.baseUrl}/products/search";
   static String deleteOrdersByUserId(String userId) =>
       "${Config.baseUrl}/orders/users/$userId";
-
   // voucher
   static const String voucher = "${Config.baseUrl}/voucher";
+
+  static String deleteVoucherId(String voucherId) => "${Config.baseUrl}/voucher/$voucherId";
+
+  // toall
+  static String total(String type) => "${Config.baseUrl}/orders/revenue/type?type=$type";
+
+  static const String totalMonth =
+      "${Config.baseUrl}/orders/compareMonthLy/revenue";
+
+      //banner
+      static const String banner = "${Config.baseUrl}/banner";
 }

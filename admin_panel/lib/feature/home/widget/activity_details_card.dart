@@ -52,7 +52,7 @@ class ActivityDetailsCard extends StatelessWidget {
                     TextWidget(
                       text: healthDetails[i].value,
                       fontSize: 14,
-                      color: Colors.grey,
+                      color: Colors.white,
                       fontWeight: FontWeight.normal,
                     ),
                   ],

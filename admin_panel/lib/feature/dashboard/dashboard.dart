@@ -6,13 +6,17 @@ import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/accessory/controller/accessory_controller.dart';
 import 'package:flutter_web/feature/accessory/view/accessory.dart';
 import 'package:flutter_web/feature/auth/controller/login_comtroller.dart';
+import 'package:flutter_web/feature/baner/controller/banner_controller.dart';
+import 'package:flutter_web/feature/baner/view/baner_view.dart';
 import 'package:flutter_web/feature/brand/controller/brand_controller.dart';
 import 'package:flutter_web/feature/brand/view/brand.dart';
 import 'package:flutter_web/feature/brand_create/controller/brand_create_controller.dart';
 import 'package:flutter_web/feature/brand_update/controller/brand_update_controller.dart';
+import 'package:flutter_web/feature/chat/view/chat_service.dart';
 import 'package:flutter_web/feature/chat_supoport/view/chat_supoport.dart';
 import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/computer_accessories/view/computer_accessories.dart';
+import 'package:flutter_web/feature/orders_detail/controller/oder_detail_controller.dart';
 import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/home/controller/home_contrioller.dart';
 import 'package:flutter_web/feature/home/view/home.dart';
@@ -68,6 +72,11 @@ class _DashboardState extends State<Dashboard> {
   final ChangePassController changePassController =
       Get.put(ChangePassController());
   final LoginController loginController = Get.put(LoginController());
+
+  final OderDetailController orderDetailController =
+      Get.put(OderDetailController());
+
+      final BannerController bannerController = Get.put(BannerController());
 
   bool isMenuOpen = true;
 
@@ -133,7 +142,7 @@ class _DashboardState extends State<Dashboard> {
                     UserView(),
                     BrandView(),
                     VoucherView(),
-                    ChatSupport(),
+                    ChatService(),
                   ],
                 ),
               ),

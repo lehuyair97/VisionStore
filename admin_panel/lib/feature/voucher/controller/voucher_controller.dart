@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/Services/api_endpoints.dart';
+import 'package:flutter_web/common/utils/custom_dialog.dart';
 import 'package:flutter_web/feature/voucher/model/voucher_model.dart';
 import 'package:flutter_web/feature/voucher/widget/voucher_gridRow.dart';
 import 'package:get/get.dart';
@@ -22,7 +23,7 @@ class VoucherController extends GetxController {
     try {
       isLoading.value = true;
       final response = await dio.get(ApiEndpoints.voucher);
-
+        voucherGridDataSource = VoucherGridDataSource(vouchers: []);
       if (response.data is List) {
         vouchers.value = (response.data as List)
             .map((e) => Voucher.fromJson(e as Map<String, dynamic>))
@@ -38,5 +39,21 @@ class VoucherController extends GetxController {
       isLoading.value = false;
       print(e);
     }
+  }
+
+    Future<void> deleteVoucherById(String voucherId) async {
+    CustomDialog()
+        .showConfirmationDialog(
+      'Xóa voucher',
+      'Bạn có chắc chắn muốn xóa voucher này không?',
+      height: 0.3,
+    )
+        .then((value) {
+      if (value ?? false) {
+        dio.delete(ApiEndpoints.deleteVoucherId(voucherId)).then((value) {
+          fetchVouchers();
+        });
+      }
+    });
   }
 }

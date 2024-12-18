@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/custom_button.dart';
 import 'package:flutter_web/common/widgets/custom_select.dart';
+import 'package:flutter_web/common/widgets/task_date.dart';
 import 'package:flutter_web/common/widgets/task_title.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
@@ -42,6 +43,16 @@ class VoucherCreate extends StatelessWidget {
                       screenWidth: Get.width,
                       controllerNote: controller.discount,
                     ),
+                    Obx(
+                      () => TaskDate(
+                        label: 'Ngày Tao Voucher',
+                        selectedDate: controller.expirationDate.value,
+                        onDateSelected: (date) {
+                          controller.onDateSelected(date);
+                        },
+                      ),
+                    ),
+                    10.verticalSpace,
                     CustomSelect(
                       label1: "Loại voucher",
                       selectList: controller.type

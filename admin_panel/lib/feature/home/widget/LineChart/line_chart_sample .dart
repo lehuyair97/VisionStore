@@ -2,14 +2,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
+import 'package:flutter_web/feature/home/model/revenue_month.dart';
 import 'package:flutter_web/feature/home/widget/LineChart/bottom_title_widgets.dart';
 import 'package:flutter_web/feature/home/widget/LineChart/left_title_widgets.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LineChartSample2 extends StatefulWidget {
+  final RevenueMonth revenueMonth;
+  
   final Color color;
-  const LineChartSample2({super.key, this.color = AppColors.colorIcon});
+  const LineChartSample2({super.key, this.color = AppColors.colorIcon,  required this.revenueMonth});
 
   @override
   State<LineChartSample2> createState() => _LineChartSample2State();
@@ -38,7 +41,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             top: -4,
             left: 0,
             child: Text(
-              'Biểu đồ doanh thu Tring 6 Tháng',
+              'Biểu đồ doanh thu 6 Tháng',
               style: TextStyle(
                 fontSize: 24.sp, // Responsive font size with ScreenUtil
                 fontWeight: FontWeight.bold,
@@ -66,7 +69,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
   }
 
   LineChartData mainData() {
-    return LineChartData(
+    final revenueMonth = widget.revenueMonth;
+    final maxtotal = 60000000;
+    //thang 1
+    final totalRevenue1 = (revenueMonth.currentMonth.totalRevenue!/maxtotal) * 17;
+    final totalRevenue2 = (revenueMonth.previousMonth.totalRevenue!/maxtotal )* 17;  
+
+   return LineChartData(
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
@@ -123,17 +132,13 @@ class _LineChartSample2State extends State<LineChartSample2> {
       minX: 0,
       maxX: 12,
       minY: 0,
-      maxY: 18,
+      maxY: 19,
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 1),
-            FlSpot(2.5, 3.5),
-            FlSpot(5, 13.5),
-            FlSpot(7, 10.2),
-            FlSpot(8.5, 11),
-            FlSpot(10, 11.5),
-            FlSpot(11.5, 11.2),
+          spots:  [
+            FlSpot(0, 0),
+            FlSpot(1, totalRevenue2),
+            FlSpot(4, totalRevenue1),
           ],
           isCurved: true,
           gradient: LinearGradient(

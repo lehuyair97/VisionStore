@@ -49,6 +49,41 @@ class BrandCreate extends StatelessWidget {
                       screenWidth: Get.width,
                       controllerNote: controller.logo,
                     ),
+                    Obx(
+                      () => (controller.imageobs.value != '')
+                          ? Image.network(
+                              controller.imageobs.value,
+                              width: Get.width * 0.5,
+                              height: Get.width * 0.2,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                Icons.error,
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    ),
+
+                    TaskTitle(
+                      sizeText: 18,
+                      isNameMain: true,
+                      label: 'Logo',
+                      note: '',
+                      screenWidth: Get.width,
+                      controllerNote: controller.baner,
+                    ),
+                    Obx(
+                      () => (controller.bannerobs.value != '')
+                          ? Image.network(
+                              controller.bannerobs.value,
+                              width: Get.width * 0.5,
+                              height: Get.width * 0.2,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                Icons.error,
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    ),
                     TaskTitle(
                       label: 'Mô tả',
                       note: '',

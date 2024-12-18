@@ -211,6 +211,7 @@ router.post("/voucher", voucherAPI.createVoucher);
 router.get("/active-voucher", voucherAPI.getAllActiveVouchers);
 router.get("/voucher", voucherAPI.getAllVouchers);
 router.post("/use-voucher", voucherAPI.useVoucher);
+router.delete("/voucher/:id", voucherAPI.deleteVoucher);
 
 // // comment routes
 router.post(

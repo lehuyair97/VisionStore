@@ -3,6 +3,8 @@ import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/orders/controller/oder_controller.dart';
 import 'package:flutter_web/feature/orders/model/oders_model.dart';
+import 'package:flutter_web/feature/orders_detail/view/orders_detail.dart';
+import 'package:flutter_web/router/app_router.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -14,6 +16,7 @@ class OrdersGridCell {
   static const String address = 'address';
   static const String paymentMethod = 'paymentMethod';
   static const String deliveryMethod = 'deliveryMethod';
+  static const String detail = 'detail'; 
   static const String delete = 'delete';
 }
 
@@ -37,6 +40,8 @@ class OrdersGridDataSource extends DataGridSource {
         DataGridCell<String>(
             columnName: OrdersGridCell.deliveryMethod,
             value: e.deliveryMethod?.method ?? ''),
+        DataGridCell<String>(
+            columnName: OrdersGridCell.detail, value: e.id ?? ''),
         DataGridCell<String>(
             columnName: OrdersGridCell.delete, value: e.id ?? ''),
       ]);
@@ -98,6 +103,20 @@ class OrdersGridDataSource extends DataGridSource {
                 maxLines: 2,
               ),
             );
+            case OrdersGridCell.detail:
+            return Center(
+              child: IconButton(
+                onPressed: () {
+               String orderID = row
+                    .getCells()
+                    .firstWhere((cell) => cell.columnName == OrdersGridCell.id)
+                    .value.toString(); 
+               Get.toNamed(AppRouter.ordersDetail, arguments: orderID);
+                },
+                icon: Icon(Icons.remove_red_eye, color: AppColors.backgroundSuccess),
+              ),
+            );
+
           case OrdersGridCell.delete:
             return Center(
               child: IconButton(

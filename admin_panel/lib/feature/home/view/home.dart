@@ -45,7 +45,7 @@ class _HomeViewState extends State<HomeView> {
             width: Get.width,
             child: Obx(
               () => controller.isLoading.value ||
-                      controllerBrand.isLoading.value
+                      controllerBrand.isLoading.value || controller.isloadingtop.value || controller.productTop == null
                   ? const Center(child: CircularProgressIndicator())
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -65,8 +65,8 @@ class _HomeViewState extends State<HomeView> {
                                   HealthModel(
                                       icon: 'assets/svg/burn.svg',
                                       value:
-                                          "${controllerUser.userList.value.length}",
-                                      title: "Người dùng đã đăng ký",
+                                          "${controller.revenueData?.revenue} VND",
+                                      title: "Tổng doanh thu",
                                       color: AppColors.backgroundCard),
                                   HealthModel(
                                       icon: 'assets/svg/steps.svg',
@@ -91,7 +91,7 @@ class _HomeViewState extends State<HomeView> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Expanded(
+                                  Expanded(
                                     flex: 2,
                                     child: Card(
                                       color: AppColors.backgroundCard,
@@ -101,6 +101,7 @@ class _HomeViewState extends State<HomeView> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           LineChartSample2(
+                                            revenueMonth: controller.revenueMonth!,
                                             color: AppColors.backgroundCard,
                                           ),
                                         ],
@@ -113,7 +114,8 @@ class _HomeViewState extends State<HomeView> {
                                     child: Column(
                                       children: [
                                         PieChartWidget(
-                                          title: 'Người dùng mong muốn sử dụng',
+                                          revenueMonth: controller.revenueMonth!,
+                                          title: 'Biểu So sanh doanh thu trước và sau',
                                           width: 1.5,
                                           color: AppColors.backgroundCard,
                                           userCount: controllerUser
@@ -143,7 +145,7 @@ class _HomeViewState extends State<HomeView> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextWidget(
-                                                text: 'Sản phẩm bán chạy',
+                                                text: 'Top 10 Sản phẩm bán chạy',
                                                 fontSize: 24,
                                                 fontWeight: FontWeight.bold,
                                               ),
@@ -153,61 +155,14 @@ class _HomeViewState extends State<HomeView> {
                                                 width: Get.width,
                                                 child: ListView.builder(
                                                   shrinkWrap: true,
-                                                  itemCount: controller
-                                                      .products.length,
-                                                  itemBuilder:
-                                                      (context, index) =>
+                                                  itemCount: controller.productTop10Model!.length,
+                                                  itemBuilder:(context, index) =>
                                                           Padding(
                                                     padding:
                                                         EdgeInsets.symmetric(
                                                             vertical: 10.w),
                                                     child: ProductItemTop(
-                                                      product: controller
-                                                          .products[index],
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Card(
-                                        elevation: 3,
-                                        color: AppColors.backgroundCard,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 40.w, vertical: 30.w),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextWidget(
-                                                text:
-                                                    'Thang 6 sản phẩm bán chạy',
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              30.verticalSpace,
-                                              Container(
-                                                height: Get.height * 0.8,
-                                                width: Get.width,
-                                                child: ListView.builder(
-                                                  shrinkWrap: true,
-                                                  itemCount: controller
-                                                      .productTop.length,
-                                                  itemBuilder:
-                                                      (context, index) =>
-                                                          Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 10.w),
-                                                    child: ProductItemTop(
-                                                      product: controller
-                                                          .products[index],
+                                                      product: controller.productTop10Model![index],
                                                     ),
                                                   ),
                                                 ),
@@ -255,6 +210,13 @@ class _HomeViewState extends State<HomeView> {
                                               color: AppColors.backgroundTab,
                                             ),
                                             60.verticalSpace,
+                                           TextWidget(
+                                              text:
+                                                  '- Tổng doanh thu: ${controller.revenueData?.revenue} VND',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            30.verticalSpace,
                                             TextWidget(
                                               text:
                                                   '- Trung bình mỗi người dùng đã mua khoảng ${(controllerOrder.orders.value.length / controllerUser.userList.value.length).toStringAsFixed(2)} sản phẩm',

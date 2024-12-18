@@ -3,6 +3,7 @@ import 'package:flutter_web/common/widgets/custom_button.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/common/widgets/search_field.dart';
+import 'package:flutter_web/feature/home/widget/custom_appbar.dart';
 import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
 import 'package:flutter_web/feature/voucher/widget/voucher_gridRow.dart';
 import 'package:flutter_web/feature/voucher_create/view/voucher_create.dart';
@@ -24,6 +25,8 @@ class VoucherView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              CustomAppBar(),
+              30.verticalSpace,
               Container(
                 alignment: Alignment.center,
                 width: Get.width * 0.8,
@@ -77,12 +80,12 @@ class VoucherView extends StatelessWidget {
                         elevation: 5,
                         color: AppColors.backgroundCard.withOpacity(0.5),
                         child: Container(
-                          height: Get.height * 1,
+                          height: Get.height * 0.7,
                           width: Get.width * 0.8,
                           alignment: Alignment.center,
                           child: Obx(() {
                             if (controller.isLoading.value) {
-                              return const Center(
+                              return  Center(
                                   child: CircularProgressIndicator());
                             }
                             return Column(
@@ -130,6 +133,35 @@ class VoucherView extends StatelessWidget {
                                         ),
                                       ),
                                       GridColumn(
+                                        columnName: VoucherGridCell.discount,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Số lượng',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
+                                        columnName:
+                                            VoucherGridCell.expirationDate,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Ngày hết hạn',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      GridColumn(
                                         columnName: VoucherGridCell.title,
                                         width:
                                             Get.width * 0.2, // Adjusted width
@@ -146,7 +178,7 @@ class VoucherView extends StatelessWidget {
                                       GridColumn(
                                         columnName: VoucherGridCell.description,
                                         width:
-                                            Get.width * 0.25, // Adjusted width
+                                            Get.width * 0.1, // Adjusted width
                                         label: Container(
                                           padding: EdgeInsets.all(16.0),
                                           alignment: Alignment.center,
@@ -185,10 +217,24 @@ class VoucherView extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                       GridColumn(
+                                        columnName: VoucherGridCell.delete,
+                                        width:
+                                            Get.width * 0.1, // Adjusted width
+                                        label: Container(
+                                          padding: EdgeInsets.all(16.0),
+                                          alignment: Alignment.center,
+                                          child: TextWidget(
+                                            text: 'Xoá',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
-                                  Expanded(
+                                Expanded(
                                   flex: 1,
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -196,15 +242,12 @@ class VoucherView extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: SfDataPager(
-                                      pageCount: controller.vouchers.length / 6,
+                                      pageCount:  (controller.vouchers.length / 7) + 1  ,
                                       visibleItemsCount: 7,
                                       delegate:
                                           controller.voucherGridDataSource,
                                       itemHeight: 50,
                                       itemWidth: 50,
-                                      firstPageItemVisible: false,
-                                      lastPageItemVisible: false,
-                                      availableRowsPerPage: [7],
                                     ),
                                   ),
                                 ),

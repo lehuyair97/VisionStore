@@ -16,12 +16,11 @@ class ComputerAccessoriesController extends GetxController {
   Dio dio = Dio();
   final productSup = <ProductItem>[].obs;
   final searchController = TextEditingController();
-  final subCateId = ''.obs;
+  final subCateId = '6728734ca6595b31391c62f1'.obs;
   ProductGridDataSource productGridDataSource =
       ProductGridDataSource(products: []);
   final List<SubCategory> accessoriesList = [];
 
-  final String sunCateId = "";
   final isLoading = false.obs;
 
   @override
@@ -36,9 +35,6 @@ class ComputerAccessoriesController extends GetxController {
     print("loading...");
     try {
       isLoading.value = true;
-      // if (productSup != '') {
-      //   productGridDataSource.clearColumnGroups();
-      // }
       final response = await dio.get(ApiEndpoints.productSub(sunCateId));
       print("fetch_sub: ${response.data}");
       if (response.statusCode ==
@@ -47,13 +43,11 @@ class ComputerAccessoriesController extends GetxController {
             'Lỗi', 'Bạn đã gửi quá nhiều yêu cầu, vui lòng thử lại sau');
         return;
       }
-
       if (response.statusCode != HttpStatusCodes.STATUS_CODE_OK) {
         print("Lỗi khi lấy dữ liệu sản phẩm");
         return;
       }
 
-      
       if (response.data.isEmpty) {
         print("Dữ liệu sản phẩm là null");
         return;
@@ -61,12 +55,11 @@ class ComputerAccessoriesController extends GetxController {
       List<dynamic> productListJson = response.data;
       List<ProductItem> products =
           productListJson.map((item) => ProductItem.fromJson(item)).toList();
-
-
       productSup.value = products;
       productGridDataSource = ProductGridDataSource(products: productSup);
       productGridDataSource.notifyListeners();
     } catch (e) {
+      productGridDataSource = ProductGridDataSource(products: []);
       print("Error fetching products: $e");
     } finally {
       isLoading.value = false;
@@ -99,8 +92,7 @@ class ComputerAccessoriesController extends GetxController {
     });
   }
 
-
-    Future<void> searchProduct(String searchText) async {
+  Future<void> searchProduct(String searchText) async {
     if (isLoading.value) return;
     if (searchText.isEmpty) {
       fetch_sub_product(subCateId.value);

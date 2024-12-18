@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
 import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
+import 'package:flutter_web/feature/voucher/controller/voucher_controller.dart';
 import 'package:flutter_web/feature/voucher/model/voucher_model.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:flutter_web/feature/user/model/user_model.dart';
 
 class VoucherGridCell {
   static const String id = 'id';
   static const String code = 'code';
+  static const String discount = 'discount';
+  static const String expirationDate = 'expirationDate';
   static const String title = 'title';
   static const String description = 'description';
   static const String status = 'status';
   static const String type = 'type';
+  static const String delete = 'delete';
 }
 
 class VoucherGridDataSource extends DataGridSource {
@@ -24,6 +29,11 @@ class VoucherGridDataSource extends DataGridSource {
         DataGridCell<String>(columnName: VoucherGridCell.id, value: e.id ?? ''),
         DataGridCell<String>(
             columnName: VoucherGridCell.code, value: e.code ?? ''),
+        DataGridCell<int>(
+            columnName: VoucherGridCell.discount, value: e.discount ?? 0),
+        DataGridCell<DateTime>(
+            columnName: VoucherGridCell.expirationDate,
+            value: e.expirationDate ?? DateTime.now()),
         DataGridCell<String>(
             columnName: VoucherGridCell.title, value: e.title ?? ''),
         DataGridCell<String>(
@@ -33,6 +43,8 @@ class VoucherGridDataSource extends DataGridSource {
             columnName: VoucherGridCell.status, value: e.status ?? ''),
         DataGridCell<String>(
             columnName: VoucherGridCell.type, value: e.type ?? ''),
+        DataGridCell<String>(
+            columnName: VoucherGridCell.delete, value: e.id ?? ''),
       ]);
     }).toList();
   }
@@ -44,6 +56,7 @@ class VoucherGridDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    final controller = Get.put(VoucherController());
     int rowIndex = _employees.indexOf(row);
     bool isEvenRow = rowIndex % 2 == 0;
 
@@ -62,6 +75,18 @@ class VoucherGridDataSource extends DataGridSource {
                 maxLines: 2,
               ),
             );
+          case VoucherGridCell.expirationDate:
+            return Center(
+              child: TextWidget(
+                text: DateFormat('dd/MM/yyyy').format(dataGridCell.value),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+            case VoucherGridCell.delete:
+            return Center(child: IconButton(onPressed: (){
+              controller.deleteVoucherById(dataGridCell.value.toString());
+            }, icon: Icon(Icons.delete),color: AppColors.primary,));
           case VoucherGridCell.description:
           case VoucherGridCell.status:
           case VoucherGridCell.type:
@@ -70,6 +95,7 @@ class VoucherGridDataSource extends DataGridSource {
                 text: dataGridCell.value.toString(),
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
+                maxLines: 4,
               ),
             );
           default:

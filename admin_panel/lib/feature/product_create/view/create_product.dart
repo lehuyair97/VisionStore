@@ -4,6 +4,7 @@ import 'package:flutter_web/common/widgets/custom_select.dart';
 import 'package:flutter_web/common/widgets/task_title.dart';
 import 'package:flutter_web/common/widgets/text_widget.dart';
 import 'package:flutter_web/core/configs/theme/app_colors.dart';
+import 'package:flutter_web/feature/accessory/controller/accessory_controller.dart';
 import 'package:flutter_web/feature/computer_accessories/controller/computer_accessories_controller.dart';
 import 'package:flutter_web/feature/product_create/controller/create_product_controller.dart';
 import 'package:flutter_web/feature/products/controller/products_controller.dart';
@@ -27,6 +28,7 @@ class CreateProduct extends StatefulWidget {
 class _CreateProductState extends State<CreateProduct> {
   final controller = Get.find<CreateProductController>();
   final controllerComputer = Get.put(ComputerAccessoriesController());
+  final accessoryController = Get.put(AccessoryController());
   @override
   Widget build(BuildContext context) {
     print("widget.categoryKey: ${widget.categoryKey}");
@@ -70,8 +72,21 @@ class _CreateProductState extends State<CreateProduct> {
                             label: '',
                             note: 'Thêm link ảnh',
                             screenWidth: Get.width,
-                            controllerNote: controller.image.value),
+                            controllerNote: controller.image),
                       ),
+                      Obx(
+                        () => (controller.imageobs.value != '')
+                            ? Image.network(
+                                controller.imageobs.value,
+                                width: Get.width * 0.5,
+                                height: Get.width * 0.2,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(
+                                  Icons.error,
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                      )
                     ],
                   ),
                 ),
@@ -194,7 +209,11 @@ class _CreateProductState extends State<CreateProduct> {
             CustomButton(
               text: 'Lưu sản phẩm',
               onPressed: () {
-                controller.postAddProduct(widget.productsController);
+                controller.postAddProduct(
+                    widget.productsController,
+                    accessoryController,
+                    controllerComputer,
+                    widget.categoryKey ?? '');
               },
               textColor: AppColors.white,
               color: AppColors.primary,
